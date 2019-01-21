@@ -14,6 +14,12 @@ public class Gymnasium{
 	private final int capacity;
 	
 	public Gymnasium(final String name, final String city, final int capacity){
+		if(name == null || name.isBlank())
+			throw new IllegalArgumentException("Gymnasium name is empty");
+		if(city == null || city.isBlank())
+			throw new IllegalArgumentException("Gymnasium city is empty");
+		if(capacity <= 0)
+			throw new IllegalArgumentException("Gymnasium capacity is invalid");
 		this.name = name;
 		this.city = city;
 		this.capacity = capacity;

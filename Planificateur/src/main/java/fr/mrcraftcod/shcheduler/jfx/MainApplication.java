@@ -14,6 +14,7 @@ import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.awt.Taskbar;
+import java.io.IOException;
 import java.util.Objects;
 import java.util.function.Consumer;
 
@@ -53,7 +54,11 @@ public class MainApplication extends Application{
 				e.usage();
 				System.exit(1);
 			}
-			Parser.parse(parameters.getCsvGymnasiumConfigFile(), parameters.getCsvTeamConfigFile());
+			try {
+				Parser.parse(parameters.getCsvGymnasiumConfigFile(), parameters.getCsvTeamConfigFile());
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 			//TODO: Load data
 		};
 	}
