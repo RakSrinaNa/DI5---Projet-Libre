@@ -16,6 +16,10 @@ public class Match{
 	private LocalDate date;
 	
 	public Match(final Team team1, final Team team2, final Gymnasium gymnasium, final LocalDate date){
+		if(team1 == null)
+			throw new IllegalArgumentException("Match Team 1 is null");
+		if(team2 == null)
+			throw new IllegalArgumentException("Match Team 2 is null");
 		this.team1 = team1;
 		this.team2 = team2;
 		this.gymnasium = gymnasium;

@@ -26,11 +26,15 @@ public class Championship{
 		this.groupStages.addAll(groupStages);
 	}
 	
-	public boolean isGymnasimFull(final Gymnasium gymnasium, final LocalDate date){
+	public boolean isGymnasiumFull(final Gymnasium gymnasium, final LocalDate date){
+		int found = 0;
 		for(GroupStage group : groupStages)
-			for(Match match : group.getMatches())
-				if(Objects.equals(gymnasium, match.getGymnasium()) && Objects.equals(date, match.getDate()))
+			for(Match match : group.getMatches()) {
+				if (Objects.equals(gymnasium, match.getGymnasium()) && Objects.equals(date, match.getDate()))
+					found++;
+				if(found >= gymnasium.getCapacity())
 					return true;
+			}
 		return false;
 	}
 	
