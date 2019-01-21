@@ -65,6 +65,8 @@ class GymnasiumTest{
 		assertThrows(IllegalArgumentException.class, executable1);
 		final Executable executable2 = () -> new Gymnasium("gName", null, Integer.MAX_VALUE);
 		assertThrows(IllegalArgumentException.class, executable2);
+		final Executable executable3 = () -> new Gymnasium("gName", "    ", Integer.MAX_VALUE);
+		assertThrows(IllegalArgumentException.class, executable3);
 	}
 	
 	@ParameterizedTest
@@ -75,5 +77,12 @@ class GymnasiumTest{
 	void constructNegativeCapacity(final int cap){
 		final Executable executable = () -> new Gymnasium("gName", "gCity", cap);
 		assertThrows(IllegalArgumentException.class, executable);
+	}
+	
+	@Test
+	void equalsTest(){
+		final var gym1 = new Gymnasium("gName", "gCity", Integer.MAX_VALUE);
+		final var gym2 = new Gymnasium("gName", "gCity", Integer.MAX_VALUE);
+		assertEquals(gym1, gym2);
 	}
 }
