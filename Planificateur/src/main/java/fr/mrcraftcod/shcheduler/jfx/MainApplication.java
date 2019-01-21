@@ -3,6 +3,7 @@ package fr.mrcraftcod.shcheduler.jfx;
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.ParameterException;
 import fr.mrcraftcod.shcheduler.CLIParameters;
+import fr.mrcraftcod.shcheduler.Parser;
 import javafx.application.Application;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.Parent;
@@ -52,7 +53,7 @@ public class MainApplication extends Application{
 				e.usage();
 				System.exit(1);
 			}
-			parameters.getCsvConfigFile();
+			Parser.parse(parameters.getCsvGymnasiumConfigFile(), parameters.getCsvTeamConfigFile());
 			//TODO: Load data
 		};
 	}

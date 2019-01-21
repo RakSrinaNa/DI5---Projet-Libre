@@ -13,12 +13,22 @@ import java.io.File;
 @SuppressWarnings("unused")
 public class CLIParameters{
 	@Parameter(names = {
-			"-c",
-			"--config"
-	}, description = "Path to the csv configuration", converter = FileConverter.class, required = true)
-	private File csvConfigFile;
+			"-g",
+			"--gymnasium"
+	}, description = "Path to the csv gymnasium configuration", converter = FileConverter.class, required = true)
+	private File csvGymnasiumConfigFile;
 	
-	public File getCsvConfigFile(){
-		return csvConfigFile;
+	@Parameter(names = {
+			"-t",
+			"--team"
+	}, description = "Path to the csv team configuration", converter = FileConverter.class, required = true)
+	private File csvTeamConfigFile;
+	
+	public File getCsvGymnasiumConfigFile(){
+		return csvGymnasiumConfigFile;
+	}
+	
+	public File getCsvTeamConfigFile(){
+		return csvTeamConfigFile;
 	}
 }
