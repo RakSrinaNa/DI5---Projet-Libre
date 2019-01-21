@@ -1,6 +1,7 @@
 package fr.mrcraftcod.shcheduler.model;
 
 import java.time.LocalDate;
+import java.util.Objects;
 
 /**
  * Created by Thomas Couchoud (MrCraftCod - zerderr@gmail.com) on 2019-01-21.
@@ -22,7 +23,9 @@ public class Match{
 	}
 	
 	public String getCity(){
-		return null;
+		if(gymnasium == null)
+			return null;
+		return gymnasium.getCity();
 	}
 	
 	public LocalDate getDate(){
@@ -47,5 +50,13 @@ public class Match{
 	
 	public Team getTeam2(){
 		return team2;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if(!(obj instanceof Match))
+			return false;
+		Match m = (Match)obj;
+		return Objects.equals(m.team1, team1) && Objects.equals(m.team2, team2);
 	}
 }

@@ -3,6 +3,7 @@ package fr.mrcraftcod.shcheduler.model;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Objects;
 
 /**
  * Created by Thomas Couchoud (MrCraftCod - zerderr@gmail.com) on 2019-01-21.
@@ -26,6 +27,10 @@ public class Championship{
 	}
 	
 	public boolean isGymnasimFull(final Gymnasium gymnasium, final LocalDate date){
+		for(GroupStage group : groupStages)
+			for(Match match : group.getMatches())
+				if(Objects.equals(gymnasium, match.getGymnasium()) && Objects.equals(date, match.getDate()))
+					return true;
 		return false;
 	}
 	

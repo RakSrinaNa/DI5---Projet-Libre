@@ -9,7 +9,6 @@ module fr.mrcraftcod.simulator {
 	
 	requires org.slf4j;
 	requires org.apache.logging.log4j;
-	requires org.apache.commons.lang3;
 	requires jcommander;
 	
 	requires java.scripting;
@@ -18,4 +17,5 @@ module fr.mrcraftcod.simulator {
 	requires javafx.swing;
 	
 	exports fr.mrcraftcod.shcheduler.jfx to javafx.graphics;
+	opens fr.mrcraftcod.shcheduler to jcommander;
 }
