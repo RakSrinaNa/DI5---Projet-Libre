@@ -2,6 +2,7 @@ package fr.mrcraftcod.shcheduler.model;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Objects;
 
 /**
  * Created by Thomas Couchoud (MrCraftCod - zerderr@gmail.com) on 2019-01-21.
@@ -46,5 +47,13 @@ public class GroupStage{
 	
 	public Collection<Team> getTeams(){
 		return teams;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if(!(obj instanceof GroupStage))
+			return false;
+		GroupStage g = (GroupStage)obj;
+		return Objects.equals(g.name, name);
 	}
 }

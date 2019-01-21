@@ -1,5 +1,7 @@
 package fr.mrcraftcod.shcheduler.model;
 
+import java.util.Objects;
+
 /**
  * Created by Thomas Couchoud (MrCraftCod - zerderr@gmail.com) on 2019-01-21.
  *
@@ -21,5 +23,13 @@ public class Team{
 	
 	public String getName(){
 		return name;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if(!(obj instanceof Team))
+			return false;
+		Team t = (Team)obj;
+		return Objects.equals(t.name, name) && Objects.equals(t.gymnasium, gymnasium);
 	}
 }
