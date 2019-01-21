@@ -42,10 +42,19 @@ class TeamTest{
 	}
 	
 	@Test
-	void constructEmptyCity(){
-		final Executable executable1 = () -> new Gymnasium("gName", "", Integer.MAX_VALUE);
+	void constructEmptyName(){
+		final var gym = new Gymnasium("gName", "gCity", Integer.MAX_VALUE);
+		final Executable executable1 = () -> new Team(gym, "");
 		assertThrows(IllegalArgumentException.class, executable1);
-		final Executable executable2 = () -> new Gymnasium("gName", null, Integer.MAX_VALUE);
+		final Executable executable2 = () -> new Team(gym, null);
 		assertThrows(IllegalArgumentException.class, executable2);
+		final Executable executable3 = () -> new Team(gym, "   ");
+		assertThrows(IllegalArgumentException.class, executable3);
+	}
+	
+	@Test
+	void constructEmptyGym(){
+		final Executable executable = () -> new Team(null, "gName");
+		assertThrows(IllegalArgumentException.class, executable);
 	}
 }
