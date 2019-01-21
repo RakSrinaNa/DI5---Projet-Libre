@@ -66,9 +66,13 @@ class GymnasiumTest{
 		assertThrows(IllegalArgumentException.class, executable2);
 	}
 	
-	@Test
-	void constructNegativeCapacity(){
-		final Executable executable = () -> new Gymnasium("gName", "gCity", -1);
+	@ParameterizedTest
+	@ValueSource(ints = {
+			-1,
+			0
+	})
+	void constructNegativeCapacity(final int cap){
+		final Executable executable = () -> new Gymnasium("gName", "gCity", cap);
 		assertThrows(IllegalArgumentException.class, executable);
 	}
 }
