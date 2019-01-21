@@ -17,7 +17,6 @@ class GymnasiumTest{
 	
 	@ParameterizedTest
 	@ValueSource(ints = {
-			0,
 			1,
 			2,
 			50,
@@ -56,6 +55,8 @@ class GymnasiumTest{
 		assertThrows(IllegalArgumentException.class, executable1);
 		final Executable executable2 = () -> new Gymnasium(null, "gCity", Integer.MAX_VALUE);
 		assertThrows(IllegalArgumentException.class, executable2);
+		final Executable executable3 = () -> new Gymnasium("    ", "gCity", Integer.MAX_VALUE);
+		assertThrows(IllegalArgumentException.class, executable3);
 	}
 	
 	@Test
@@ -66,9 +67,13 @@ class GymnasiumTest{
 		assertThrows(IllegalArgumentException.class, executable2);
 	}
 	
-	@Test
-	void constructNegativeCapacity(){
-		final Executable executable = () -> new Gymnasium("gName", "gCity", -1);
+	@ParameterizedTest
+	@ValueSource(ints = {
+			-1,
+			0
+	})
+	void constructNegativeCapacity(final int cap){
+		final Executable executable = () -> new Gymnasium("gName", "gCity", cap);
 		assertThrows(IllegalArgumentException.class, executable);
 	}
 }
