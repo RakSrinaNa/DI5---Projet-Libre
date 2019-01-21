@@ -13,6 +13,10 @@ public class Team{
 	private final String name;
 	
 	public Team(final Gymnasium gymnasium, final String name){
+		if(gymnasium == null)
+			throw new IllegalArgumentException("Team gymnasium is empty");
+		if(name == null || name.isBlank())
+			throw new IllegalArgumentException("Team name is empty");
 		this.gymnasium = gymnasium;
 		this.name = name;
 	}
