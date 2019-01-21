@@ -21,7 +21,7 @@ public class Parser{
 		List<String> gymnasiumLine = Files.readAllLines(gymnasiumsCsvFile.toPath());
 		List<String> teamLine = Files.readAllLines(teamsCsvFile.toPath());
 
-		List<Gymnasium> gymnasiums = new ArrayList<>();
+		Set<Gymnasium> gymnasiums = new HashSet<>();
 		Set<GroupStage> groupStages = new HashSet<>();
 
 		for(String gym : gymnasiumLine){
