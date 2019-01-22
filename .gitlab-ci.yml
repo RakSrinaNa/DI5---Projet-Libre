@@ -20,3 +20,12 @@ test:
     - master
   script:
     - cd Planificateur && mvn $MAVEN_CLI_OPTS test
+
+code_quality:
+  stage: test
+  allow_failure: true
+  script:
+    - cd Planificateur && mvn $MAVEN_CLI_OPTS test
+  artifacts:
+    reports:
+      codequality: gl-code-quality-report.json
