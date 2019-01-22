@@ -1,5 +1,6 @@
 package fr.mrcraftcod.shcheduler;
 
+import fr.mrcraftcod.shcheduler.exceptions.IllegalCSVFormatException;
 import fr.mrcraftcod.shcheduler.exceptions.ParserException;
 import fr.mrcraftcod.shcheduler.model.Gymnasium;
 import org.junit.jupiter.api.BeforeEach;
@@ -137,5 +138,22 @@ class ParserGymnasiumsTest{
 	void getGymsEmpty(){
 		final var gyms = parser.getGymnasiums(List.of());
 		assertEquals(0, gyms.size());
+	}
+	
+	@ParameterizedTest
+	@ValueSource(strings = {
+			"/gymnasiums/invalid1.csv"
+	})
+	void getGymsInvalid(final String path){
+		final Executable executable1 = () -> parser.getGymnasiums(getLines(Parser.class.getResourceAsStream(path)));
+		try{
+			executable1.execute();
+		}
+		catch(final Throwable e){
+			if(!(e instanceof ParserException)){
+				fail("Wrong exception thrown");
+			}
+			assertEquals(IllegalCSVFormatException.class, e.getCause().getClass());
+		}
 	}
 }
