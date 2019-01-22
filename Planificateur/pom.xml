@@ -80,25 +80,17 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>3.0.0-M3</version>
-                <configuration>
-                    <argLine>
-                        --illegal-access=permit
-                    </argLine>
-                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
-                <version>0.8.3-20190117.185826-65</version>
+                <version>0.8.2</version>
                 <executions>
                     <execution>
                         <id>pre-unit-test</id>
                         <goals>
                             <goal>prepare-agent</goal>
                         </goals>
-                        <configuration>
-                            <destFile>${project.build.directory}/coverage-reports/jacoco-ut.exec</destFile>
-                        </configuration>
                     </execution>
                     <execution>
                         <id>post-unit-test</id>
@@ -106,23 +98,12 @@
                         <goals>
                             <goal>report</goal>
                         </goals>
-                        <configuration>
-                            <dataFile>${project.build.directory}/coverage-reports/jacoco-ut.exec</dataFile>
-                            <outputDirectory>${project.reporting.outputDirectory}/jacoco-ut</outputDirectory>
-                        </configuration>
                     </execution>
                 </executions>
             </plugin>
         </plugins>
     </build>
 
-    <pluginRepositories>
-        <pluginRepository>
-            <id>jacoco</id>
-            <name>Jacoco snapshots</name>
-            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-        </pluginRepository>
-    </pluginRepositories>
     <dependencies>
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
