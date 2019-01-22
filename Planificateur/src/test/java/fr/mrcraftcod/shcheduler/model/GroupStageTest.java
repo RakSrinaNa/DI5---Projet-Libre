@@ -2,6 +2,7 @@ package fr.mrcraftcod.shcheduler.model;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.function.Executable;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import java.time.LocalDate;
@@ -84,5 +85,17 @@ class GroupStageTest{
 		final var gs3 = new GroupStage("gs2");
 		assertEquals(gs1, gs2);
 		assertNotEquals(gs1, gs3);
+	}
+	
+	@Test
+	void addWrongMatch(){
+		final var gs = new GroupStage("gs");
+		final var wMatch1 = new Match(team1, new Team(new Gymnasium("gNameA", "gCityA", 2), "tNameA"), team1.getGymnasium(), date);
+		gs.addAllTeams(List.of(team1, team2));
+		final Executable executable = () -> gs.addMatch(wMatch1);
+		assertThrows(IllegalArgumentException.class, executable);
+		assertFalse(gs.addAllMatches(List.of(match1, wMatch1)));
+		assertTrue(gs.getMatches().contains(match1));
+		assertFalse(gs.getMatches().contains(wMatch1));
 	}
 }
