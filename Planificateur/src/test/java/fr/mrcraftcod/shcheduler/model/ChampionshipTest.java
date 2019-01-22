@@ -63,7 +63,7 @@ class ChampionshipTest{
 	void isGymnasiumFull(){
 		final var c = new Championship();
 		c.addAllGroupStages(List.of(gs1, gs2));
-		assertFalse(c.isGymnasiumFull(match1112.getGymnasium(), date));
+		assertTrue(c.isGymnasiumFull(match1112.getGymnasium(), date));
 		assertFalse(c.isGymnasiumFull(match2122.getGymnasium(), date));
 	}
 }
