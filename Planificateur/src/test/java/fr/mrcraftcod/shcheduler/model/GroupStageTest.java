@@ -36,6 +36,7 @@ class GroupStageTest{
 		final var gs = new GroupStage("gs");
 		gs.addMatch(match1);
 		assertTrue(gs.getMatches().contains(match1));
+		assertFalse(gs.getMatches().contains(match2));
 		gs.addMatch(match2);
 		assertTrue(gs.getMatches().contains(match1));
 		assertTrue(gs.getMatches().contains(match2));
@@ -44,7 +45,7 @@ class GroupStageTest{
 	@Test
 	void addAllMatches(){
 		final var gs = new GroupStage("gs");
-		gs.addAllMatches(List.of(match1, match2));
+		assertTrue(gs.addAllMatches(List.of(match1, match2)));
 		assertTrue(gs.getMatches().contains(match1));
 		assertTrue(gs.getMatches().contains(match2));
 	}
@@ -54,6 +55,7 @@ class GroupStageTest{
 		final var gs = new GroupStage("gs");
 		gs.addTeam(team1);
 		assertTrue(gs.getTeams().contains(team1));
+		assertFalse(gs.getTeams().contains(team2));
 		gs.addTeam(team2);
 		assertTrue(gs.getTeams().contains(team1));
 		assertTrue(gs.getTeams().contains(team2));
