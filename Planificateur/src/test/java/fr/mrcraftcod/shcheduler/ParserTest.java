@@ -58,6 +58,16 @@ class ParserTest{
 	}
 	
 	@Test
+	void getGymsBigSize1() throws IOException{
+		final var g1 = new Gymnasium("G1", "C1", Integer.MAX_VALUE);
+		
+		final var gyms = parser.getGymnasiums(Files.readAllLines(Path.of(Parser.class.getResource("/gymnasiums/bigSize1.csv").getPath())));
+		assertEquals(1, gyms.size());
+		assertTrue(gyms.contains(g1));
+		assertEquals(g1.getCapacity(), gyms.iterator().next().getCapacity());
+	}
+	
+	@Test
 	void getGroupStages(){
 	}
 	
