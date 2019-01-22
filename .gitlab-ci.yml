@@ -11,7 +11,8 @@ cache:
 build:
   stage: build
   script:
-    - cd Planificateur && mvn $MAVEN_CLI_OPTS compile
+    - cd Planificateur
+    - mvn $MAVEN_CLI_OPTS compile
 
 test:
   stage: test
@@ -19,13 +20,16 @@ test:
     - victor
     - master
   script:
-    - cd Planificateur && mvn $MAVEN_CLI_OPTS test
+    - cd Planificateur
+    - mvn $MAVEN_CLI_OPTS -B test
+    - cat target/site/jacoco/index.html
 
 code_quality:
   stage: test
   allow_failure: true
   script:
-    - cd Planificateur && mvn $MAVEN_CLI_OPTS test
+    - cd Planificateur
+    - mvn $MAVEN_CLI_OPTS test
   artifacts:
     reports:
       codequality: gl-code-quality-report.json
