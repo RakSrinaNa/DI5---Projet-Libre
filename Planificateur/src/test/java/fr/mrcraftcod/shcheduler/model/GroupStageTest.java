@@ -52,7 +52,7 @@ class GroupStageTest{
 	void addTeam(){
 		final var gs = new GroupStage("gs");
 		gs.addTeam(team1);
-		assertTrue(gs.getMatches().contains(match1));
+		assertTrue(gs.getTeams().contains(team1));
 		gs.addTeam(team2);
 		assertTrue(gs.getTeams().contains(team1));
 		assertTrue(gs.getTeams().contains(team2));
