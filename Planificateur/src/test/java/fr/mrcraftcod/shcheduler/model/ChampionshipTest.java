@@ -2,6 +2,7 @@ package fr.mrcraftcod.shcheduler.model;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.function.Executable;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -99,5 +100,12 @@ class ChampionshipTest{
 		assertTrue(championship.addAllGroupStages(groups));
 		assertEquals(1, championship.getGroupStages().stream().filter(e -> Objects.equals(e, gs1)).count());
 		assertEquals(1, championship.getGroupStages().stream().filter(e -> Objects.equals(e, gs2)).count());
+	}
+	
+	@Test
+	void addWrongGroupStage(){
+		final var championship = new Championship();
+		final Executable executable1 = () -> championship.addGroupStage(null);
+		assertThrows(IllegalArgumentException.class, executable1);
 	}
 }
