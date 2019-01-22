@@ -25,8 +25,8 @@ public class GroupStage{
 		this.matches.add(match);
 	}
 	
-	public void addAllMatches(final Collection<Match> matches){
-		this.matches.addAll(matches);
+	public boolean addAllMatches(final Collection<Match> matches){
+		return this.matches.addAll(matches);
 	}
 	
 	public void addTeam(final Team team){
