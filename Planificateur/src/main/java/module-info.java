@@ -4,7 +4,7 @@
  * @author Thomas Couchoud
  * @since 2019-01-09
  */
-module fr.mrcraftcod.simulator {
+open module fr.mrcraftcod.simulator {
 	requires annotations;
 	
 	requires org.slf4j;
@@ -17,5 +17,4 @@ module fr.mrcraftcod.simulator {
 	requires javafx.swing;
 	
 	exports fr.mrcraftcod.shcheduler.jfx to javafx.graphics;
-	opens fr.mrcraftcod.shcheduler to jcommander;
 }
