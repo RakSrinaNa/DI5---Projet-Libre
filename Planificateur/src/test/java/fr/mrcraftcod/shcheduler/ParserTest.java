@@ -43,6 +43,21 @@ class ParserTest{
 	}
 	
 	@Test
+	void getGymsDuplicates1() throws IOException{
+		final var g1 = new Gymnasium("G1", "C1", 1);
+		final var g2 = new Gymnasium("G2", "C2", 2);
+		final var g3 = new Gymnasium("G3", "C3", 3);
+		final var g4 = new Gymnasium("G4", "C4", 4);
+		
+		final var gyms = parser.getGymnasiums(Files.readAllLines(Path.of(Parser.class.getResource("/gymnasiums/duplicates1.csv").getPath())));
+		assertEquals(4, gyms.size());
+		assertTrue(gyms.contains(g1));
+		assertTrue(gyms.contains(g2));
+		assertTrue(gyms.contains(g3));
+		assertTrue(gyms.contains(g4));
+	}
+	
+	@Test
 	void getGroupStages(){
 	}
 	
