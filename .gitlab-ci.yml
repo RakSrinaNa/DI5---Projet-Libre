@@ -27,24 +27,26 @@ test:
     paths:
       - Planificateur/target/site/jacoco/
 
-code_quality:
-  stage: test
-  allow_failure: true
-  dependencies:
-    - build
-  script:
-    - cd Planificateur
-    - mvn $MAVEN_CLI_OPTS test
-  artifacts:
-    reports:
-      codequality: gl-code-quality-report.json
+#code_quality:
+#  stage: test
+#  allow_failure: true
+#  dependencies:
+#    - build
+#  script:
+#    - cd Planificateur
+#    - mvn $MAVEN_CLI_OPTS test
+#  artifacts:
+#    reports:
+#      codequality: gl-code-quality-report.json
 
 pages:
   stage: deploy
   dependencies:
     - test
   script:
-    - mv Planificateur/target/site/jacoco/ public/
+    - mkdir .public
+    - cp -r Planificateur/target/site/jacoco/* .public/
+    - mv .public public
   artifacts:
     paths:
       - public
