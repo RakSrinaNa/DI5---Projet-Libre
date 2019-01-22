@@ -29,11 +29,18 @@ public class Championship{
 	 * @param groupStage The group stage to add.
 	 */
 	public void addGroupStage(final GroupStage groupStage){
+		if(this.groupStages.contains(groupStage))
+			return;
 		this.groupStages.add(groupStage);
 	}
 	
 	public boolean addAllGroupStages(final Collection<GroupStage> groupStages){
-		return this.groupStages.addAll(groupStages);
+		return groupStages.stream().filter(m -> m != null).map(m -> {try{
+			this.addGroupStage(m);
+			return true;
+		}catch(Exception e){
+			return false;
+		}}).filter(m -> !m).count() == 0;
 	}
 	
 	public boolean isGymnasiumFull(final Gymnasium gymnasium, final LocalDate date){

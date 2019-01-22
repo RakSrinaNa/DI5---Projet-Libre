@@ -1,5 +1,7 @@
 package fr.mrcraftcod.shcheduler;
 
+import fr.mrcraftcod.shcheduler.exceptions.IllegalCSVFormatException;
+import fr.mrcraftcod.shcheduler.exceptions.ParserException;
 import fr.mrcraftcod.shcheduler.model.*;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -42,16 +44,33 @@ public class Parser{
 	}
 	
 	public Collection<Gymnasium> getGymnasiums(Collection<String> gymnasiumLines){
-		final var gyms = new ArrayList<Gymnasium>();
+		final var gyms = new HashSet<Gymnasium>();
 		for(String gym : gymnasiumLines){
-			String[] elements = gym.split(";|,");
-			gyms.add(new Gymnasium(elements[0], elements[2], Integer.parseInt(elements[1])));
+			String[] elements = gym.split(";|,", -1);
+
+			if(elements.length != 3)
+			    throw new ParserException("Wrong format", new IllegalCSVFormatException("No 3 elements"));
+
+			int cap;
+			try{
+				cap = Integer.parseInt(elements[1]);
+			}catch(NumberFormatException e){
+				throw new ParserException("Invalid gymnasium capacity", e);
+			}
+            String name = elements[0];
+            String city = elements[2];
+
+            try {
+                gyms.add(new Gymnasium(name, city, cap));
+            }catch(IllegalArgumentException e){
+                throw new ParserException("Gymnasium parsing error", e);
+            }
 		}
 		return gyms;
 	}
 	
 	public Collection<GroupStage> getGroupStages(Collection<Gymnasium> gymnasiums, Collection<String> teamLines){
-		final var groups = new ArrayList<GroupStage>();
+		final var groups = new HashSet<GroupStage>();
 		for(String team : teamLines){
 			String[] elements = team.split(";");
 			
