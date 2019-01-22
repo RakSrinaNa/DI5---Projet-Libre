@@ -4,6 +4,8 @@ import com.beust.jcommander.JCommander;
 import com.beust.jcommander.ParameterException;
 import fr.mrcraftcod.shcheduler.CLIParameters;
 import fr.mrcraftcod.shcheduler.Parser;
+import fr.mrcraftcod.shcheduler.exceptions.ParserException;
+import fr.mrcraftcod.shcheduler.model.Championship;
 import javafx.application.Application;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.Parent;
@@ -19,6 +21,8 @@ import java.util.Objects;
 import java.util.function.Consumer;
 
 /**
+ * Main application window.
+ * <p>
  * Created by Thomas Couchoud (MrCraftCod - zerderr@gmail.com) on 2019-01-17.
  *
  * @author Thomas Couchoud
@@ -27,6 +31,7 @@ import java.util.function.Consumer;
 public class MainApplication extends Application{
 	private static final Logger LOGGER = LoggerFactory.getLogger(MainApplication.class);
 	private Stage stage;
+	private Championship championship;
 	
 	@Override
 	public void start(final Stage stage) throws Exception{
@@ -42,6 +47,72 @@ public class MainApplication extends Application{
 		Objects.requireNonNull(this.getOnStageDisplayed()).accept(stage);
 	}
 	
+	/**
+	 * Main call.
+	 *
+	 * @param args See {@link CLIParameters}.
+	 */
+	public static void main(final String[] args){
+		launch(args);
+	}
+	
+	/**
+	 * Build the scene.
+	 *
+	 * @param stage The stage the scene is in.
+	 *
+	 * @return The scene.
+	 */
+	private Scene buildScene(final Stage stage){
+		return new Scene(createContent(stage), 640, 640);
+	}
+	
+	/**
+	 * Create the scene content.
+	 *
+	 * @param stage The stage the scene is in.
+	 *
+	 * @return The root content.
+	 */
+	private Parent createContent(final Stage stage){
+		final var root = new VBox();
+		return root;
+	}
+	
+	/**
+	 * Get the title of the frame.
+	 *
+	 * @return The title.
+	 */
+	private String getFrameTitle(){
+		return "Scheduler";
+	}
+	
+	/**
+	 * Get the icon to set for the application.
+	 *
+	 * @return The application icon to set.
+	 */
+	private Image getIcon(){
+		return null;
+	}
+	
+	/**
+	 * Set the icon of the application.
+	 *
+	 * @param icon The icon to set.
+	 */
+	private void setIcon(final Image icon){
+		this.stage.getIcons().clear();
+		this.stage.getIcons().add(icon);
+		Taskbar.getTaskbar().setIconImage(SwingFXUtils.fromFXImage(icon, null));
+	}
+	
+	/**
+	 * Called when the stage is displayed.
+	 *
+	 * @return The consumer to execute.
+	 */
 	@SuppressWarnings("Duplicates")
 	private Consumer<Stage> getOnStageDisplayed(){
 		return stage -> {
@@ -54,43 +125,22 @@ public class MainApplication extends Application{
 				e.usage();
 				System.exit(1);
 			}
-			try {
-				new Parser(';').parse(parameters.getCsvGymnasiumConfigFile().toPath(), parameters.getCsvTeamConfigFile().toPath());
-			} catch (IOException e) {
+			try{
+				championship = new Parser(';').parse(parameters.getCsvGymnasiumConfigFile().toPath(), parameters.getCsvTeamConfigFile().toPath());
+			}
+			catch(ParserException | IOException e){
 				e.printStackTrace();
 			}
-			//TODO: Load data
+			//TODO: Load data into view
 		};
 	}
 	
-	private void setIcon(final Image icon){
-		this.stage.getIcons().clear();
-		this.stage.getIcons().add(icon);
-		Taskbar.getTaskbar().setIconImage(SwingFXUtils.fromFXImage(icon, null));
-	}
-	
-	public Image getIcon(){
-		return null;
-	}
-	
-	public Scene buildScene(final Stage stage){
-		return new Scene(createContent(stage), 640, 640);
-	}
-	
-	public String getFrameTitle(){
-		return "Shcheduler";
-	}
-	
-	public Parent createContent(final Stage stage){
-		final var root = new VBox();
-		return root;
-	}
-	
+	/**
+	 * Get the stage.
+	 *
+	 * @return The stage.
+	 */
 	public Stage getStage(){
 		return stage;
-	}
-	
-	public static void main(final String[] args){
-		launch(args);
 	}
 }

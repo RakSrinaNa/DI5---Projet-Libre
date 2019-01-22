@@ -64,8 +64,8 @@ class GroupStageTest{
 		matches.add(match2);
 		matches.add(null);
 		assertTrue(gs.addAllMatches(matches));
-		assertTrue(gs.getMatches().contains(match1));
-		assertTrue(gs.getMatches().contains(match2));
+		assertEquals(1, gs.getMatches().stream().filter(e -> Objects.equals(e, match1)).count());
+		assertEquals(1, gs.getMatches().stream().filter(e -> Objects.equals(e, match2)).count());
 	}
 	
 	@Test
