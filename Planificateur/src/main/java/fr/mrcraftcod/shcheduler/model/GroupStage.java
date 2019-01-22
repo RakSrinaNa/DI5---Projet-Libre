@@ -32,12 +32,13 @@ public class GroupStage{
 	}
 	
 	public boolean addAllMatches(final Collection<Match> matches){
-		matches.stream().forEach(m -> try{
-
+	    int size = this.matches.size() + matches.size();
+		return matches.stream().map(m -> {try{
+            this.addMatch(m);
+            return true;
 		}catch(Exception e){
-
-		});
-		return this.matches.addAll(matches);
+		    return false;
+        }}).filter(m -> !m).count() == 0;
 	}
 	
 	public void addTeam(final Team team){
