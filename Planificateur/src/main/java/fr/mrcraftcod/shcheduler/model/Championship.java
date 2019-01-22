@@ -22,11 +22,11 @@ public class Championship{
 		this.groupStages.add(groupStage);
 	}
 	
-	public void addAllGroupStage(final Collection<GroupStage> groupStages){
+	public void addAllGroupStages(final Collection<GroupStage> groupStages){
 		this.groupStages.addAll(groupStages);
 	}
 	
-	public boolean isGymnasimFull(final Gymnasium gymnasium, final LocalDate date){
+	public boolean isGymnasiumFull(final Gymnasium gymnasium, final LocalDate date){
 		for(GroupStage group : groupStages)
 			for(Match match : group.getMatches())
 				if(Objects.equals(gymnasium, match.getGymnasium()) && Objects.equals(date, match.getDate()))
