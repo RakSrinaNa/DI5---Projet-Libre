@@ -6,7 +6,9 @@ import org.junit.jupiter.api.function.Executable;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -34,18 +36,34 @@ class GroupStageTest{
 	@Test
 	void addMatch(){
 		final var gs = new GroupStage("gs");
+		gs.addAllTeams(List.of(team1, team2));
 		gs.addMatch(match1);
 		assertTrue(gs.getMatches().contains(match1));
 		assertFalse(gs.getMatches().contains(match2));
 		gs.addMatch(match2);
 		assertTrue(gs.getMatches().contains(match1));
 		assertTrue(gs.getMatches().contains(match2));
+		gs.addMatch(match1);
+		gs.addMatch(match2);
+		assertEquals(1, gs.getMatches().stream().filter(e -> Objects.equals(e, match1)).count());
+		assertEquals(1, gs.getMatches().stream().filter(e -> Objects.equals(e, match2)).count());
 	}
 	
 	@Test
 	void addAllMatches(){
 		final var gs = new GroupStage("gs");
+		gs.addAllTeams(List.of(team1, team2));
 		assertTrue(gs.addAllMatches(List.of(match1, match2)));
+		assertTrue(gs.getMatches().contains(match1));
+		assertTrue(gs.getMatches().contains(match2));
+		assertTrue(gs.addAllMatches(List.of(match1, match2)));
+		assertEquals(1, gs.getMatches().stream().filter(e -> Objects.equals(e, match1)).count());
+		assertEquals(1, gs.getMatches().stream().filter(e -> Objects.equals(e, match2)).count());
+		final var matches = new ArrayList<Match>();
+		matches.add(match1);
+		matches.add(match2);
+		matches.add(null);
+		assertTrue(gs.addAllMatches(matches));
 		assertTrue(gs.getMatches().contains(match1));
 		assertTrue(gs.getMatches().contains(match2));
 	}
@@ -59,6 +77,10 @@ class GroupStageTest{
 		gs.addTeam(team2);
 		assertTrue(gs.getTeams().contains(team1));
 		assertTrue(gs.getTeams().contains(team2));
+		gs.addTeam(team1);
+		gs.addTeam(team2);
+		assertEquals(1, gs.getTeams().stream().filter(e -> Objects.equals(e, team1)).count());
+		assertEquals(1, gs.getTeams().stream().filter(e -> Objects.equals(e, team2)).count());
 	}
 	
 	@Test
@@ -67,6 +89,9 @@ class GroupStageTest{
 		gs.addAllTeams(List.of(team1, team2));
 		assertTrue(gs.getTeams().contains(team1));
 		assertTrue(gs.getTeams().contains(team2));
+		gs.addAllTeams(List.of(team1, team2));
+		assertEquals(1, gs.getTeams().stream().filter(e -> Objects.equals(e, team1)).count());
+		assertEquals(1, gs.getTeams().stream().filter(e -> Objects.equals(e, team2)).count());
 	}
 	
 	@ParameterizedTest
@@ -92,10 +117,13 @@ class GroupStageTest{
 	@Test
 	void addWrongMatch(){
 		final var gs = new GroupStage("gs");
+		gs.addAllTeams(List.of(team1, team2));
 		final var wMatch1 = new Match(team1, new Team(new Gymnasium("gNameA", "gCityA", 2), "tNameA"), team1.getGymnasium(), date);
 		gs.addAllTeams(List.of(team1, team2));
-		final Executable executable = () -> gs.addMatch(wMatch1);
-		assertThrows(IllegalArgumentException.class, executable);
+		final Executable executable1 = () -> gs.addMatch(null);
+		assertThrows(IllegalArgumentException.class, executable1);
+		final Executable executable2 = () -> gs.addMatch(wMatch1);
+		assertThrows(IllegalArgumentException.class, executable2);
 		assertFalse(gs.addAllMatches(List.of(match1, wMatch1)));
 		assertTrue(gs.getMatches().contains(match1));
 		assertFalse(gs.getMatches().contains(wMatch1));
