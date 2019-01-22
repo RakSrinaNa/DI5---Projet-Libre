@@ -32,8 +32,7 @@ public class GroupStage{
 	}
 	
 	public boolean addAllMatches(final Collection<Match> matches){
-	    int size = this.matches.size() + matches.size();
-		return matches.stream().map(m -> {try{
+		return matches.stream().filter(m -> m != null).map(m -> {try{
             this.addMatch(m);
             return true;
 		}catch(Exception e){
