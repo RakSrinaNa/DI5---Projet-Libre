@@ -22,7 +22,7 @@ public class Gymnasium{
 	 * @param city     The city.
 	 * @param capacity The capacity.
 	 *
-	 * @throws IllegalArgumentException if the name is empty, or the city is empty or the capacity isn't positive.
+	 * @throws IllegalArgumentException If the name is empty, or the city is empty or the capacity isn't positive.
 	 */
 	public Gymnasium(final String name, final String city, final int capacity) throws IllegalArgumentException{
 		if(name == null || name.isBlank()){

@@ -20,7 +20,7 @@ public class Team{
 	 * @param gymnasium The gymnasium the team is associated with.
 	 * @param name      The name.
 	 *
-	 * @throws IllegalArgumentException if the gymnasium is null or if the name is empty.
+	 * @throws IllegalArgumentException If the gymnasium is null or if the name is empty.
 	 */
 	public Team(final Gymnasium gymnasium, final String name) throws IllegalArgumentException{
 		if(gymnasium == null){

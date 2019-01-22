@@ -27,7 +27,7 @@ public class Match{
 	 * @param gymnasium The gymnasium the match is in.
 	 * @param date      The date of the match.
 	 *
-	 * @throws IllegalArgumentException if a team is null or if the gymnasium isn't one of the two teams.
+	 * @throws IllegalArgumentException If a team is null or if the gymnasium isn't one of the two teams.
 	 */
 	public Match(final Team team1, final Team team2, final Gymnasium gymnasium, final LocalDate date) throws IllegalArgumentException{
 		if(team1 == null){
