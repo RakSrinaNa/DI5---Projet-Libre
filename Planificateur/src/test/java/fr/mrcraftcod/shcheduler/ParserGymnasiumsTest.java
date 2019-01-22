@@ -12,6 +12,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.Collection;
+import java.util.List;
 import java.util.stream.Collectors;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -130,5 +131,11 @@ class ParserGymnasiumsTest{
 			}
 			assertEquals(IllegalArgumentException.class, e.getCause().getClass());
 		}
+	}
+	
+	@Test
+	void getGymsEmpty(){
+		final var gyms = parser.getGymnasiums(List.of());
+		assertEquals(0, gyms.size());
 	}
 }
