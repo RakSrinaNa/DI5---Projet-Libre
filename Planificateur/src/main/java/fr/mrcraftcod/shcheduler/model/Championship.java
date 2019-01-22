@@ -56,18 +56,7 @@ public class Championship{
 	 * @return True if full, false otherwise.
 	 */
 	public boolean isGymnasiumFull(final Gymnasium gymnasium, final LocalDate date){
-		int found = 0;
-		for(GroupStage group : groupStages){
-			for(Match match : group.getMatches()){
-				if(Objects.equals(gymnasium, match.getGymnasium()) && Objects.equals(date, match.getDate())){
-					found++;
-				}
-				if(found >= gymnasium.getCapacity()){
-					return true;
-				}
-			}
-		}
-		return false;
+		return groupStages.stream().flatMap(gs -> gs.getMatches().stream()).filter(m -> Objects.equals(gymnasium, m.getGymnasium()) && Objects.equals(date, m.getDate())).count() >= gymnasium.getCapacity();
 	}
 	
 	/**
