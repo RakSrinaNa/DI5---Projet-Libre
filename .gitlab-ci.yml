@@ -26,6 +26,7 @@ test:
   artifacts:
     paths:
       - Planificateur/target/site/jacoco/
+    expire_in: 30 days
 
 #code_quality:
 #  stage: test
@@ -50,6 +51,6 @@ pages:
   artifacts:
     paths:
       - public
-    expire_in: 30 days
+#    expire_in: 30 days
   only:
     - master
