@@ -1,5 +1,6 @@
 package fr.mrcraftcod.shcheduler;
 
+import fr.mrcraftcod.shcheduler.exceptions.IllegalCSVFormatException;
 import fr.mrcraftcod.shcheduler.exceptions.ParserException;
 import fr.mrcraftcod.shcheduler.model.Gymnasium;
 import org.junit.jupiter.api.BeforeEach;
@@ -12,6 +13,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.Collection;
+import java.util.List;
 import java.util.stream.Collectors;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -129,6 +131,29 @@ class ParserGymnasiumsTest{
 				fail("Wrong exception thrown");
 			}
 			assertEquals(IllegalArgumentException.class, e.getCause().getClass());
+		}
+	}
+	
+	@Test
+	void getGymsEmpty(){
+		final var gyms = parser.getGymnasiums(List.of());
+		assertEquals(0, gyms.size());
+	}
+	
+	@ParameterizedTest
+	@ValueSource(strings = {
+			"/gymnasiums/invalid1.csv"
+	})
+	void getGymsInvalid(final String path){
+		final Executable executable1 = () -> parser.getGymnasiums(getLines(Parser.class.getResourceAsStream(path)));
+		try{
+			executable1.execute();
+		}
+		catch(final Throwable e){
+			if(!(e instanceof ParserException)){
+				fail("Wrong exception thrown");
+			}
+			assertEquals(IllegalCSVFormatException.class, e.getCause().getClass());
 		}
 	}
 }
