@@ -39,7 +39,7 @@ public class Parser{
 	public Collection<Gymnasium> getGymnasiums(List<String> gymnasiumLines){
 		final var gyms = new ArrayList<Gymnasium>();
 		for(String gym : gymnasiumLines){
-			String[] elements = gym.split(";");
+			String[] elements = gym.split(";|,");
 			gyms.add(new Gymnasium(elements[0], elements[2], Integer.parseInt(elements[1])));
 		}
 		return gyms;
