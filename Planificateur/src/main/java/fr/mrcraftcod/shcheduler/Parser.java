@@ -1,9 +1,9 @@
 package fr.mrcraftcod.shcheduler;
 
 import fr.mrcraftcod.shcheduler.model.*;
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.*;
 
 /**
@@ -13,14 +13,20 @@ import java.util.*;
  * @since 2019-01-21
  */
 public class Parser{
-	public static Championship parse(final File gymnasiumsCsvFile, final File teamsCsvFile) throws IOException{
-		List<String> gymnasiumLines = Files.readAllLines(gymnasiumsCsvFile.toPath());
-		List<String> teamLines = Files.readAllLines(teamsCsvFile.toPath());
+	private final char csvSeparator;
+	
+	public Parser(final char csvSeparator){
+		this.csvSeparator = csvSeparator;
+	}
+	
+	public Championship parse(final Path gymnasiumsCsvFile, final Path teamsCsvFile) throws IOException{
+		List<String> gymnasiumLines = Files.readAllLines(gymnasiumsCsvFile);
+		List<String> teamLines = Files.readAllLines(teamsCsvFile);
 		
 		Set<Gymnasium> gymnasiums = new HashSet<>();
 		Set<GroupStage> groupStages = new HashSet<>();
 		
-		gymnasiums.addAll(getGyms(gymnasiumLines));
+		gymnasiums.addAll(getGymnasiums(gymnasiumLines));
 		groupStages.addAll(getGroupStages(gymnasiums, teamLines));
 		buildMatches(groupStages);
 		
@@ -30,7 +36,7 @@ public class Parser{
 		return championship;
 	}
 	
-	public static Collection<Gymnasium> getGyms(List<String> gymnasiumLines){
+	public Collection<Gymnasium> getGymnasiums(List<String> gymnasiumLines){
 		final var gyms = new ArrayList<Gymnasium>();
 		for(String gym : gymnasiumLines){
 			String[] elements = gym.split(";");
@@ -39,7 +45,7 @@ public class Parser{
 		return gyms;
 	}
 	
-	public static Collection<GroupStage> getGroupStages(Collection<Gymnasium> gymnasiums, List<String> teamLines){
+	public Collection<GroupStage> getGroupStages(Collection<Gymnasium> gymnasiums, List<String> teamLines){
 		final var groups = new ArrayList<GroupStage>();
 		for(String team : teamLines){
 			String[] elements = team.split(";");
@@ -54,7 +60,7 @@ public class Parser{
 		return groups;
 	}
 	
-	public static void buildMatches(Collection<GroupStage> groupStages){
+	public void buildMatches(Collection<GroupStage> groupStages){
 		for(GroupStage group : groupStages){
 			for(Team team1 : group.getTeams()){
 				for(Team team2 : group.getTeams()){

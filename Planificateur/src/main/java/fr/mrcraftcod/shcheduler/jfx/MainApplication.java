@@ -55,7 +55,7 @@ public class MainApplication extends Application{
 				System.exit(1);
 			}
 			try {
-				Parser.parse(parameters.getCsvGymnasiumConfigFile(), parameters.getCsvTeamConfigFile());
+				new Parser(';').parse(parameters.getCsvGymnasiumConfigFile().toPath(), parameters.getCsvTeamConfigFile().toPath());
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
