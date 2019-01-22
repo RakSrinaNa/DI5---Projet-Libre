@@ -1,0 +1,7 @@
+*.img
+
+Planificateur/\.idea/
+Planificateur/log/
+Planificateur/target/
+
+*.iml

@@ -1,0 +1,53 @@
+image: maven:3.6.0-jdk-11-slim
+
+variables:
+  MAVEN_OPTS: "-Dmaven.repo.local=.m2/repository"
+
+cache:
+  paths:
+    - .m2/repository/
+    - Planificateur/target/
+
+build:
+  stage: build
+  script:
+    - cd Planificateur
+    - mvn $MAVEN_CLI_OPTS compile
+
+test:
+  stage: test
+  dependencies:
+    - build
+  script:
+    - cd Planificateur
+    - mvn $MAVEN_CLI_OPTS -B test
+    - awk -F"," '{ instructions += $4 + $5; covered += $5 } END { print covered, "/", instructions, "instructions covered"; print 100*covered/instructions, "% covered" }' target/site/jacoco/jacoco.csv
+  coverage: '/\d+.\d+ \% covered/'
+  artifacts:
+    paths:
+      - Planificateur/target/site/jacoco/
+
+code_quality:
+  stage: test
+  allow_failure: true
+  dependencies:
+    - build
+  script:
+    - cd Planificateur
+    - mvn $MAVEN_CLI_OPTS test
+  artifacts:
+    reports:
+      codequality: gl-code-quality-report.json
+
+pages:
+  stage: deploy
+  dependencies:
+    - test
+  script:
+    - mv Planificateur/target/site/jacoco/ public/
+  artifacts:
+    paths:
+      - public
+    expire_in: 30 days
+  only:
+    - master
