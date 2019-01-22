@@ -38,7 +38,7 @@ public class GroupStage{
 	 */
 	public boolean addAllMatches(final Collection<Match> matches){
 		//noinspection ReplaceInefficientStreamCount
-		return matches.stream().map(m -> {
+		return matches.stream().filter(m -> m != null).map(m -> {
 			try{
 				this.addMatch(m);
 				return true;

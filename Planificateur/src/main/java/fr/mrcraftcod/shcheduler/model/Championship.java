@@ -32,6 +32,10 @@ public class Championship{
 	 * @throws IllegalArgumentException If the group stage is null.
 	 */
 	public void addGroupStage(final GroupStage groupStage) throws IllegalArgumentException{
+		if(groupStage == null)
+			throw new IllegalArgumentException("Championship GroupStage is null");
+		if(this.groupStages.contains(groupStage))
+			return;
 		this.groupStages.add(groupStage);
 	}
 	
@@ -44,7 +48,15 @@ public class Championship{
 	 * @return True if all elements were added, false otherwise.
 	 */
 	public boolean addAllGroupStages(final Collection<GroupStage> groupStages){
-		return this.groupStages.addAll(groupStages);
+		return groupStages.stream().filter(m -> m != null).map(m -> {
+			try{
+				this.addGroupStage(m);
+				return true;
+			}
+			catch(Exception e){
+				return false;
+			}
+		}).filter(m -> !m).count() == 0;
 	}
 	
 	/**
