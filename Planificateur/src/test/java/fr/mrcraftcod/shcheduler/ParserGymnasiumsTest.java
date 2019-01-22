@@ -24,11 +24,13 @@ import static org.junit.jupiter.api.Assertions.*;
  * @since 2019-01-22
  */
 class ParserGymnasiumsTest{
-	private Parser parser;
+	private Parser parserComma;
+	private Parser parserSemicolon;
 	
 	@BeforeEach
 	void setUp(){
-		parser = new Parser(',');
+		parserComma = new Parser(',');
+		parserSemicolon = new Parser(';');
 	}
 	
 	@Test
@@ -38,12 +40,21 @@ class ParserGymnasiumsTest{
 		final var g3 = new Gymnasium("G3", "C3", 3);
 		final var g4 = new Gymnasium("G4", "C4", 4);
 		
-		final var gyms = parser.getGymnasiums(getLines(Parser.class.getResourceAsStream("/gymnasiums/valid1.csv")));
+		final var gyms = parserComma.getGymnasiums(getLines(Parser.class.getResourceAsStream("/gymnasiums/valid1.csv")));
 		assertEquals(4, gyms.size());
 		assertTrue(gyms.contains(g1));
 		assertTrue(gyms.contains(g2));
 		assertTrue(gyms.contains(g3));
 		assertTrue(gyms.contains(g4));
+	}
+	
+	@Test
+	void getGymsValid2(){
+		final var g1 = new Gymnasium("G1,1", "C1", 1);
+		
+		final var gyms = parserSemicolon.getGymnasiums(getLines(Parser.class.getResourceAsStream("/gymnasiums/valid1.csv")));
+		assertEquals(1, gyms.size());
+		assertTrue(gyms.contains(g1));
 	}
 	
 	private Collection<String> getLines(final InputStream is){
@@ -57,7 +68,7 @@ class ParserGymnasiumsTest{
 		final var g3 = new Gymnasium("G3", "C3", 3);
 		final var g4 = new Gymnasium("G4", "C4", 4);
 		
-		final var gyms = parser.getGymnasiums(getLines(Parser.class.getResourceAsStream("/gymnasiums/duplicates1.csv")));
+		final var gyms = parserComma.getGymnasiums(getLines(Parser.class.getResourceAsStream("/gymnasiums/duplicates1.csv")));
 		assertEquals(4, gyms.size());
 		assertTrue(gyms.contains(g1));
 		assertTrue(gyms.contains(g2));
@@ -67,7 +78,7 @@ class ParserGymnasiumsTest{
 	
 	@Test
 	void getGymsBigSize1(){
-		final Executable executable1 = () -> parser.getGymnasiums(getLines(Parser.class.getResourceAsStream("/gymnasiums/bigSize1.csv")));
+		final Executable executable1 = () -> parserComma.getGymnasiums(getLines(Parser.class.getResourceAsStream("/gymnasiums/bigSize1.csv")));
 		try{
 			executable1.execute();
 		}
@@ -84,7 +95,7 @@ class ParserGymnasiumsTest{
 			"/gymnasiums/invalidSize1.csv"
 	})
 	void getGymsInvalidSizes(final String path){
-		final Executable executable1 = () -> parser.getGymnasiums(getLines(Parser.class.getResourceAsStream(path)));
+		final Executable executable1 = () -> parserComma.getGymnasiums(getLines(Parser.class.getResourceAsStream(path)));
 		try{
 			executable1.execute();
 		}
@@ -102,7 +113,7 @@ class ParserGymnasiumsTest{
 			"/gymnasiums/invalidSize3.csv"
 	})
 	void getGymsInvalidSizes2(final String path){
-		final Executable executable1 = () -> parser.getGymnasiums(getLines(Parser.class.getResourceAsStream(path)));
+		final Executable executable1 = () -> parserComma.getGymnasiums(getLines(Parser.class.getResourceAsStream(path)));
 		try{
 			executable1.execute();
 		}
@@ -120,7 +131,7 @@ class ParserGymnasiumsTest{
 			"/gymnasiums/invalidCity2.csv"
 	})
 	void getGymsInvalidCities(final String path){
-		final Executable executable1 = () -> parser.getGymnasiums(getLines(Parser.class.getResourceAsStream(path)));
+		final Executable executable1 = () -> parserComma.getGymnasiums(getLines(Parser.class.getResourceAsStream(path)));
 		try{
 			executable1.execute();
 		}
@@ -138,7 +149,7 @@ class ParserGymnasiumsTest{
 			"/gymnasiums/invalidName2.csv"
 	})
 	void getGymsInvalidNames(final String path){
-		final Executable executable1 = () -> parser.getGymnasiums(getLines(Parser.class.getResourceAsStream(path)));
+		final Executable executable1 = () -> parserComma.getGymnasiums(getLines(Parser.class.getResourceAsStream(path)));
 		try{
 			executable1.execute();
 		}
@@ -152,7 +163,7 @@ class ParserGymnasiumsTest{
 	
 	@Test
 	void getGymsEmpty(){
-		final var gyms = parser.getGymnasiums(List.of());
+		final var gyms = parserComma.getGymnasiums(List.of());
 		assertEquals(0, gyms.size());
 	}
 	
@@ -161,7 +172,7 @@ class ParserGymnasiumsTest{
 			"/gymnasiums/invalid1.csv"
 	})
 	void getGymsInvalid(final String path){
-		final Executable executable1 = () -> parser.getGymnasiums(getLines(Parser.class.getResourceAsStream(path)));
+		final Executable executable1 = () -> parserComma.getGymnasiums(getLines(Parser.class.getResourceAsStream(path)));
 		try{
 			executable1.execute();
 		}
