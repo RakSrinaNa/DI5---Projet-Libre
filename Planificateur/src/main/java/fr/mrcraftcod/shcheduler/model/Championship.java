@@ -24,6 +24,16 @@ public class Championship{
 	}
 	
 	/**
+	 * Add a collection group stage.
+	 * If the group stage already exists, it won't be added again.
+	 *
+	 * @param groupStages The groups stages to add.
+	 */
+	public void addAllGroupStages(final Collection<GroupStage> groupStages){
+		groupStages.stream().filter(Objects::nonNull).forEach(this::addGroupStage);
+	}
+	
+	/**
 	 * Add a group stage.
 	 * If the group stage already exists, it won't be added again.
 	 *
@@ -32,31 +42,12 @@ public class Championship{
 	 * @throws IllegalArgumentException If the group stage is null.
 	 */
 	public void addGroupStage(final GroupStage groupStage) throws IllegalArgumentException{
-		if(groupStage == null)
+		if(groupStage == null){
 			throw new IllegalArgumentException("Championship GroupStage is null");
-		if(this.groupStages.contains(groupStage))
-			return;
-		this.groupStages.add(groupStage);
-	}
-	
-	/**
-	 * Add a collection group stage.
-	 * If the group stage already exists, it won't be added again.
-	 *
-	 * @param groupStages The groups stages to add.
-	 *
-	 * @return True if all elements were added, false otherwise.
-	 */
-	public boolean addAllGroupStages(final Collection<GroupStage> groupStages){
-		return groupStages.stream().filter(m -> m != null).map(m -> {
-			try{
-				this.addGroupStage(m);
-				return true;
-			}
-			catch(Exception e){
-				return false;
-			}
-		}).filter(m -> !m).count() == 0;
+		}
+		if(!this.groupStages.contains(groupStage)){
+			this.groupStages.add(groupStage);
+		}
 	}
 	
 	/**
@@ -68,7 +59,7 @@ public class Championship{
 	 * @return True if full, false otherwise.
 	 */
 	public boolean isGymnasiumFull(final Gymnasium gymnasium, final LocalDate date){
-		return groupStages.stream().flatMap(gs -> gs.getMatches().stream()).filter(m -> Objects.equals(gymnasium, m.getGymnasium()) && Objects.equals(date, m.getDate())).count() >= gymnasium.getCapacity();
+		return this.groupStages.stream().flatMap(groupStage -> groupStage.getMatches().stream()).filter(match -> Objects.equals(gymnasium, match.getGymnasium()) && Objects.equals(date, match.getDate())).count() >= gymnasium.getCapacity();
 	}
 	
 	/**
@@ -77,6 +68,6 @@ public class Championship{
 	 * @return The group stages.
 	 */
 	public Collection<GroupStage> getGroupStages(){
-		return groupStages;
+		return this.groupStages;
 	}
 }

@@ -20,7 +20,7 @@ public class GroupStage{
 	/**
 	 * Constructor.
 	 *
-	 * @param name The name of the group satge.
+	 * @param name The name of the group stage.
 	 */
 	public GroupStage(final String name){
 		this.name = name;
@@ -29,7 +29,7 @@ public class GroupStage{
 	}
 	
 	/**
-	 * Add a collection matches.
+	 * Add a collection of matches.
 	 * If the match already exists, it won't be added again.
 	 *
 	 * @param matches The matches to add.
@@ -38,7 +38,7 @@ public class GroupStage{
 	 */
 	public boolean addAllMatches(final Collection<Match> matches){
 		//noinspection ReplaceInefficientStreamCount
-		return matches.stream().filter(m -> m != null).map(m -> {
+		return matches.stream().filter(Objects::nonNull).map(m -> {
 			try{
 				this.addMatch(m);
 				return true;
@@ -59,50 +59,72 @@ public class GroupStage{
 	 * @throws IllegalArgumentException If the match is null or if the teams participating in it are not in this group stage.
 	 */
 	public void addMatch(final Match match) throws IllegalArgumentException{
-		if(match == null){
+		if(Objects.isNull(match)){
 			throw new IllegalArgumentException("GroupStage match is null");
 		}
-		if(matches.contains(match)){
-			return;
-		}
-		if(!(teams.contains(match.getTeam1()) && teams.contains(match.getTeam2()))){
+		if(!teams.contains(match.getTeam1()) || !teams.contains(match.getTeam2())){
 			throw new IllegalArgumentException("GroupStage match for wrong team");
 		}
-		this.matches.add(match);
+		if(!matches.contains(match)){
+			this.matches.add(match);
+		}
 	}
 	
+	/**
+	 * Add a collection of teams.
+	 * If the team already exists, it won't be added again.
+	 *
+	 * @param teams The teams to add.
+	 */
+	public void addAllTeams(final Collection<Team> teams){
+		teams.stream().filter(Objects::nonNull).forEach(this::addTeam);
+	}
+	
+	/**
+	 * Add a team.
+	 * <p>
+	 * If the team is already in the list, it won't be added again.
+	 *
+	 * @param team The team to add.
+	 *
+	 * @throws IllegalArgumentException If the team is null.
+	 */
 	public void addTeam(final Team team){
 		if(team == null){
 			throw new IllegalArgumentException("GroupStage Team is null");
 		}
-		if(teams.contains(team)){
-			return;
+		if(!teams.contains(team)){
+			this.teams.add(team);
 		}
-		this.teams.add(team);
-	}
-	
-	public void addAllTeams(final Collection<Team> teams){
-		teams.stream().forEach(t -> this.addTeam(t));
-	}
-	
-	public Collection<Match> getMatches(){
-		return matches;
-	}
-	
-	public String getName(){
-		return name;
-	}
-	
-	public Collection<Team> getTeams(){
-		return teams;
 	}
 	
 	@Override
-	public boolean equals(Object obj){
-		if(!(obj instanceof GroupStage)){
-			return false;
-		}
-		GroupStage g = (GroupStage) obj;
-		return Objects.equals(g.name, name);
+	public boolean equals(final Object obj){
+		return obj instanceof GroupStage && Objects.equals(((GroupStage) obj).getName(), this.getName());
+	}
+	
+	/**
+	 * Get the name of the group stage.
+	 * @return The name.
+	 */
+	public String getName(){
+		return this.name;
+	}
+	
+	/**
+	 * Get the matches.
+	 *
+	 * @return The matches.
+	 */
+	public Collection<Match> getMatches(){
+		return this.matches;
+	}
+	
+	/**
+	 * Get the teams.
+	 * @return The teams.
+	 */
+	public Collection<Team> getTeams(){
+		return this.teams;
 	}
 }

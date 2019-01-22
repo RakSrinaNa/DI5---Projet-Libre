@@ -87,17 +87,17 @@ class ChampionshipTest{
 	@Test
 	void addAllGroupStageDuplicate(){
 		final var championship = new Championship();
-		assertTrue(championship.addAllGroupStages(List.of(gs1, gs2)));
+		championship.addAllGroupStages(List.of(gs1, gs2));
 		assertTrue(championship.getGroupStages().contains(gs1));
 		assertTrue(championship.getGroupStages().contains(gs2));
-		assertTrue(championship.addAllGroupStages(List.of(gs1, gs2)));
+		championship.addAllGroupStages(List.of(gs1, gs2));
 		assertEquals(1, championship.getGroupStages().stream().filter(e -> Objects.equals(e, gs1)).count());
 		assertEquals(1, championship.getGroupStages().stream().filter(e -> Objects.equals(e, gs2)).count());
 		final var groups = new ArrayList<GroupStage>();
 		groups.add(gs1);
 		groups.add(gs2);
 		groups.add(null);
-		assertTrue(championship.addAllGroupStages(groups));
+		championship.addAllGroupStages(groups);
 		assertEquals(1, championship.getGroupStages().stream().filter(e -> Objects.equals(e, gs1)).count());
 		assertEquals(1, championship.getGroupStages().stream().filter(e -> Objects.equals(e, gs2)).count());
 	}

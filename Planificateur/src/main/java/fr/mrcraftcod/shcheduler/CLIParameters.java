@@ -1,8 +1,8 @@
 package fr.mrcraftcod.shcheduler;
 
 import com.beust.jcommander.Parameter;
-import com.beust.jcommander.converters.FileConverter;
-import java.io.File;
+import com.beust.jcommander.converters.PathConverter;
+import java.nio.file.Path;
 
 /**
  * Created by Thomas Couchoud (MrCraftCod - zerderr@gmail.com) on 01/09/2018.
@@ -15,20 +15,30 @@ public class CLIParameters{
 	@Parameter(names = {
 			"-g",
 			"--gymnasium"
-	}, description = "Path to the csv gymnasium configuration", converter = FileConverter.class, required = true)
-	private File csvGymnasiumConfigFile;
+	}, description = "Path to the csv gymnasium configuration", converter = PathConverter.class, required = true)
+	private Path csvGymnasiumConfigFile;
 	
 	@Parameter(names = {
 			"-t",
 			"--team"
-	}, description = "Path to the csv team configuration", converter = FileConverter.class, required = true)
-	private File csvTeamConfigFile;
+	}, description = "Path to the csv team configuration", converter = PathConverter.class, required = true)
+	private Path csvTeamConfigFile;
 	
-	public File getCsvGymnasiumConfigFile(){
-		return csvGymnasiumConfigFile;
+	/**
+	 * Get the path to the CSV file for the gymnasiums.
+	 *
+	 * @return The path.
+	 */
+	public Path getCsvGymnasiumConfigFile(){
+		return this.csvGymnasiumConfigFile;
 	}
 	
-	public File getCsvTeamConfigFile(){
-		return csvTeamConfigFile;
+	/**
+	 * Get the path to the CSV file for the teams.
+	 *
+	 * @return The path.
+	 */
+	public Path getCsvTeamConfigFile(){
+		return this.csvTeamConfigFile;
 	}
 }

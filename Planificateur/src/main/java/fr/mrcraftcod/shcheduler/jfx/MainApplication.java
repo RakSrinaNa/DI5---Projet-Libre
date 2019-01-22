@@ -126,10 +126,10 @@ public class MainApplication extends Application{
 				System.exit(1);
 			}
 			try{
-				championship = new Parser(';').parse(parameters.getCsvGymnasiumConfigFile().toPath(), parameters.getCsvTeamConfigFile().toPath());
+				championship = new Parser(';').parse(parameters.getCsvGymnasiumConfigFile(), parameters.getCsvTeamConfigFile());
 			}
-			catch(ParserException | IOException e){
-				e.printStackTrace();
+			catch(final ParserException | IOException e){
+				LOGGER.error("Error parsing config", e);
 			}
 			//TODO: Load data into view
 		};
