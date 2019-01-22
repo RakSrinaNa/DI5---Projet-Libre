@@ -25,17 +25,36 @@ public class Championship{
 	
 	/**
 	 * Add a group stage.
+	 * If the group stage already exists, it won't be added again.
 	 *
 	 * @param groupStage The group stage to add.
+	 *
+	 * @throws IllegalArgumentException If the group stage is null.
 	 */
-	public void addGroupStage(final GroupStage groupStage){
+	public void addGroupStage(final GroupStage groupStage) throws IllegalArgumentException{
 		this.groupStages.add(groupStage);
 	}
 	
+	/**
+	 * Add a collection group stage.
+	 * If the group stage already exists, it won't be added again.
+	 *
+	 * @param groupStages The groups stages to add.
+	 *
+	 * @return True if all elements were added, false otherwise.
+	 */
 	public boolean addAllGroupStages(final Collection<GroupStage> groupStages){
 		return this.groupStages.addAll(groupStages);
 	}
 	
+	/**
+	 * Tells if a gymnasium is full at a given date.
+	 *
+	 * @param gymnasium The gymnasium to check for.
+	 * @param date      The date to check at.
+	 *
+	 * @return True if full, false otherwise.
+	 */
 	public boolean isGymnasiumFull(final Gymnasium gymnasium, final LocalDate date){
 		int found = 0;
 		for(GroupStage group : groupStages){
@@ -51,6 +70,11 @@ public class Championship{
 		return false;
 	}
 	
+	/**
+	 * Get the group stages.
+	 *
+	 * @return The group stages.
+	 */
 	public Collection<GroupStage> getGroupStages(){
 		return groupStages;
 	}
