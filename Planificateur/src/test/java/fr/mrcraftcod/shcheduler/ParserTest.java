@@ -7,9 +7,13 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
+import java.io.BufferedReader;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
+import java.util.Collection;
+import java.util.stream.Collectors;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -37,12 +41,16 @@ class ParserTest{
 		final var g3 = new Gymnasium("G3", "C3", 3);
 		final var g4 = new Gymnasium("G4", "C4", 4);
 		
-		final var gyms = parser.getGymnasiums(Files.readAllLines(Path.of(Parser.class.getResource("/gymnasiums/valid1.csv").getPath())));
+		final var gyms = parser.getGymnasiums(getLines(Parser.class.getResourceAsStream("/gymnasiums/valid1.csv")));
 		assertEquals(4, gyms.size());
 		assertTrue(gyms.contains(g1));
 		assertTrue(gyms.contains(g2));
 		assertTrue(gyms.contains(g3));
 		assertTrue(gyms.contains(g4));
+	}
+	
+	private Collection<String> getLines(final InputStream is){
+		return new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8)).lines().collect(Collectors.toList());
 	}
 	
 	@Test
@@ -52,7 +60,7 @@ class ParserTest{
 		final var g3 = new Gymnasium("G3", "C3", 3);
 		final var g4 = new Gymnasium("G4", "C4", 4);
 		
-		final var gyms = parser.getGymnasiums(Files.readAllLines(Path.of(Parser.class.getResource("/gymnasiums/duplicates1.csv").getPath())));
+		final var gyms = parser.getGymnasiums(getLines(Parser.class.getResourceAsStream("/gymnasiums/duplicates1.csv")));
 		assertEquals(4, gyms.size());
 		assertTrue(gyms.contains(g1));
 		assertTrue(gyms.contains(g2));
@@ -64,7 +72,7 @@ class ParserTest{
 	void getGymsBigSize1() throws IOException{
 		final var g1 = new Gymnasium("G1", "C1", Integer.MAX_VALUE);
 		
-		final var gyms = parser.getGymnasiums(Files.readAllLines(Path.of(Parser.class.getResource("/gymnasiums/bigSize1.csv").getPath())));
+		final var gyms = parser.getGymnasiums(getLines(Parser.class.getResourceAsStream("/gymnasiums/bigSize1.csv")));
 		assertEquals(1, gyms.size());
 		assertTrue(gyms.contains(g1));
 		assertEquals(g1.getCapacity(), gyms.iterator().next().getCapacity());
@@ -76,8 +84,26 @@ class ParserTest{
 			"/gymnasiums/invalidSize2.csv",
 			"/gymnasiums/invalidSize3.csv"
 	})
-	void getGymsInvalidSize1(final String path){
-		final Executable executable1 = () -> parser.getGymnasiums(Files.readAllLines(Path.of(Parser.class.getResource(path).getPath())));
+	void getGymsInvalidSizes(final String path){
+		final Executable executable1 = () -> parser.getGymnasiums(getLines(Parser.class.getResourceAsStream(path)));
+		try{
+			executable1.execute();
+		}
+		catch(final Throwable e){
+			if(!(e instanceof ParserException)){
+				fail("Wrong exception thrown");
+			}
+			assertEquals(IllegalArgumentException.class, e.getCause().getClass());
+		}
+	}
+	
+	@ParameterizedTest
+	@ValueSource(strings = {
+			"/gymnasiums/invalidCity1.csv",
+			"/gymnasiums/invalidCity2.csv"
+	})
+	void getGymsInvalidCities(final String path){
+		final Executable executable1 = () -> parser.getGymnasiums(getLines(Parser.class.getResourceAsStream(path)));
 		try{
 			executable1.execute();
 		}
@@ -95,5 +121,23 @@ class ParserTest{
 	
 	@Test
 	void buildMatches(){
+	}
+	
+	@ParameterizedTest
+	@ValueSource(strings = {
+			"/gymnasiums/invalidName1.csv",
+			"/gymnasiums/invalidName2.csv"
+	})
+	void getGymsInvalidNames(final String path){
+		final Executable executable1 = () -> parser.getGymnasiums(getLines(Parser.class.getResourceAsStream(path)));
+		try{
+			executable1.execute();
+		}
+		catch(final Throwable e){
+			if(!(e instanceof ParserException)){
+				fail("Wrong exception thrown");
+			}
+			assertEquals(IllegalArgumentException.class, e.getCause().getClass());
+		}
 	}
 }
