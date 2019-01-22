@@ -84,11 +84,11 @@ public class Parser{
 		final var gyms = new ArrayList<Gymnasium>();
 		for(String gym : gymnasiumLines){
 			String[] elements = gym.split(csvSeparator, -1);
-			
+
 			if(elements.length != 3){
 				throw new ParserException("Wrong format", new IllegalCSVFormatException("No 3 elements"));
 			}
-			
+
 			int cap;
 			try{
 				cap = Integer.parseInt(elements[1]);
@@ -98,7 +98,7 @@ public class Parser{
 			}
 			String name = elements[0];
 			String city = elements[2];
-			
+
 			try{
 				Gymnasium g = new Gymnasium(name, city, cap);
 				if(!gyms.contains(g)){
@@ -126,11 +126,11 @@ public class Parser{
 		final var groups = new ArrayList<GroupStage>();
 		for(String team : teamLines){
 			String[] elements = team.split(csvSeparator, -1);
-			
-			if(elements.length != 3){
+
+			if(elements.length != 4){
 				throw new ParserException("Wrong format", new IllegalCSVFormatException("No 3 elements"));
 			}
-			
+
 			try{
 				groups.add(new GroupStage(elements[3]));
 			}
@@ -140,7 +140,7 @@ public class Parser{
 			GroupStage group = groups.stream().filter(g -> g.getName().equals(elements[3])).findFirst().get();
 			
 			Gymnasium gym = gymnasiums.stream().filter(g -> g.getName().equals(elements[1])).findFirst().get();
-			
+
 			try{
 				Team t = new Team(gym, elements[0]);
 				if(!groups.contains(t)){

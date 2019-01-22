@@ -52,7 +52,7 @@ class ParserGymnasiumsTest{
 	void getGymsValid2(){
 		final var g1 = new Gymnasium("G1,1", "C1", 1);
 		
-		final var gyms = parserSemicolon.getGymnasiums(getLines(Parser.class.getResourceAsStream("/gymnasiums/valid1.csv")));
+		final var gyms = parserSemicolon.getGymnasiums(getLines(Parser.class.getResourceAsStream("/gymnasiums/valid2.csv")));
 		assertEquals(1, gyms.size());
 		assertTrue(gyms.contains(g1));
 	}
