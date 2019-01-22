@@ -16,9 +16,6 @@ build:
 
 test:
   stage: test
-  only:
-    - victor
-    - master
   script:
     - cd Planificateur
     - mvn $MAVEN_CLI_OPTS -B test
