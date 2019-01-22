@@ -16,10 +16,10 @@ import java.util.stream.Collectors;
  * @since 2019-01-21
  */
 public class Parser{
-	private final char csvSeparator;
+	private final String csvSeparator;
 	
 	public Parser(final char csvSeparator){
-		this.csvSeparator = csvSeparator;
+		this.csvSeparator = ""+csvSeparator;
 	}
 	
 	public Championship parse(final Path gymnasiumsCsvFile, final Path teamsCsvFile) throws IOException{
@@ -46,7 +46,7 @@ public class Parser{
 	public Collection<Gymnasium> getGymnasiums(Collection<String> gymnasiumLines){
 		final var gyms = new ArrayList<Gymnasium>();
 		for(String gym : gymnasiumLines){
-			String[] elements = gym.split(";|,", -1);
+			String[] elements = gym.split(csvSeparator, -1);
 
 			if(elements.length != 3)
 			    throw new ParserException("Wrong format", new IllegalCSVFormatException("No 3 elements"));
@@ -72,16 +72,29 @@ public class Parser{
 	}
 	
 	public Collection<GroupStage> getGroupStages(Collection<Gymnasium> gymnasiums, Collection<String> teamLines){
-		final var groups = new HashSet<GroupStage>();
+		final var groups = new ArrayList<GroupStage>();
 		for(String team : teamLines){
-			String[] elements = team.split(";");
-			
-			groups.add(new GroupStage(elements[3]));
+			String[] elements = team.split(csvSeparator, -1);
+
+			if(elements.length != 3)
+				throw new ParserException("Wrong format", new IllegalCSVFormatException("No 3 elements"));
+
+			try {
+				groups.add(new GroupStage(elements[3]));
+			}catch (IllegalArgumentException e){
+				throw new ParserException("Team parsing error", e);
+			}
 			GroupStage group = groups.stream().filter(g -> g.getName().equals(elements[3])).findFirst().get();
 			
 			Gymnasium gym = gymnasiums.stream().filter(g -> g.getName().equals(elements[1])).findFirst().get();
-			
-			group.addTeam(new Team(gym, elements[0]));
+
+			try {
+				Team t = new Team(gym, elements[0]);
+				if(!groups.contains(t))
+					group.addTeam(t);
+			}catch (IllegalArgumentException e){
+				throw new ParserException("Team parsing error", e);
+			}
 		}
 		return groups;
 	}
