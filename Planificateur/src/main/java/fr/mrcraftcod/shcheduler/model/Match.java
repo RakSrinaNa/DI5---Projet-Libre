@@ -22,7 +22,7 @@ public class Match{
 			throw new IllegalArgumentException("Match Team 2 is null");
 		this.team1 = team1;
 		this.team2 = team2;
-		this.gymnasium = gymnasium;
+		setGymnasium(gymnasium);
 		this.date = date;
 	}
 	
@@ -45,6 +45,8 @@ public class Match{
 	}
 	
 	public void setGymnasium(final Gymnasium gymnasium){
+		if(gymnasium != null && (!gymnasium.equals(team1.getGymnasium()) && !gymnasium.equals(team2.getGymnasium())))
+			throw new IllegalArgumentException("Match gymnasium not corresponding to a team");
 		this.gymnasium = gymnasium;
 	}
 	

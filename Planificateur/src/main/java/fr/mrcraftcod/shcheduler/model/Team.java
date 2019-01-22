@@ -22,7 +22,7 @@ public class Team{
 	}
 	
 	public String getCity(){
-		return null;
+		return gymnasium.getCity();
 	}
 	
 	public Gymnasium getGymnasium(){

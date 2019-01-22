@@ -47,7 +47,7 @@ public class Parser{
 						group.addMatch(new Match(team1, team2, null, null));
 
 		Championship championship = new Championship();
-		championship.addAllGroupStage(groupStages);
+		championship.addAllGroupStages(groupStages);
 
 		return championship;
 	}
