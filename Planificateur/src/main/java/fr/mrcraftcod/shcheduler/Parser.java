@@ -44,7 +44,7 @@ public class Parser{
 	}
 	
 	public Collection<Gymnasium> getGymnasiums(Collection<String> gymnasiumLines){
-		final var gyms = new HashSet<Gymnasium>();
+		final var gyms = new ArrayList<Gymnasium>();
 		for(String gym : gymnasiumLines){
 			String[] elements = gym.split(";|,", -1);
 
@@ -61,7 +61,9 @@ public class Parser{
             String city = elements[2];
 
             try {
-                gyms.add(new Gymnasium(name, city, cap));
+                Gymnasium g = new Gymnasium(name, city, cap);
+                if(!gyms.contains(g))
+                    gyms.add(g);
             }catch(IllegalArgumentException e){
                 throw new ParserException("Gymnasium parsing error", e);
             }
