@@ -3,9 +3,10 @@ package fr.mrcraftcod.shcheduler.model;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import java.util.Objects;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Created by Thomas Couchoud (MrCraftCod - zerderr@gmail.com) on 2019-01-22.
@@ -65,5 +66,38 @@ class ChampionshipTest{
 		c.addAllGroupStages(List.of(gs1, gs2));
 		assertTrue(c.isGymnasiumFull(match1112.getGymnasium(), date));
 		assertFalse(c.isGymnasiumFull(match2122.getGymnasium(), date));
+	}
+	
+	@Test
+	void addGroupStageDuplicate(){
+		final var gs = new Championship();
+		gs.addGroupStage(gs1);
+		assertTrue(gs.getGroupStages().contains(gs1));
+		assertFalse(gs.getGroupStages().contains(gs2));
+		gs.addGroupStage(gs2);
+		assertTrue(gs.getGroupStages().contains(gs1));
+		assertTrue(gs.getGroupStages().contains(gs2));
+		gs.addGroupStage(gs1);
+		gs.addGroupStage(gs2);
+		assertEquals(1, gs.getGroupStages().stream().filter(e -> Objects.equals(e, gs1)).count());
+		assertEquals(1, gs.getGroupStages().stream().filter(e -> Objects.equals(e, gs2)).count());
+	}
+	
+	@Test
+	void addAllGroupStageDuplicate(){
+		final var championship = new Championship();
+		assertTrue(championship.addAllGroupStages(List.of(gs1, gs2)));
+		assertTrue(championship.getGroupStages().contains(gs1));
+		assertTrue(championship.getGroupStages().contains(gs2));
+		assertTrue(championship.addAllGroupStages(List.of(gs1, gs2)));
+		assertEquals(1, championship.getGroupStages().stream().filter(e -> Objects.equals(e, gs1)).count());
+		assertEquals(1, championship.getGroupStages().stream().filter(e -> Objects.equals(e, gs2)).count());
+		final var groups = new ArrayList<GroupStage>();
+		groups.add(gs1);
+		groups.add(gs2);
+		groups.add(null);
+		assertTrue(championship.addAllGroupStages(groups));
+		assertEquals(1, championship.getGroupStages().stream().filter(e -> Objects.equals(e, gs1)).count());
+		assertEquals(1, championship.getGroupStages().stream().filter(e -> Objects.equals(e, gs2)).count());
 	}
 }

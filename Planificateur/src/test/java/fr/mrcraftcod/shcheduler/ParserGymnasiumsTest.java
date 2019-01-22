@@ -81,9 +81,7 @@ class ParserGymnasiumsTest{
 	
 	@ParameterizedTest
 	@ValueSource(strings = {
-			"/gymnasiums/invalidSize1.csv",
-			"/gymnasiums/invalidSize2.csv",
-			"/gymnasiums/invalidSize3.csv"
+			"/gymnasiums/invalidSize1.csv"
 	})
 	void getGymsInvalidSizes(final String path){
 		final Executable executable1 = () -> parser.getGymnasiums(getLines(Parser.class.getResourceAsStream(path)));
@@ -95,6 +93,24 @@ class ParserGymnasiumsTest{
 				fail("Wrong exception thrown");
 			}
 			assertEquals(IllegalArgumentException.class, e.getCause().getClass());
+		}
+	}
+	
+	@ParameterizedTest
+	@ValueSource(strings = {
+			"/gymnasiums/invalidSize2.csv",
+			"/gymnasiums/invalidSize3.csv"
+	})
+	void getGymsInvalidSizes2(final String path){
+		final Executable executable1 = () -> parser.getGymnasiums(getLines(Parser.class.getResourceAsStream(path)));
+		try{
+			executable1.execute();
+		}
+		catch(final Throwable e){
+			if(!(e instanceof ParserException)){
+				fail("Wrong exception thrown");
+			}
+			assertEquals(NumberFormatException.class, e.getCause().getClass());
 		}
 	}
 	

@@ -6,6 +6,8 @@ import java.util.Collection;
 import java.util.Objects;
 
 /**
+ * Represents a championship.
+ * <p>
  * Created by Thomas Couchoud (MrCraftCod - zerderr@gmail.com) on 2019-01-21.
  *
  * @author Thomas Couchoud
@@ -14,27 +16,38 @@ import java.util.Objects;
 public class Championship{
 	private final Collection<GroupStage> groupStages;
 	
+	/**
+	 * Constructor.
+	 */
 	public Championship(){
 		this.groupStages = new ArrayList<>();
 	}
 	
+	/**
+	 * Add a group stage.
+	 *
+	 * @param groupStage The group stage to add.
+	 */
 	public void addGroupStage(final GroupStage groupStage){
 		this.groupStages.add(groupStage);
 	}
 	
-	public void addAllGroupStages(final Collection<GroupStage> groupStages){
-		this.groupStages.addAll(groupStages);
+	public boolean addAllGroupStages(final Collection<GroupStage> groupStages){
+		return this.groupStages.addAll(groupStages);
 	}
 	
 	public boolean isGymnasiumFull(final Gymnasium gymnasium, final LocalDate date){
 		int found = 0;
-	    for(GroupStage group : groupStages)
-			for(Match match : group.getMatches()) {
-				if (Objects.equals(gymnasium, match.getGymnasium()) && Objects.equals(date, match.getDate()))
+		for(GroupStage group : groupStages){
+			for(Match match : group.getMatches()){
+				if(Objects.equals(gymnasium, match.getGymnasium()) && Objects.equals(date, match.getDate())){
 					found++;
-				if(found >= gymnasium.getCapacity())
+				}
+				if(found >= gymnasium.getCapacity()){
 					return true;
+				}
 			}
+		}
 		return false;
 	}
 	
