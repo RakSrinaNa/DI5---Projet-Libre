@@ -21,6 +21,10 @@ public class Team{
 		this.name = name;
 	}
 	
+	public String getCity(){
+		return null;
+	}
+	
 	public Gymnasium getGymnasium(){
 		return gymnasium;
 	}

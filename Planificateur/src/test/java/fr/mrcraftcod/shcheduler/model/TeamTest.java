@@ -1,5 +1,6 @@
 package fr.mrcraftcod.shcheduler.model;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -14,9 +15,16 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
  * @since 2019-01-21
  */
 class TeamTest{
+	private Gymnasium gym;
+	
+	@BeforeEach
+	void setUp(){
+		this.gym = new Gymnasium("gName", "gCity", Integer.MAX_VALUE);
+		;
+	}
+	
 	@Test
 	void getGymnasium(){
-		final var gym = new Gymnasium("gName", "gCity", Integer.MAX_VALUE);
 		final var team = new Team(gym, "tName");
 		assertEquals(gym, team.getGymnasium());
 	}
@@ -28,14 +36,12 @@ class TeamTest{
 			"T3"
 	})
 	void getName(final String tName){
-		final var gym = new Gymnasium("gName", "gCity", Integer.MAX_VALUE);
 		final var team = new Team(gym, tName);
 		assertEquals(tName, team.getName());
 	}
 	
 	@Test
 	void equalsTest(){
-		final var gym = new Gymnasium("gName", "gCity", Integer.MAX_VALUE);
 		final var team1 = new Team(gym, "tName");
 		final var team2 = new Team(gym, "tName");
 		assertEquals(team1, team2);
@@ -43,7 +49,6 @@ class TeamTest{
 	
 	@Test
 	void constructEmptyName(){
-		final var gym = new Gymnasium("gName", "gCity", Integer.MAX_VALUE);
 		final Executable executable1 = () -> new Team(gym, "");
 		assertThrows(IllegalArgumentException.class, executable1);
 		final Executable executable2 = () -> new Team(gym, null);
@@ -56,5 +61,11 @@ class TeamTest{
 	void constructEmptyGym(){
 		final Executable executable = () -> new Team(null, "gName");
 		assertThrows(IllegalArgumentException.class, executable);
+	}
+	
+	@Test
+	void getCity(){
+		final var team = new Team(gym, "tName");
+		assertEquals(gym.getCity(), team.getCity());
 	}
 }
