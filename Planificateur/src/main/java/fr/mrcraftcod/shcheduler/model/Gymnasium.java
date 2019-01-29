@@ -1,5 +1,8 @@
 package fr.mrcraftcod.shcheduler.model;
 
+import java.time.LocalDate;
+import java.util.Collection;
+import java.util.LinkedList;
 import java.util.Objects;
 
 /**
@@ -14,6 +17,7 @@ public class Gymnasium{
 	private final String name;
 	private final String city;
 	private final int capacity;
+	private final Collection<LocalDate> bannedDates;
 	
 	/**
 	 * Constructor.
@@ -37,11 +41,24 @@ public class Gymnasium{
 		this.name = name;
 		this.city = city;
 		this.capacity = capacity;
+		this.bannedDates = new LinkedList<>();
 	}
 	
 	@Override
 	public boolean equals(final Object obj){
 		return obj instanceof Gymnasium && Objects.equals(((Gymnasium) obj).getCity(), this.getCity()) && Objects.equals(((Gymnasium) obj).getName(), this.getName());
+	}
+	
+	public void addBannedDate(final LocalDate date){
+	
+	}
+	
+	public boolean isDateBanned(final LocalDate date){
+		return false;
+	}
+	
+	public Collection<LocalDate> getBannedDates(){
+		return bannedDates;
 	}
 	
 	/**

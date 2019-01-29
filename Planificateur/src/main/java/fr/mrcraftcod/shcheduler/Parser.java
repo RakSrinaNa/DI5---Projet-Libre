@@ -142,7 +142,7 @@ public class Parser{
 			Gymnasium gym = gymnasiums.stream().filter(g -> g.getName().equals(elements[1])).findFirst().get();
 
 			try{
-				Team t = new Team(gym, elements[0]);
+				Team t = new Team(gym, elements[0], playDay);
 				if(!groups.contains(t)){
 					group.addTeam(t);
 				}

@@ -3,6 +3,7 @@ package fr.mrcraftcod.shcheduler.model;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -19,8 +20,8 @@ class MatchTest{
 	
 	@BeforeEach
 	void setUp(){
-		team1 = new Team(new Gymnasium("gym1", "city1", Integer.MAX_VALUE), "team1");
-		team2 = new Team(new Gymnasium("gym2", "city2", Integer.MAX_VALUE), "team2");
+		team1 = new Team(new Gymnasium("gym1", "city1", Integer.MAX_VALUE), "team1", DayOfWeek.MONDAY);
+		team2 = new Team(new Gymnasium("gym2", "city2", Integer.MAX_VALUE), "team2", DayOfWeek.MONDAY);
 		date = LocalDate.now();
 	}
 	

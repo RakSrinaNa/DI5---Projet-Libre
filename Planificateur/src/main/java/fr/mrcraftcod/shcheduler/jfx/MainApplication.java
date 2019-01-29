@@ -5,7 +5,6 @@ import com.beust.jcommander.ParameterException;
 import fr.mrcraftcod.shcheduler.CLIParameters;
 import fr.mrcraftcod.shcheduler.Parser;
 import fr.mrcraftcod.shcheduler.exceptions.ParserException;
-import fr.mrcraftcod.shcheduler.model.Championship;
 import javafx.application.Application;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.Parent;
@@ -31,12 +30,11 @@ import java.util.function.Consumer;
 public class MainApplication extends Application{
 	private static final Logger LOGGER = LoggerFactory.getLogger(MainApplication.class);
 	private Stage stage;
-	private Championship championship;
 	
 	@Override
-	public void start(final Stage stage) throws Exception{
+	public void start(final Stage stage){
 		this.stage = stage;
-		final var scene = buildScene(stage);
+		final var scene = buildScene();
 		stage.setTitle(this.getFrameTitle());
 		stage.setScene(scene);
 		stage.sizeToScene();
@@ -59,24 +57,37 @@ public class MainApplication extends Application{
 	/**
 	 * Build the scene.
 	 *
-	 * @param stage The stage the scene is in.
-	 *
 	 * @return The scene.
 	 */
-	private Scene buildScene(final Stage stage){
-		return new Scene(createContent(stage), 640, 640);
+	private Scene buildScene(){
+		return new Scene(createContent(), 640, 640);
 	}
 	
 	/**
-	 * Create the scene content.
+	 * Called when the stage is displayed.
 	 *
-	 * @param stage The stage the scene is in.
-	 *
-	 * @return The root content.
+	 * @return The consumer to execute.
 	 */
-	private Parent createContent(final Stage stage){
-		final var root = new VBox();
-		return root;
+	@SuppressWarnings("Duplicates")
+	private Consumer<Stage> getOnStageDisplayed(){
+		return stage -> {
+			final var parameters = new CLIParameters();
+			try{
+				JCommander.newBuilder().addObject(parameters).build().parse(this.getParameters().getRaw().toArray(new String[0]));
+			}
+			catch(final ParameterException e){
+				LOGGER.error("Failed to parse arguments", e);
+				e.usage();
+				System.exit(1);
+			}
+			try{
+				new Parser(';').parse(parameters.getCsvGymnasiumConfigFile(), parameters.getCsvTeamConfigFile());
+			}
+			catch(final ParserException | IOException e){
+				LOGGER.error("Error parsing config", e);
+			}
+			//TODO: Load data into view
+		};
 	}
 	
 	/**
@@ -109,30 +120,13 @@ public class MainApplication extends Application{
 	}
 	
 	/**
-	 * Called when the stage is displayed.
+	 * Create the scene content.
 	 *
-	 * @return The consumer to execute.
+	 * @return The root content.
 	 */
-	@SuppressWarnings("Duplicates")
-	private Consumer<Stage> getOnStageDisplayed(){
-		return stage -> {
-			final var parameters = new CLIParameters();
-			try{
-				JCommander.newBuilder().addObject(parameters).build().parse(this.getParameters().getRaw().toArray(new String[0]));
-			}
-			catch(final ParameterException e){
-				LOGGER.error("Failed to parse arguments", e);
-				e.usage();
-				System.exit(1);
-			}
-			try{
-				championship = new Parser(';').parse(parameters.getCsvGymnasiumConfigFile(), parameters.getCsvTeamConfigFile());
-			}
-			catch(final ParserException | IOException e){
-				LOGGER.error("Error parsing config", e);
-			}
-			//TODO: Load data into view
-		};
+	private Parent createContent(){
+		final var root = new VBox();
+		return root;
 	}
 	
 	/**
