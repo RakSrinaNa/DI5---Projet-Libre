@@ -1,5 +1,7 @@
 package fr.mrcraftcod.shcheduler.model;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Objects;
@@ -13,7 +15,7 @@ import java.util.Objects;
  * @since 2019-01-21
  */
 public class GroupStage{
-	private final Collection<Match> matches;
+	private final ObservableList<Match> matches;
 	private final Collection<Team> teams;
 	private final String name;
 	
@@ -24,7 +26,7 @@ public class GroupStage{
 	 */
 	public GroupStage(final String name){
 		this.name = name;
-		this.matches = new ArrayList<>();
+		this.matches = FXCollections.observableArrayList(new ArrayList<>());
 		this.teams = new ArrayList<>();
 	}
 	
@@ -116,7 +118,7 @@ public class GroupStage{
 	 *
 	 * @return The matches.
 	 */
-	public Collection<Match> getMatches(){
+	public ObservableList<Match> getMatches(){
 		return this.matches;
 	}
 	

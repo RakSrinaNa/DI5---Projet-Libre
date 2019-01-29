@@ -47,6 +47,10 @@ public class Match{
 		return obj instanceof Match && Objects.equals(((Match) obj).getTeam1(), this.getTeam1()) && Objects.equals(((Match) obj).getTeam2(), this.getTeam2());
 	}
 	
+	public boolean isTeamPlaying(Team team){
+		return Objects.equals(team, team1) || Objects.equals(team, team2);
+	}
+	
 	/**
 	 * Get the first team.
 	 *
@@ -114,5 +118,10 @@ public class Match{
 			throw new IllegalArgumentException("Match gymnasium not corresponding to a team");
 		}
 		this.gymnasium = gymnasium;
+	}
+	
+	@Override
+	public String toString(){
+		return "Match{" + "team1=" + team1 + ", team2=" + team2 + ", gymnasium=" + gymnasium + ", date=" + date + '}';
 	}
 }

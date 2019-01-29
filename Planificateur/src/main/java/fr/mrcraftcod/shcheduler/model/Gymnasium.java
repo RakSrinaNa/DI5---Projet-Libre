@@ -87,4 +87,9 @@ public class Gymnasium{
 	public int getCapacity(){
 		return this.capacity;
 	}
+	
+	@Override
+	public String toString(){
+		return name;
+	}
 }

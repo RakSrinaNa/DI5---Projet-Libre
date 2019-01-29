@@ -6,6 +6,7 @@ import fr.mrcraftcod.shcheduler.model.*;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
+import java.time.DayOfWeek;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -132,7 +133,10 @@ public class Parser{
 			}
 
 			try{
-				groups.add(new GroupStage(elements[3]));
+				final var group = new GroupStage(elements[3]);
+				if(!groups.contains(group)){
+					groups.add(group);
+				}
 			}
 			catch(IllegalArgumentException e){
 				throw new ParserException("Team parsing error", e);
@@ -142,7 +146,7 @@ public class Parser{
 			Gymnasium gym = gymnasiums.stream().filter(g -> g.getName().equals(elements[1])).findFirst().get();
 
 			try{
-				Team t = new Team(gym, elements[0], playDay);
+				Team t = new Team(gym, elements[0], DayOfWeek.MONDAY);
 				if(!groups.contains(t)){
 					group.addTeam(t);
 				}

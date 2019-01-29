@@ -26,7 +26,6 @@ public class Team{
 	 * @throws IllegalArgumentException If the gymnasium is null or if the name is empty.
 	 */
 	public Team(final Gymnasium gymnasium, final String name, final DayOfWeek playDay) throws IllegalArgumentException{
-		this.playDay = playDay;
 		if(gymnasium == null){
 			throw new IllegalArgumentException("Team gymnasium is empty");
 		}
@@ -35,6 +34,7 @@ public class Team{
 		}
 		this.gymnasium = gymnasium;
 		this.name = name;
+		this.playDay = playDay;
 	}
 	
 	@Override
@@ -71,5 +71,10 @@ public class Team{
 	
 	public DayOfWeek getPlayDay(){
 		return playDay;
+	}
+	
+	@Override
+	public String toString(){
+		return name;
 	}
 }

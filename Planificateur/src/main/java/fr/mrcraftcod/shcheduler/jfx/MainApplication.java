@@ -30,10 +30,13 @@ import java.util.function.Consumer;
 public class MainApplication extends Application{
 	private static final Logger LOGGER = LoggerFactory.getLogger(MainApplication.class);
 	private Stage stage;
+	private MainController controller;
+	private MatchTableView matchesTableView;
 	
 	@Override
 	public void start(final Stage stage){
 		this.stage = stage;
+		this.controller = new MainController();
 		final var scene = buildScene();
 		stage.setTitle(this.getFrameTitle());
 		stage.setScene(scene);
@@ -81,7 +84,8 @@ public class MainApplication extends Application{
 				System.exit(1);
 			}
 			try{
-				new Parser(';').parse(parameters.getCsvGymnasiumConfigFile(), parameters.getCsvTeamConfigFile());
+				final var championship = new Parser(';').parse(parameters.getCsvGymnasiumConfigFile(), parameters.getCsvTeamConfigFile());
+				matchesTableView.loadGroupStage(championship.getGroupStages().iterator().next());
 			}
 			catch(final ParserException | IOException e){
 				LOGGER.error("Error parsing config", e);
@@ -126,6 +130,8 @@ public class MainApplication extends Application{
 	 */
 	private Parent createContent(){
 		final var root = new VBox();
+		matchesTableView = new MatchTableView(controller);
+		root.getChildren().addAll(matchesTableView);
 		return root;
 	}
 	
