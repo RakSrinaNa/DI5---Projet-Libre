@@ -25,10 +25,10 @@ class ChampionshipTest{
 	
 	@BeforeEach
 	void setUp(){
-		final var team11 = new Team(new Gymnasium("g11", "c11", 1), "t11", DayOfWeek.MONDAY);
-		final var team12 = new Team(new Gymnasium("g12", "c12", 1), "t12", DayOfWeek.MONDAY);
-		final var team21 = new Team(new Gymnasium("g21", "c21", 2), "t21", DayOfWeek.MONDAY);
-		final var team22 = new Team(new Gymnasium("g22", "c22", 2), "t22", DayOfWeek.MONDAY);
+		final var team11 = new Team(new Gymnasium("g11", "c11", 1, "red"), "t11", DayOfWeek.MONDAY);
+		final var team12 = new Team(new Gymnasium("g12", "c12", 1, "red"), "t12", DayOfWeek.MONDAY);
+		final var team21 = new Team(new Gymnasium("g21", "c21", 2, "red"), "t21", DayOfWeek.MONDAY);
+		final var team22 = new Team(new Gymnasium("g22", "c22", 2, "red"), "t22", DayOfWeek.MONDAY);
 		
 		match1112 = new Match(team11, team12, team11.getGymnasium(), date);
 		match2122 = new Match(team21, team22, team21.getGymnasium(), date);

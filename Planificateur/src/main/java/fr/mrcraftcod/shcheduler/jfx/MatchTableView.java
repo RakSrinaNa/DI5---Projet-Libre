@@ -6,11 +6,12 @@ import fr.mrcraftcod.shcheduler.model.Gymnasium;
 import fr.mrcraftcod.shcheduler.model.Match;
 import fr.mrcraftcod.shcheduler.model.Team;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.scene.control.TableColumn;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.stream.Collectors;
 
 /**
@@ -31,30 +32,35 @@ public class MatchTableView extends SortedTableView<Gymnasium>{
 		super();
 		this.controller = controller;
 		this.setItems(FXCollections.observableList(new ArrayList<>()));
+		this.getStylesheets().add(getClass().getResource("/jfx/cell.css").toExternalForm());
 		setEditable(true);
+		
+		getSelectionModel().setCellSelectionEnabled(true);
+		this.setStyle("-fx-my-cell-background: -fx-background;");
 	}
 	
-	public void loadGroupStage(final GroupStage groupStage){
+	public void loadGroupStage(final GroupStage groupStage, ObservableList<Match> matchPool){
 		final var colCount = 10;
 		final var padding = 2;
 		
-		final var columnGymnasium = new TableColumn<Gymnasium, String>("Gymnasium");
-		columnGymnasium.setCellValueFactory(value -> new SimpleStringProperty(value.getValue().getName()));
+		final var columnGymnasium = new TableColumn<Gymnasium, Gymnasium>("Gymnasium");
+		columnGymnasium.setCellValueFactory(value -> new SimpleObjectProperty<>(value.getValue()));
+		columnGymnasium.setCellFactory(col -> new GymnasiumTableCell());
 		columnGymnasium.prefWidthProperty().bind(widthProperty().subtract(padding).divide(colCount));
 		//column.setCellFactory(list -> new ManagerComboBoxTableCell(controller.getCompany().getManagers()));
 		columnGymnasium.setEditable(false);
 		getColumns().add(columnGymnasium);
 		
-		for(var i = 0; i < colCount; i++){
+		for(var i = 1; i <= colCount; i++){
 			final var column = new TableColumn<Gymnasium, Match>("Week " + i);
 			column.setCellValueFactory(value -> new SimpleObjectProperty<>(null));
 			final var finalI = i;
-			column.setCellFactory(list -> new GymnasiumMatchTableCell(groupStage, controller, LocalDate.now().plusDays(finalI * 7)));
+			column.setCellFactory(list -> new GymnasiumMatchTableCell(groupStage, controller, LocalDate.now().plusDays(finalI * 7), matchPool));
 			column.prefWidthProperty().bind(widthProperty().subtract(padding).divide(colCount));
 			column.setEditable(true);
 			getColumns().add(column);
 		}
 		
-		setItems(FXCollections.observableArrayList(groupStage.getTeams().stream().map(Team::getGymnasium).distinct().collect(Collectors.toList())));
+		setItems(FXCollections.observableArrayList(groupStage.getTeams().stream().map(Team::getGymnasium).distinct().sorted(Comparator.comparing(Gymnasium::getName)).collect(Collectors.toList())));
 	}
 }

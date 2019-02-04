@@ -18,6 +18,7 @@ public class Gymnasium{
 	private final String city;
 	private final int capacity;
 	private final Collection<LocalDate> bannedDates;
+	private String color;
 	
 	/**
 	 * Constructor.
@@ -28,7 +29,7 @@ public class Gymnasium{
 	 *
 	 * @throws IllegalArgumentException If the name is empty, or the city is empty or the capacity isn't positive.
 	 */
-	public Gymnasium(final String name, final String city, final int capacity) throws IllegalArgumentException{
+	public Gymnasium(final String name, final String city, final int capacity, final String color) throws IllegalArgumentException{
 		if(name == null || name.isBlank()){
 			throw new IllegalArgumentException("Gymnasium name is empty");
 		}
@@ -41,6 +42,7 @@ public class Gymnasium{
 		this.name = name;
 		this.city = city;
 		this.capacity = capacity;
+		this.color = color;
 		this.bannedDates = new LinkedList<>();
 	}
 	
@@ -55,6 +57,10 @@ public class Gymnasium{
 	
 	public boolean isDateBanned(final LocalDate date){
 		return false;
+	}
+	
+	public String getColor(){
+		return this.color;
 	}
 	
 	public Collection<LocalDate> getBannedDates(){

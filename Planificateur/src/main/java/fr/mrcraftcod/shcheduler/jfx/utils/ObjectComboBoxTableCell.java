@@ -94,12 +94,16 @@ public class ObjectComboBoxTableCell<S, T> extends ObjectTableCell<S, T>{
 			comboBox = createComboBox(this, null, converter);
 		}
 		
-		comboBox.setItems(items.filtered(filter));
-		comboBox.getSelectionModel().select(getItem()); //Select the item in the cell
+		updateComboBoxList();
 		
 		super.startEdit();
 		setText(null);
 		setGraphic(comboBox);
+	}
+	
+	protected void updateComboBoxList(){
+		comboBox.setItems(items.filtered(filter));
+		comboBox.getSelectionModel().select(getItem()); //Select the item in the cell
 	}
 	
 	/**

@@ -23,7 +23,7 @@ class GymnasiumTest{
 			Integer.MAX_VALUE
 	})
 	void getCapacity(final int cap){
-		final var gym = new Gymnasium("gName", "gCity", cap);
+		final var gym = new Gymnasium("gName", "gCity", cap, "red");
 		assertEquals(cap, gym.getCapacity());
 	}
 	
@@ -34,7 +34,7 @@ class GymnasiumTest{
 			"C3"
 	})
 	void getCity(final String city){
-		final var gym = new Gymnasium("gName", city, Integer.MAX_VALUE);
+		final var gym = new Gymnasium("gName", city, Integer.MAX_VALUE, "red");
 		assertEquals(city, gym.getCity());
 	}
 	
@@ -45,27 +45,27 @@ class GymnasiumTest{
 			"G3"
 	})
 	void getName(final String name){
-		final var gym = new Gymnasium(name, "gCity", Integer.MAX_VALUE);
+		final var gym = new Gymnasium(name, "gCity", Integer.MAX_VALUE, "red");
 		assertEquals(name, gym.getName());
 	}
 	
 	@Test
 	void constructEmptyName(){
-		final Executable executable1 = () -> new Gymnasium("", "gCity", Integer.MAX_VALUE);
+		final Executable executable1 = () -> new Gymnasium("", "gCity", Integer.MAX_VALUE, "red");
 		assertThrows(IllegalArgumentException.class, executable1);
-		final Executable executable2 = () -> new Gymnasium(null, "gCity", Integer.MAX_VALUE);
+		final Executable executable2 = () -> new Gymnasium(null, "gCity", Integer.MAX_VALUE, "red");
 		assertThrows(IllegalArgumentException.class, executable2);
-		final Executable executable3 = () -> new Gymnasium("    ", "gCity", Integer.MAX_VALUE);
+		final Executable executable3 = () -> new Gymnasium("    ", "gCity", Integer.MAX_VALUE, "red");
 		assertThrows(IllegalArgumentException.class, executable3);
 	}
 	
 	@Test
 	void constructEmptyCity(){
-		final Executable executable1 = () -> new Gymnasium("gName", "", Integer.MAX_VALUE);
+		final Executable executable1 = () -> new Gymnasium("gName", "", Integer.MAX_VALUE, "red");
 		assertThrows(IllegalArgumentException.class, executable1);
-		final Executable executable2 = () -> new Gymnasium("gName", null, Integer.MAX_VALUE);
+		final Executable executable2 = () -> new Gymnasium("gName", null, Integer.MAX_VALUE, "red");
 		assertThrows(IllegalArgumentException.class, executable2);
-		final Executable executable3 = () -> new Gymnasium("gName", "    ", Integer.MAX_VALUE);
+		final Executable executable3 = () -> new Gymnasium("gName", "    ", Integer.MAX_VALUE, "red");
 		assertThrows(IllegalArgumentException.class, executable3);
 	}
 	
@@ -75,14 +75,14 @@ class GymnasiumTest{
 			0
 	})
 	void constructNegativeCapacity(final int cap){
-		final Executable executable = () -> new Gymnasium("gName", "gCity", cap);
+		final Executable executable = () -> new Gymnasium("gName", "gCity", cap, "red");
 		assertThrows(IllegalArgumentException.class, executable);
 	}
 	
 	@Test
 	void equalsTest(){
-		final var gym1 = new Gymnasium("gName", "gCity", Integer.MAX_VALUE);
-		final var gym2 = new Gymnasium("gName", "gCity", Integer.MAX_VALUE);
+		final var gym1 = new Gymnasium("gName", "gCity", Integer.MAX_VALUE, "red");
+		final var gym2 = new Gymnasium("gName", "gCity", Integer.MAX_VALUE, "red");
 		assertEquals(gym1, gym2);
 	}
 }

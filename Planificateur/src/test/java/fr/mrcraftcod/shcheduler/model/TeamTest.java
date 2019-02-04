@@ -20,7 +20,7 @@ class TeamTest{
 	
 	@BeforeEach
 	void setUp(){
-		this.gym = new Gymnasium("gName", "gCity", Integer.MAX_VALUE);
+		this.gym = new Gymnasium("gName", "gCity", Integer.MAX_VALUE, "red");
 	}
 	
 	@Test

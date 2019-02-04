@@ -114,8 +114,10 @@ public class Match{
 	 * @param gymnasium The gymnasium to set.
 	 */
 	public void setGymnasium(final Gymnasium gymnasium){
-		if(gymnasium != null && (!gymnasium.equals(team1.getGymnasium()) && !gymnasium.equals(team2.getGymnasium()))){
-			throw new IllegalArgumentException("Match gymnasium not corresponding to a team");
+		if(gymnasium != null){
+			if(!gymnasium.equals(team1.getGymnasium()) && !gymnasium.equals(team2.getGymnasium())){
+				throw new IllegalArgumentException("Match gymnasium not corresponding to a team");
+			}
 		}
 		this.gymnasium = gymnasium;
 	}

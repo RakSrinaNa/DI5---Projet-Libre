@@ -5,17 +5,19 @@ import com.beust.jcommander.ParameterException;
 import fr.mrcraftcod.shcheduler.CLIParameters;
 import fr.mrcraftcod.shcheduler.Parser;
 import fr.mrcraftcod.shcheduler.exceptions.ParserException;
+import fr.mrcraftcod.shcheduler.model.GroupStage;
 import javafx.application.Application;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.TabPane;
 import javafx.scene.image.Image;
-import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.awt.Taskbar;
 import java.io.IOException;
+import java.util.Comparator;
 import java.util.Objects;
 import java.util.function.Consumer;
 
@@ -31,7 +33,7 @@ public class MainApplication extends Application{
 	private static final Logger LOGGER = LoggerFactory.getLogger(MainApplication.class);
 	private Stage stage;
 	private MainController controller;
-	private MatchTableView matchesTableView;
+	private TabPane tabPane;
 	
 	@Override
 	public void start(final Stage stage){
@@ -67,31 +69,13 @@ public class MainApplication extends Application{
 	}
 	
 	/**
-	 * Called when the stage is displayed.
+	 * Create the scene content.
 	 *
-	 * @return The consumer to execute.
+	 * @return The root content.
 	 */
-	@SuppressWarnings("Duplicates")
-	private Consumer<Stage> getOnStageDisplayed(){
-		return stage -> {
-			final var parameters = new CLIParameters();
-			try{
-				JCommander.newBuilder().addObject(parameters).build().parse(this.getParameters().getRaw().toArray(new String[0]));
-			}
-			catch(final ParameterException e){
-				LOGGER.error("Failed to parse arguments", e);
-				e.usage();
-				System.exit(1);
-			}
-			try{
-				final var championship = new Parser(';').parse(parameters.getCsvGymnasiumConfigFile(), parameters.getCsvTeamConfigFile());
-				matchesTableView.loadGroupStage(championship.getGroupStages().iterator().next());
-			}
-			catch(final ParserException | IOException e){
-				LOGGER.error("Error parsing config", e);
-			}
-			//TODO: Load data into view
-		};
+	private Parent createContent(){
+		tabPane = new TabPane();
+		return tabPane;
 	}
 	
 	/**
@@ -124,15 +108,34 @@ public class MainApplication extends Application{
 	}
 	
 	/**
-	 * Create the scene content.
+	 * Called when the stage is displayed.
 	 *
-	 * @return The root content.
+	 * @return The consumer to execute.
 	 */
-	private Parent createContent(){
-		final var root = new VBox();
-		matchesTableView = new MatchTableView(controller);
-		root.getChildren().addAll(matchesTableView);
-		return root;
+	@SuppressWarnings("Duplicates")
+	private Consumer<Stage> getOnStageDisplayed(){
+		return stage -> {
+			final var parameters = new CLIParameters();
+			try{
+				JCommander.newBuilder().addObject(parameters).build().parse(this.getParameters().getRaw().toArray(new String[0]));
+			}
+			catch(final ParameterException e){
+				LOGGER.error("Failed to parse arguments", e);
+				e.usage();
+				System.exit(1);
+			}
+			try{
+				final var championship = new Parser(';').parse(parameters.getCsvGymnasiumConfigFile(), parameters.getCsvTeamConfigFile());
+				controller.setChampionship(championship);
+				championship.getGroupStages().stream().sorted(Comparator.comparing(GroupStage::getName)).forEach(gs -> {
+					tabPane.getTabs().add(new GroupStageTab(controller, gs));
+				});
+			}
+			catch(final ParserException | IOException e){
+				LOGGER.error("Error parsing config", e);
+			}
+			//TODO: Load data into view
+		};
 	}
 	
 	/**
