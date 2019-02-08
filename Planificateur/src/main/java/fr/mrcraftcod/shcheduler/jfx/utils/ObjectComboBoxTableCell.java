@@ -75,6 +75,7 @@ public class ObjectComboBoxTableCell<S, T> extends ObjectTableCell<S, T>{
 	
 	@Override
 	public void updateItem(T item, boolean empty){
+		super.updateItem(item, empty);
 		LOGGER.info("i={}, e={}", item, empty);
 		if(isEmpty()){
 			setText(null);

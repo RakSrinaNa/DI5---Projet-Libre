@@ -4,6 +4,12 @@
     -fx-border-width: 0.05;
 }
 
+.moncul {
+    -fx-background-color: -fx-my-cell-background;
+    -fx-border-color: gray;
+    -fx-border-width: 0.05;
+}
+
 .table-view:row-selection .table-row-cell:selected .table-cell {
     -fx-background-color: null;
 }

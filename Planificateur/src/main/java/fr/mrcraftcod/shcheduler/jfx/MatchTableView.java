@@ -52,7 +52,7 @@ public class MatchTableView extends SortedTableView<Gymnasium>{
 		getColumns().add(columnGymnasium);
 		
 		for(var i = 1; i <= colCount; i++){
-			final var column = new TableColumn<Gymnasium, Match>("Week " + i);
+			final var column = new TableColumn<Gymnasium, ObservableList<Match>>("Week " + i);
 			column.setCellValueFactory(value -> new SimpleObjectProperty<>(null));
 			final var finalI = i;
 			column.setCellFactory(list -> new GymnasiumMatchTableCell(groupStage, controller, LocalDate.now().plusDays(finalI * 7), matchPool));

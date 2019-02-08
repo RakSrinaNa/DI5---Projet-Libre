@@ -27,6 +27,10 @@ public class MainController{
 		return predicateCorrectGymnasium.negate();
 	}
 	
+	public int getRemainingSpace(Gymnasium gymnasium, LocalDate date){
+		return Integer.MAX_VALUE;
+	}
+	
 	public void setChampionship(Championship championship){
 		this.championship = championship;
 	}
