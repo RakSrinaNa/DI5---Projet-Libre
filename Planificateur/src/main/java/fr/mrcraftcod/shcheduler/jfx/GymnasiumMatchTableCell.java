@@ -20,23 +20,22 @@ public class GymnasiumMatchTableCell extends ObjectComboBoxTableCell<Gymnasium, 
 	private final LocalDate date;
 	
 	public GymnasiumMatchTableCell(final GroupStage gs, final MainController controller, final LocalDate date, final ObservableList<Match> matchPool){
-		super(null, matchPool, m -> new SimpleStringProperty(m.getTeam1() + " - " + m.getTeam2()), null);
+		super(null, matchPool, m -> new SimpleStringProperty(m.getTeam1() + " - " + m.getTeam2()), null, null);
 		this.match = null;
 		this.matchPool = matchPool;
 		
+		final Predicate<Match> predicateMatchGymnasium = m -> Objects.equals(getGymnasium(), m.getTeam1().getGymnasium()) || Objects.equals(getGymnasium(), m.getTeam2().getGymnasium());
 		final Predicate<Match> predicateNotAssigned = m -> Objects.isNull(m.getGymnasium());
 		final Predicate<Match> predicateFreeGymnasium = m -> controller.isGymnasiumFree(getGymnasium(), date);
 		final Predicate<Match> predicateDontPlaySameDay = m -> gs.getMatches().stream().filter(m2 -> m2.isTeamPlaying(m.getTeam1()) || m2.isTeamPlaying(m.getTeam2())).noneMatch(m2 -> Objects.equals(date, m2.getDate()));
 		
-		//TODO Contraintes faibles: warning
-		final Predicate<Match> predicateCorrectGymnasium = m -> Objects.equals(getGymnasium(), m.getTeam1().getGymnasium());
-		
-		this.setFilter(predicateCorrectGymnasium.and(predicateNotAssigned).and(predicateFreeGymnasium).and(predicateDontPlaySameDay));
+		this.setFilter(predicateMatchGymnasium.and(predicateNotAssigned).and(predicateFreeGymnasium).and(predicateDontPlaySameDay));
+		this.setWarnings(controller.getWeakConstraints(this));
 		this.date = date;
 		this.setAlignment(Pos.CENTER);
 	}
 	
-	private Gymnasium getGymnasium(){
+	public Gymnasium getGymnasium(){
 		return this.getTableView().getItems().get(this.getTableRow().getIndex());
 	}
 	
