@@ -3,6 +3,7 @@ package fr.mrcraftcod.shcheduler.model;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -19,8 +20,8 @@ class MatchTest{
 	
 	@BeforeEach
 	void setUp(){
-		team1 = new Team(new Gymnasium("gym1", "city1", Integer.MAX_VALUE), "team1");
-		team2 = new Team(new Gymnasium("gym2", "city2", Integer.MAX_VALUE), "team2");
+		team1 = new Team(new Gymnasium("gym1", "city1", Integer.MAX_VALUE, "red"), "team1", DayOfWeek.MONDAY);
+		team2 = new Team(new Gymnasium("gym2", "city2", Integer.MAX_VALUE, "red"), "team2", DayOfWeek.MONDAY);
 		date = LocalDate.now();
 	}
 	
@@ -62,7 +63,7 @@ class MatchTest{
 	@Test
 	void setInvalidGymnasium(){
 		final var match = new Match(team1, team2, team1.getGymnasium(), date);
-		final Executable executable1 = () -> match.setGymnasium(new Gymnasium("gNameA", "gCityA", Integer.MAX_VALUE));
+		final Executable executable1 = () -> match.setGymnasium(new Gymnasium("gNameA", "gCityA", Integer.MAX_VALUE, "red"));
 		assertThrows(IllegalArgumentException.class, executable1);
 	}
 	
@@ -97,7 +98,7 @@ class MatchTest{
 	
 	@Test
 	void failConstruct(){
-		final Executable executable1 = () -> new Match(team1, team2, new Gymnasium("gNameA", "cNameA", Integer.MAX_VALUE), date);
+		final Executable executable1 = () -> new Match(team1, team2, new Gymnasium("gNameA", "cNameA", Integer.MAX_VALUE, "red"), date);
 		assertThrows(IllegalArgumentException.class, executable1);
 		final Executable executable2 = () -> new Match(null, team2, team2.getGymnasium(), date);
 		assertThrows(IllegalArgumentException.class, executable2);

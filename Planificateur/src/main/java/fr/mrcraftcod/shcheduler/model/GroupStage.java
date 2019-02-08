@@ -2,6 +2,7 @@ package fr.mrcraftcod.shcheduler.model;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -13,7 +14,7 @@ import java.util.Objects;
  * @since 2019-01-21
  */
 public class GroupStage{
-	private final Collection<Match> matches;
+	private final List<Match> matches;
 	private final Collection<Team> teams;
 	private final String name;
 	
@@ -116,7 +117,7 @@ public class GroupStage{
 	 *
 	 * @return The matches.
 	 */
-	public Collection<Match> getMatches(){
+	public List<Match> getMatches(){
 		return this.matches;
 	}
 	

@@ -5,18 +5,19 @@ import com.beust.jcommander.ParameterException;
 import fr.mrcraftcod.shcheduler.CLIParameters;
 import fr.mrcraftcod.shcheduler.Parser;
 import fr.mrcraftcod.shcheduler.exceptions.ParserException;
-import fr.mrcraftcod.shcheduler.model.Championship;
+import fr.mrcraftcod.shcheduler.model.GroupStage;
 import javafx.application.Application;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.TabPane;
 import javafx.scene.image.Image;
-import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.awt.Taskbar;
 import java.io.IOException;
+import java.util.Comparator;
 import java.util.Objects;
 import java.util.function.Consumer;
 
@@ -31,12 +32,14 @@ import java.util.function.Consumer;
 public class MainApplication extends Application{
 	private static final Logger LOGGER = LoggerFactory.getLogger(MainApplication.class);
 	private Stage stage;
-	private Championship championship;
+	private MainController controller;
+	private TabPane tabPane;
 	
 	@Override
-	public void start(final Stage stage) throws Exception{
+	public void start(final Stage stage){
 		this.stage = stage;
-		final var scene = buildScene(stage);
+		this.controller = new MainController();
+		final var scene = buildScene();
 		stage.setTitle(this.getFrameTitle());
 		stage.setScene(scene);
 		stage.sizeToScene();
@@ -59,24 +62,20 @@ public class MainApplication extends Application{
 	/**
 	 * Build the scene.
 	 *
-	 * @param stage The stage the scene is in.
-	 *
 	 * @return The scene.
 	 */
-	private Scene buildScene(final Stage stage){
-		return new Scene(createContent(stage), 640, 640);
+	private Scene buildScene(){
+		return new Scene(createContent(), 640, 640);
 	}
 	
 	/**
 	 * Create the scene content.
 	 *
-	 * @param stage The stage the scene is in.
-	 *
 	 * @return The root content.
 	 */
-	private Parent createContent(final Stage stage){
-		final var root = new VBox();
-		return root;
+	private Parent createContent(){
+		tabPane = new TabPane();
+		return tabPane;
 	}
 	
 	/**
@@ -126,7 +125,11 @@ public class MainApplication extends Application{
 				System.exit(1);
 			}
 			try{
-				championship = new Parser(';').parse(parameters.getCsvGymnasiumConfigFile(), parameters.getCsvTeamConfigFile());
+				final var championship = new Parser(';').parse(parameters.getCsvGymnasiumConfigFile(), parameters.getCsvTeamConfigFile());
+				controller.setChampionship(championship);
+				championship.getGroupStages().stream().sorted(Comparator.comparing(GroupStage::getName)).forEach(gs -> {
+					tabPane.getTabs().add(new GroupStageTab(controller, gs));
+				});
 			}
 			catch(final ParserException | IOException e){
 				LOGGER.error("Error parsing config", e);

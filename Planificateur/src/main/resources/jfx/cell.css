@@ -1,0 +1,18 @@
+.table-cell:filled {
+    -fx-background-color: -fx-my-cell-background;
+    -fx-border-color: gray;
+    -fx-border-width: 0.05;
+}
+
+.table-view:row-selection .table-row-cell:selected .table-cell {
+    -fx-background-color: null;
+}
+
+.table-view:cell-selection .table-cell:selected {
+    -fx-background-color: -fx-table-cell-border-color, -fx-background;
+}
+
+.table-row-cell {
+    -fx-cell-size: 50px;
+    -fx-wrap-text: true;
+}

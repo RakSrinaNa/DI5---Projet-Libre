@@ -35,10 +35,10 @@ class ParserGymnasiumsTest{
 	
 	@Test
 	void getGymsValid1(){
-		final var g1 = new Gymnasium("G1", "C1", 1);
-		final var g2 = new Gymnasium("G2", "C2", 2);
-		final var g3 = new Gymnasium("G3", "C3", 3);
-		final var g4 = new Gymnasium("G4", "C4", 4);
+		final var g1 = new Gymnasium("G1", "C1", 1, "red");
+		final var g2 = new Gymnasium("G2", "C2", 2, "red");
+		final var g3 = new Gymnasium("G3", "C3", 3, "red");
+		final var g4 = new Gymnasium("G4", "C4", 4, "red");
 		
 		final var gyms = parserComma.getGymnasiums(getLines(Parser.class.getResourceAsStream("/gymnasiums/valid1.csv")));
 		assertEquals(4, gyms.size());
@@ -50,7 +50,7 @@ class ParserGymnasiumsTest{
 	
 	@Test
 	void getGymsValid2(){
-		final var g1 = new Gymnasium("G1,1", "C1", 1);
+		final var g1 = new Gymnasium("G1,1", "C1", 1, "red");
 		
 		final var gyms = parserSemicolon.getGymnasiums(getLines(Parser.class.getResourceAsStream("/gymnasiums/valid2.csv")));
 		assertEquals(1, gyms.size());
@@ -63,10 +63,10 @@ class ParserGymnasiumsTest{
 	
 	@Test
 	void getGymsDuplicates1(){
-		final var g1 = new Gymnasium("G1", "C1", 1);
-		final var g2 = new Gymnasium("G2", "C2", 2);
-		final var g3 = new Gymnasium("G3", "C3", 3);
-		final var g4 = new Gymnasium("G4", "C4", 4);
+		final var g1 = new Gymnasium("G1", "C1", 1, "red");
+		final var g2 = new Gymnasium("G2", "C2", 2, "red");
+		final var g3 = new Gymnasium("G3", "C3", 3, "red");
+		final var g4 = new Gymnasium("G4", "C4", 4, "red");
 		
 		final var gyms = parserComma.getGymnasiums(getLines(Parser.class.getResourceAsStream("/gymnasiums/duplicates1.csv")));
 		assertEquals(4, gyms.size());

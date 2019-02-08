@@ -6,6 +6,7 @@ import fr.mrcraftcod.shcheduler.model.*;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
+import java.time.DayOfWeek;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -81,14 +82,16 @@ public class Parser{
 	 * @throws ParserException If the parser encountered an error.
 	 */
 	public Collection<Gymnasium> getGymnasiums(final Collection<String> gymnasiumLines) throws ParserException{
+		final List<String> colors = Arrays.asList("blue", "green", "red", "violet", "yellow", "rgb(255,125,75)");
 		final var gyms = new ArrayList<Gymnasium>();
+		int i = 0;
 		for(String gym : gymnasiumLines){
 			String[] elements = gym.split(csvSeparator, -1);
-
+			
 			if(elements.length != 3){
 				throw new ParserException("Wrong format", new IllegalCSVFormatException("No 3 elements"));
 			}
-
+			
 			int cap;
 			try{
 				cap = Integer.parseInt(elements[1]);
@@ -98,9 +101,9 @@ public class Parser{
 			}
 			String name = elements[0];
 			String city = elements[2];
-
+			
 			try{
-				Gymnasium g = new Gymnasium(name, city, cap);
+				Gymnasium g = new Gymnasium(name, city, cap, colors.get(i++ % colors.size()));
 				if(!gyms.contains(g)){
 					gyms.add(g);
 				}
@@ -126,13 +129,16 @@ public class Parser{
 		final var groups = new ArrayList<GroupStage>();
 		for(String team : teamLines){
 			String[] elements = team.split(csvSeparator, -1);
-
+			
 			if(elements.length != 4){
 				throw new ParserException("Wrong format", new IllegalCSVFormatException("No 3 elements"));
 			}
-
+			
 			try{
-				groups.add(new GroupStage(elements[3]));
+				final var group = new GroupStage(elements[3]);
+				if(!groups.contains(group)){
+					groups.add(group);
+				}
 			}
 			catch(IllegalArgumentException e){
 				throw new ParserException("Team parsing error", e);
@@ -140,9 +146,9 @@ public class Parser{
 			GroupStage group = groups.stream().filter(g -> g.getName().equals(elements[3])).findFirst().get();
 			
 			Gymnasium gym = gymnasiums.stream().filter(g -> g.getName().equals(elements[1])).findFirst().get();
-
+			
 			try{
-				Team t = new Team(gym, elements[0]);
+				Team t = new Team(gym, elements[0], DayOfWeek.MONDAY);
 				if(!groups.contains(t)){
 					group.addTeam(t);
 				}

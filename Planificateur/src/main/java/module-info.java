@@ -17,4 +17,5 @@ open module fr.mrcraftcod.simulator {
 	requires javafx.swing;
 	
 	exports fr.mrcraftcod.shcheduler.jfx to javafx.graphics;
+	exports fr.mrcraftcod.shcheduler.model;
 }

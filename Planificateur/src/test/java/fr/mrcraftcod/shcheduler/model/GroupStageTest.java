@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,8 +28,8 @@ class GroupStageTest{
 	@BeforeEach
 	void setUp(){
 		date = LocalDate.now();
-		team1 = new Team(new Gymnasium("gName1", "gCity1", Integer.MAX_VALUE), "tName1");
-		team2 = new Team(new Gymnasium("gName2", "gCity2", Integer.MAX_VALUE), "tName2");
+		team1 = new Team(new Gymnasium("gName1", "gCity1", Integer.MAX_VALUE, "red"), "tName1", DayOfWeek.MONDAY);
+		team2 = new Team(new Gymnasium("gName2", "gCity2", Integer.MAX_VALUE, "red"), "tName2", DayOfWeek.MONDAY);
 		match1 = new Match(team1, team2, team1.getGymnasium(), date);
 		match2 = new Match(team2, team1, team2.getGymnasium(), date);
 	}
@@ -118,7 +119,7 @@ class GroupStageTest{
 	void addWrongMatch(){
 		final var gs = new GroupStage("gs");
 		gs.addAllTeams(List.of(team1, team2));
-		final var wMatch1 = new Match(team1, new Team(new Gymnasium("gNameA", "gCityA", 2), "tNameA"), team1.getGymnasium(), date);
+		final var wMatch1 = new Match(team1, new Team(new Gymnasium("gNameA", "gCityA", 2, "red"), "tNameA", DayOfWeek.MONDAY), team1.getGymnasium(), date);
 		gs.addAllTeams(List.of(team1, team2));
 		final Executable executable1 = () -> gs.addMatch(null);
 		assertThrows(IllegalArgumentException.class, executable1);
