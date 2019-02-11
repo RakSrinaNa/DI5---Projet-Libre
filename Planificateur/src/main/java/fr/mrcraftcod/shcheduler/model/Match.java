@@ -51,6 +51,10 @@ public class Match{
 		return Objects.equals(team, team1) || Objects.equals(team, team2);
 	}
 	
+	public String getDisplayName(){
+		return getTeam1().getName() + " VS " + getTeam2().getName();
+	}
+	
 	public String getId(){
 		return getTeam1().getName() + getTeam2().getName();
 	}

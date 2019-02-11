@@ -4,20 +4,16 @@ import fr.mrcraftcod.shcheduler.jfx.utils.MatchMenuButton;
 import fr.mrcraftcod.shcheduler.model.GroupStage;
 import fr.mrcraftcod.shcheduler.model.Gymnasium;
 import fr.mrcraftcod.shcheduler.model.Match;
-import javafx.application.Platform;
-import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
-import javafx.scene.control.Cell;
 import javafx.scene.control.Control;
 import javafx.scene.control.TableCell;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
-import org.controlsfx.control.CheckComboBox;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.time.LocalDate;
@@ -32,27 +28,20 @@ public class GymnasiumMatchTableCell extends TableCell<Gymnasium, ObservableList
 	private final LocalDate date;
 	private final MainController controller;
 	private ObservableList<Match> matches;
-	private MatchMenuButton comboBox;
+	private MatchMenuButton matchMenuButton;
+	private GroupStage groupStage;
 	
 	public GymnasiumMatchTableCell(final GroupStage gs, final MainController controller, final LocalDate date, final ObservableList<Match> matchPool){
 		super();
 		this.controller = controller;
+		this.groupStage = gs;
 		this.matches = null;
 		this.matchPool = matchPool;
-		
-		final Predicate<Match> predicateMatchGymnasium = m -> Objects.equals(getGymnasium(), m.getTeam1().getGymnasium()) || Objects.equals(getGymnasium(), m.getTeam2().getGymnasium());
-		final Predicate<Match> predicateNotAssigned = m -> Objects.isNull(m.getGymnasium());
-		final Predicate<Match> predicateFreeGymnasium = m -> controller.isGymnasiumFree(getGymnasium(), date);
-		final Predicate<Match> predicateDontPlaySameDay = m -> gs.getMatches().stream().filter(m2 -> m2.isTeamPlaying(m.getTeam1()) || m2.isTeamPlaying(m.getTeam2())).noneMatch(m2 -> Objects.equals(date, m2.getDate()));
-		
-		this.filters = predicateMatchGymnasium.and(predicateNotAssigned).and(predicateFreeGymnasium).and(predicateDontPlaySameDay);
-		this.warnings = controller.getWeakConstraints(this);
 		this.date = date;
+		
+		this.filters = controller.getStrongConstraints(this);
+		this.warnings = controller.getWeakConstraints(this);
 		this.setAlignment(Pos.CENTER);
-	}
-	
-	public Gymnasium getGymnasium(){
-		return this.getTableView().getItems().get(this.getTableRow().getIndex());
 	}
 	
 	@Override
@@ -63,12 +52,31 @@ public class GymnasiumMatchTableCell extends TableCell<Gymnasium, ObservableList
 				matches = item;
 				setGraphic(getCellContent(item));
 				setText(null);
-				matches.forEach(match -> assignMatch(match, null, null));
+				matches.forEach(match -> assignMatch(match, getGymnasium(), getDate()));
 			}
 			else if(Objects.nonNull(matches)){
 				matches.forEach(match -> assignMatch(match, null, null));
 				this.setStyle("");
 				matches = null;
+			}
+		}
+	}
+	
+	public Gymnasium getGymnasium(){
+		return this.getTableView().getItems().get(this.getTableRow().getIndex());
+	}
+	
+	private void assignMatch(Match match, Gymnasium gymnasium, LocalDate date){
+		if(Objects.nonNull(match)){
+			match.setGymnasium(gymnasium);
+			match.setDate(date);
+			if(Objects.isNull(gymnasium) || Objects.isNull(date)){
+				if(matchPool.contains(match)){
+					matchPool.add(match);
+				}
+			}
+			else{
+				matchPool.remove(match);
 			}
 		}
 	}
@@ -93,17 +101,23 @@ public class GymnasiumMatchTableCell extends TableCell<Gymnasium, ObservableList
 		return vBox;
 	}
 	
-	private void assignMatch(Match match, Gymnasium gymnasium, LocalDate date){
-		if(Objects.nonNull(match)){
-			match.setGymnasium(gymnasium);
-			match.setDate(date);
-			if(Objects.isNull(gymnasium) || Objects.isNull(date)){
-				matchPool.add(match);
-			}
-			else{
-				matchPool.remove(match);
-			}
+	@Override
+	public void startEdit(){
+		if(!isEditable() || !getTableView().isEditable() || !getTableColumn().isEditable()){
+			return;
 		}
+		
+		if(matchMenuButton == null){
+			matchMenuButton = new MatchMenuButton(this, matchPool.filtered(filters), controller);
+		}
+		
+		final var valid = new Button("OK");
+		valid.setOnAction(evt -> GymnasiumMatchTableCell.this.commitEdit(matchMenuButton.getCheckedItems()));
+		valid.setMaxWidth(Double.MAX_VALUE);
+		
+		super.startEdit();
+		setText(null);
+		setGraphic(new VBox(matchMenuButton, valid));
 	}
 	
 	public LocalDate getDate(){
@@ -111,69 +125,16 @@ public class GymnasiumMatchTableCell extends TableCell<Gymnasium, ObservableList
 	}
 	
 	@Override
-	public void startEdit(){
-		if(!isEditable() || !getTableView().isEditable() || !getTableColumn().isEditable()){
-			return;
-		}
-		
-		if(comboBox == null){
-			comboBox = createComboBox(this, matchPool.filtered(filters));
-		}
-		
-		final var valid = new Button("OK");
-		valid.setOnAction(evt -> GymnasiumMatchTableCell.this.commitEdit(comboBox.getCheckedItems()));
-		valid.setMaxWidth(Double.MAX_VALUE);
-		
-		super.startEdit();
-		setText(null);
-		setGraphic(new VBox(comboBox, valid));
-	}
-	
-	private MatchMenuButton createComboBox(final Cell<ObservableList<Match>> cell, final ObservableList<Match> items){
-		CheckComboBox<Match> comboBox = new CheckComboBox<>(items);
-		// Callback<ListView<T>, ListCell<T>> cellFactory = param -> new ListCell<>(){
-		// 	@Override
-		// 	protected void updateItem(final T item, final boolean empty){
-		// 		super.updateItem(item, empty);
-		// 		if(!empty && item != null){
-		// 			setText(item.toString());
-		// 			if(Objects.nonNull(ObjectComboBoxTableCell.this.warnings) && ObjectComboBoxTableCell.this.warnings.test(item)){
-		// 				setBackground(new Background(new BackgroundFill(Color.YELLOW, CornerRadii.EMPTY, Insets.EMPTY)));
-		// 			}
-		// 			else{
-		// 				setBackground(Background.EMPTY);
-		// 			}
-		// 		}
-		// 		else{
-		// 			setText(null);
-		// 			setBackground(Background.EMPTY);
-		// 		}
-		// 	}
-		// };
-		// //comboBox.setButtonCell(cellFactory.call(null));
-		// comboBox.setCellFactory(cellFactory);
-		comboBox.setMaxWidth(Double.MAX_VALUE);
-		comboBox.getCheckModel().getCheckedItems().addListener((ListChangeListener<Match>) change -> {
-			while(change.next()){
-				if(change.getAddedSize() > 0){
-					if(comboBox.getCheckModel().getCheckedIndices().size() > controller.getRemainingSpace(getGymnasium(), getDate())){
-						change.getAddedSubList().forEach(m -> Platform.runLater(() -> comboBox.getCheckModel().clearCheck(m)));
-					}
-				}
-			}
-		});
-		
-		final var menuButton = new MatchMenuButton(items);
-		return menuButton;
-	}
-	
-	@Override
 	public void cancelEdit(){
 		super.cancelEdit();
-		comboBox = null;
+		matchMenuButton = null;
 		
 		setText(null);
 		setGraphic(getCellContent(matches));
+	}
+	
+	public GroupStage getGroupStage(){
+		return this.groupStage;
 	}
 }
 

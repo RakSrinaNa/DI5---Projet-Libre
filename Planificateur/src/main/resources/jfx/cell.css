@@ -22,3 +22,10 @@
     -fx-cell-size: 50px;
     -fx-wrap-text: true;
 }
+
+.check-warning {
+    -fx-background-color: yellow;
+}
+
+.check-warning:hover {
+}
