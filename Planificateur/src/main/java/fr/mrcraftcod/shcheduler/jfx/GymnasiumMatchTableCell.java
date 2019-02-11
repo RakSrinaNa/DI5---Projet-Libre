@@ -108,7 +108,7 @@ public class GymnasiumMatchTableCell extends TableCell<Gymnasium, ObservableList
 		}
 		
 		if(matchMenuButton == null){
-			matchMenuButton = new MatchMenuButton(this, matchPool.filtered(filters), controller);
+			matchMenuButton = new MatchMenuButton(this, matchPool.filtered(m -> Objects.equals(getGymnasium(), m.getTeam1().getGymnasium()) || Objects.equals(getGymnasium(), m.getTeam2().getGymnasium())), controller);
 		}
 		
 		final var valid = new Button("OK");

@@ -28,4 +28,9 @@
 }
 
 .check-warning:hover {
+    -fx-text-fill: black;
+}
+
+.check-warning:hover .check-box {
+    -fx-text-fill: black;
 }

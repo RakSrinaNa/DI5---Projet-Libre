@@ -4,7 +4,6 @@ import fr.mrcraftcod.shcheduler.jfx.GymnasiumMatchTableCell;
 import fr.mrcraftcod.shcheduler.jfx.MainController;
 import fr.mrcraftcod.shcheduler.model.Match;
 import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.CustomMenuItem;
@@ -32,17 +31,6 @@ public class MatchMenuButton extends MenuButton{
 		this.weak = controller.getWeakConstraintsSelection(this);
 		
 		items.stream().sorted(Comparator.comparing(Match::getDisplayName)).forEachOrdered(m -> createMatchComboBox(m, controller));
-		
-		items.addListener((ListChangeListener<Match>) change -> {
-			while(change.next()){
-				for(Match m : change.getAddedSubList()){
-					createMatchComboBox(m, controller);
-				}
-				for(Match m : change.getRemoved()){
-					removeMatch(m);
-				}
-			}
-		});
 	}
 	
 	private void createMatchComboBox(Match m, MainController controller){
@@ -52,8 +40,16 @@ public class MatchMenuButton extends MenuButton{
 		this.getItems().add(customMenuItem);
 		
 		if(!controller.getWeakConstraintsSelection(this).test(m)){
-			checkBox.getStyleClass().add("check-warning");
+			customMenuItem.getStyleClass().add("check-warning");
 		}
+		checkBox.setDisable(!strong.test(m));
+		if(!weak.test(m)){
+			customMenuItem.getStyleClass().add("check-warning");
+		}
+		else{
+			customMenuItem.getStyleClass().remove("check-warning");
+		}
+		
 		checkBox.selectedProperty().addListener((observableValue, oldValue, newValue) -> {
 			if(newValue){
 				selected.add(m);
@@ -63,14 +59,19 @@ public class MatchMenuButton extends MenuButton{
 			}
 			
 			MatchMenuButton.this.getItems().stream().filter(i -> i instanceof CustomMenuItem).map(i -> ((CustomMenuItem) i).getContent()).filter(i -> i instanceof CheckBox).forEach(i -> {
-				final var match = getMatchById(i.getId());
-				
-				i.setDisable(!strong.test(match) && !((CheckBox) i).isSelected());
-				if(!weak.test(match)){
-					i.getStyleClass().add("check-warning");
+				final Match match;
+				try{
+					match = getMatchById(i.getId());
+					i.setDisable(!strong.test(match) && !((CheckBox) i).isSelected());
+					if(!weak.test(match)){
+						i.getParent().getStyleClass().add("check-warning");
+					}
+					else{
+						i.getParent().getStyleClass().remove("check-warning");
+					}
 				}
-				else{
-					i.getStyleClass().remove("check-warning");
+				catch(WTFException e){
+					e.printStackTrace(); //TODO
 				}
 			});
 		});
@@ -78,12 +79,8 @@ public class MatchMenuButton extends MenuButton{
 		checkBox.setId(m.getId());
 	}
 	
-	private Match getMatchById(String id){
-		return items.stream().filter(n -> Objects.equals(n.getId(), id)).findFirst().orElse(null);
-	}
-	
-	private void removeMatch(Match m){
-		getChildren().removeIf(n -> Objects.equals(n.getId(), m.getId()));
+	private Match getMatchById(String id) throws WTFException{
+		return items.stream().filter(n -> Objects.equals(n.getId(), id)).findFirst().orElseThrow(() -> new WTFException());
 	}
 	
 	public ObservableList<Match> getCheckedItems(){
