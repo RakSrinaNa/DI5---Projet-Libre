@@ -52,10 +52,10 @@ public class GymnasiumMatchTableCell extends TableCell<Gymnasium, ObservableList
 				matches = item;
 				setGraphic(getCellContent(item));
 				setText(null);
-				matches.forEach(match -> assignMatch(match, getGymnasium(), getDate()));
+				matches.forEach(match -> controller.assignMatch(match, getGymnasium(), getDate()));
 			}
 			else if(Objects.nonNull(matches)){
-				matches.forEach(match -> assignMatch(match, null, null));
+				matches.forEach(match -> controller.assignMatch(match, null, null));
 				this.setStyle("");
 				matches = null;
 			}
@@ -64,21 +64,6 @@ public class GymnasiumMatchTableCell extends TableCell<Gymnasium, ObservableList
 	
 	public Gymnasium getGymnasium(){
 		return this.getTableView().getItems().get(this.getTableRow().getIndex());
-	}
-	
-	private void assignMatch(Match match, Gymnasium gymnasium, LocalDate date){
-		if(Objects.nonNull(match)){
-			match.setGymnasium(gymnasium);
-			match.setDate(date);
-			if(Objects.isNull(gymnasium) || Objects.isNull(date)){
-				if(matchPool.contains(match)){
-					matchPool.add(match);
-				}
-			}
-			else{
-				matchPool.remove(match);
-			}
-		}
 	}
 	
 	private Node getCellContent(final ObservableList<Match> matches){

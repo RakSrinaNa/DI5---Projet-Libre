@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
+import java.util.stream.Stream;
 
 public class MainController{
 	private Championship championship;
@@ -21,8 +22,10 @@ public class MainController{
 	}
 	
 	public void assignMatch(Match item, Gymnasium gymnasium, LocalDate date){
-		item.setGymnasium(gymnasium);
-		item.setDate(date);
+		if(Objects.nonNull(item)){
+			item.setGymnasium(gymnasium);
+			item.setDate(date);
+		}
 	}
 	
 	private Predicate<Match> getWeakConstraints(final GroupStage gs, final Supplier<Gymnasium> gym, final LocalDate date, final List<Match> selected){
@@ -53,7 +56,7 @@ public class MainController{
 	}
 	
 	public boolean isGymnasiumFree(final Gymnasium gymnasium, final LocalDate date, List<Match> selected){
-		return gymnasium.getCapacity() > championship.getGroupStages().stream().flatMap(gs -> gs.getMatches().stream()).filter(m -> Objects.equals(gymnasium, m.getGymnasium()) && Objects.equals(date, m.getDate())).count();
+		return gymnasium.getCapacity() > Stream.concat(championship.getGroupStages().stream().flatMap(gs -> gs.getMatches().stream()).filter(m -> Objects.equals(gymnasium, m.getGymnasium())).filter(m -> Objects.equals(date, m.getDate())), selected.stream()).distinct().count();
 	}
 	
 	public Predicate<Match> getStrongConstraintsSelection(final MatchMenuButton button){
