@@ -9,7 +9,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.TableColumn;
-import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.stream.Collectors;
@@ -39,7 +39,7 @@ public class MatchTableView extends SortedTableView<Gymnasium>{
 		this.setStyle("-fx-my-cell-background: -fx-background;");
 	}
 	
-	public void loadGroupStage(final GroupStage groupStage, ObservableList<Match> matchPool){
+	public void loadGroupStage(final GroupStage groupStage, final ObservableList<Match> matchPool){
 		final var colCount = 10;
 		final var padding = 2;
 		
@@ -51,15 +51,15 @@ public class MatchTableView extends SortedTableView<Gymnasium>{
 		columnGymnasium.setEditable(false);
 		getColumns().add(columnGymnasium);
 		
-		for(var i = 1; i <= colCount; i++){
-			final var column = new TableColumn<Gymnasium, ObservableList<Match>>("Week " + i);
+		final var weekFormatter = DateTimeFormatter.ofPattern("ww");
+		groupStage.getChampionship().getDates().stream().sorted().forEach(date -> {
+			final var column = new TableColumn<Gymnasium, ObservableList<Match>>("Week " + weekFormatter.format(date));
 			column.setCellValueFactory(value -> new SimpleObjectProperty<>(null));
-			final var finalI = i;
-			column.setCellFactory(list -> new GymnasiumMatchTableCell(groupStage, controller, LocalDate.now().plusDays(finalI * 7), matchPool));
+			column.setCellFactory(list -> new GymnasiumMatchTableCell(groupStage, controller, date, matchPool));
 			column.prefWidthProperty().bind(widthProperty().subtract(padding).divide(colCount));
 			column.setEditable(true);
 			getColumns().add(column);
-		}
+		});
 		
 		setItems(FXCollections.observableArrayList(groupStage.getTeams().stream().map(Team::getGymnasium).distinct().sorted(Comparator.comparing(Gymnasium::getName)).collect(Collectors.toList())));
 	}

@@ -93,7 +93,7 @@ public class MainApplication extends Application{
 	 * @return The application icon to set.
 	 */
 	private Image getIcon(){
-		return null;
+		return new Image("/jfx/icon.png");
 	}
 	
 	/**

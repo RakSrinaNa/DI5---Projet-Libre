@@ -17,13 +17,16 @@ public class GroupStage{
 	private final List<Match> matches;
 	private final Collection<Team> teams;
 	private final String name;
+	private Championship championship;
 	
 	/**
 	 * Constructor.
 	 *
+	 * @param championship
 	 * @param name The name of the group stage.
 	 */
-	public GroupStage(final String name){
+	public GroupStage(final Championship championship, final String name){
+		this.championship = championship;
 		this.name = name;
 		this.matches = new ArrayList<>();
 		this.teams = new ArrayList<>();
@@ -104,8 +107,13 @@ public class GroupStage{
 		return obj instanceof GroupStage && Objects.equals(((GroupStage) obj).getName(), this.getName());
 	}
 	
+	public Championship getChampionship(){
+		return this.championship;
+	}
+	
 	/**
 	 * Get the name of the group stage.
+	 *
 	 * @return The name.
 	 */
 	public String getName(){
@@ -123,6 +131,7 @@ public class GroupStage{
 	
 	/**
 	 * Get the teams.
+	 *
 	 * @return The teams.
 	 */
 	public Collection<Team> getTeams(){

@@ -16,11 +16,14 @@ import java.util.Objects;
 public class Championship{
 	private final Collection<GroupStage> groupStages;
 	
+	private final Collection<LocalDate> dates;
+	
 	/**
 	 * Constructor.
 	 */
 	public Championship(){
 		this.groupStages = new ArrayList<>();
+		this.dates = new ArrayList<>();
 	}
 	
 	/**
@@ -69,5 +72,15 @@ public class Championship{
 	 */
 	public Collection<GroupStage> getGroupStages(){
 		return this.groupStages;
+	}
+	
+	public void addDate(final LocalDate date){
+		if(!this.dates.contains(date)){
+			this.dates.add(date);
+		}
+	}
+	
+	public Collection<LocalDate> getDates(){
+		return this.dates;
 	}
 }

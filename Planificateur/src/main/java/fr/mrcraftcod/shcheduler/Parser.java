@@ -7,6 +7,7 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -62,12 +63,19 @@ public class Parser{
 		Set<Gymnasium> gymnasiums = new HashSet<>();
 		Set<GroupStage> groupStages = new HashSet<>();
 		
+		Championship championship = new Championship();
+		
 		gymnasiums.addAll(getGymnasiums(gymnasiumLines));
-		groupStages.addAll(getGroupStages(gymnasiums, teamLines));
+		groupStages.addAll(getGroupStages(championship, gymnasiums, teamLines));
 		buildMatches(groupStages);
 		
-		Championship championship = new Championship();
 		championship.addAllGroupStages(groupStages);
+		
+		final var numberOfWeeks = 10;
+		final var initialDate = LocalDate.now().minusDays(getDaysToRemove(LocalDate.now().getDayOfWeek()));
+		for(var i = 0; i < numberOfWeeks; i++){
+			championship.addDate(initialDate.plusDays(i * 7));
+		}
 		
 		return championship;
 	}
@@ -86,6 +94,9 @@ public class Parser{
 		final var gyms = new ArrayList<Gymnasium>();
 		int i = 0;
 		for(String gym : gymnasiumLines){
+			if(gym.isBlank()){
+				continue;
+			}
 			String[] elements = gym.split(csvSeparator, -1);
 			
 			if(elements.length != 3){
@@ -116,8 +127,10 @@ public class Parser{
 	}
 	
 	/**
-	 * Par se the group stages and teams.
+	 * Parse the group stages and teams.
 	 *
+	 *
+	 * @param championship
 	 * @param gymnasiums The gymnasiums.
 	 * @param teamLines  The CSV lines of the teams/group stages.
 	 *
@@ -125,9 +138,12 @@ public class Parser{
 	 *
 	 * @throws ParserException If the parser encountered an error.
 	 */
-	public Collection<GroupStage> getGroupStages(final Collection<Gymnasium> gymnasiums, final Collection<String> teamLines) throws ParserException{
+	public Collection<GroupStage> getGroupStages(Championship championship, final Collection<Gymnasium> gymnasiums, final Collection<String> teamLines) throws ParserException{
 		final var groups = new ArrayList<GroupStage>();
 		for(String team : teamLines){
+			if(team.isBlank()){
+				continue;
+			}
 			String[] elements = team.split(csvSeparator, -1);
 			
 			if(elements.length != 4){
@@ -135,7 +151,7 @@ public class Parser{
 			}
 			
 			try{
-				final var group = new GroupStage(elements[3]);
+				final var group = new GroupStage(championship, elements[3]);
 				if(!groups.contains(group)){
 					groups.add(group);
 				}
@@ -158,6 +174,26 @@ public class Parser{
 			}
 		}
 		return groups;
+	}
+	
+	private long getDaysToRemove(final DayOfWeek dayOfWeek){
+		switch(dayOfWeek){
+			case MONDAY:
+				return 0;
+			case TUESDAY:
+				return 1;
+			case WEDNESDAY:
+				return 2;
+			case THURSDAY:
+				return 3;
+			case FRIDAY:
+				return 4;
+			case SATURDAY:
+				return 5;
+			case SUNDAY:
+				return 6;
+		}
+		return 0;
 	}
 	
 	/**

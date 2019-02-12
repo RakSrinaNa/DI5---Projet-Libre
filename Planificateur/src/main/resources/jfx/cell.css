@@ -34,3 +34,10 @@
 .check-warning:hover .check-box {
     -fx-text-fill: black;
 }
+
+.places-counter {
+    -fx-border-style: dashed;
+    -fx-border-width: 3px;
+    -fx-border-radius: 5px;
+    -fx-border-color: salmon;
+}

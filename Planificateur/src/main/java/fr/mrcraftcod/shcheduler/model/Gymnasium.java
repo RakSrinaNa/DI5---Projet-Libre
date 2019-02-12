@@ -18,7 +18,7 @@ public class Gymnasium{
 	private final String city;
 	private final int capacity;
 	private final Collection<LocalDate> bannedDates;
-	private String color;
+	private final String color;
 	
 	/**
 	 * Constructor.

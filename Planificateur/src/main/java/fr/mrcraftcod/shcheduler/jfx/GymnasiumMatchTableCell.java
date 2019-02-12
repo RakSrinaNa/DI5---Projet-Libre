@@ -1,6 +1,6 @@
 package fr.mrcraftcod.shcheduler.jfx;
 
-import fr.mrcraftcod.shcheduler.jfx.utils.MatchMenuButton;
+import fr.mrcraftcod.shcheduler.jfx.table.MatchMenuButton;
 import fr.mrcraftcod.shcheduler.model.GroupStage;
 import fr.mrcraftcod.shcheduler.model.Gymnasium;
 import fr.mrcraftcod.shcheduler.model.Match;
@@ -10,7 +10,9 @@ import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Control;
 import javafx.scene.control.TableCell;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
@@ -42,6 +44,7 @@ public class GymnasiumMatchTableCell extends TableCell<Gymnasium, ObservableList
 		this.filters = controller.getStrongConstraints(this);
 		this.warnings = controller.getWeakConstraints(this);
 		this.setAlignment(Pos.CENTER);
+		setPrefHeight(Control.USE_COMPUTED_SIZE);
 	}
 	
 	@Override
@@ -50,8 +53,6 @@ public class GymnasiumMatchTableCell extends TableCell<Gymnasium, ObservableList
 		if(!empty){
 			if(Objects.nonNull(item)){
 				matches = item;
-				setGraphic(getCellContent(item));
-				setText(null);
 				matches.forEach(match -> controller.assignMatch(match, getGymnasium(), getDate()));
 			}
 			else if(Objects.nonNull(matches)){
@@ -59,11 +60,16 @@ public class GymnasiumMatchTableCell extends TableCell<Gymnasium, ObservableList
 				this.setStyle("");
 				matches = null;
 			}
+			setGraphic(getCellContent(item));
+			setText(null);
 		}
 	}
 	
 	public Gymnasium getGymnasium(){
-		return this.getTableView().getItems().get(this.getTableRow().getIndex());
+		if(this.getTableView().getItems().size() > this.getTableRow().getIndex() && this.getTableRow().getIndex() >= 0){
+			return this.getTableView().getItems().get(this.getTableRow().getIndex());
+		}
+		return null;
 	}
 	
 	private Node getCellContent(final ObservableList<Match> matches){
@@ -73,7 +79,6 @@ public class GymnasiumMatchTableCell extends TableCell<Gymnasium, ObservableList
 				if(Objects.nonNull(match)){
 					final var group = new FlowPane();
 					final var text = new Text();
-					setPrefHeight(Control.USE_COMPUTED_SIZE);
 					text.wrappingWidthProperty().bind(widthProperty());
 					text.setText(match.getTeam1().getName() + "\nVS\n" + match.getTeam2().getName());
 					text.setTextAlignment(TextAlignment.CENTER);
@@ -83,6 +88,24 @@ public class GymnasiumMatchTableCell extends TableCell<Gymnasium, ObservableList
 				}
 			}
 		}
+		
+		final var prop = controller.remainingPlaceProperty(getGymnasium(), getDate());
+		final var group = new FlowPane();
+		final var t = new Text();
+		t.wrappingWidthProperty().bind(widthProperty().add(-30));
+		t.textProperty().bind(prop.asString("%1$+d"));
+		t.setTextAlignment(TextAlignment.CENTER);
+		
+		group.setMaxHeight(Double.MAX_VALUE);
+		group.managedProperty().bind(prop.greaterThan(0));
+		group.visibleProperty().bind(prop.greaterThan(0));
+		group.setAlignment(Pos.CENTER);
+		group.getStyleClass().add("places-counter");
+		group.getChildren().add(t);
+		vBox.getChildren().add(group);
+		
+		VBox.setVgrow(group, Priority.ALWAYS);
+		
 		return vBox;
 	}
 	
@@ -100,9 +123,16 @@ public class GymnasiumMatchTableCell extends TableCell<Gymnasium, ObservableList
 		valid.setOnAction(evt -> GymnasiumMatchTableCell.this.commitEdit(matchMenuButton.getCheckedItems()));
 		valid.setMaxWidth(Double.MAX_VALUE);
 		
+		final var vBox = new VBox(matchMenuButton, valid);
+		vBox.setOnKeyReleased(t -> {
+			if(t.getCode() == KeyCode.ENTER || t.getCode() == KeyCode.ESCAPE){
+				commitEdit(matchMenuButton.getCheckedItems());
+			}
+		});
+		
 		super.startEdit();
 		setText(null);
-		setGraphic(new VBox(matchMenuButton, valid));
+		setGraphic(vBox);
 	}
 	
 	public LocalDate getDate(){
