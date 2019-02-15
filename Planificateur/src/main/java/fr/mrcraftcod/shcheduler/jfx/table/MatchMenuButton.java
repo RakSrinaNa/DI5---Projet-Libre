@@ -2,11 +2,13 @@ package fr.mrcraftcod.shcheduler.jfx.table;
 
 import fr.mrcraftcod.shcheduler.jfx.MainController;
 import fr.mrcraftcod.shcheduler.model.Match;
+import fr.mrcraftcod.shcheduler.utils.StringUtils;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.CustomMenuItem;
 import javafx.scene.control.MenuButton;
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.Objects;
 import java.util.function.Predicate;
@@ -33,11 +35,11 @@ public class MatchMenuButton extends MenuButton{
 	 * @param items      The items to select.
 	 * @param controller The controller.
 	 */
-	public MatchMenuButton(final GymnasiumMatchTableCell parent, final ObservableList<Match> items, final MainController controller){
-		super("Select matches");
+	public MatchMenuButton(final GymnasiumMatchTableCell parent, final ObservableList<Match> items, final Collection<Match> selected, final MainController controller){
+		super(StringUtils.getString("select_matches_text"));
 		this.items = items;
 		this.parent = parent;
-		this.selected = FXCollections.observableArrayList();
+		this.selected = FXCollections.observableArrayList(selected);
 		this.strong = controller.getStrongConstraintsSelection(this);
 		this.weak = controller.getWeakConstraintsSelection(this);
 		

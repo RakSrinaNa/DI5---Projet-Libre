@@ -1,5 +1,6 @@
 package fr.mrcraftcod.shcheduler.model;
 
+import javafx.beans.property.SimpleIntegerProperty;
 import org.jetbrains.annotations.NotNull;
 import java.time.LocalDate;
 import java.util.Collection;
@@ -17,7 +18,7 @@ import java.util.Objects;
 public class Gymnasium implements Comparable<Gymnasium>{
 	private final String name;
 	private final String city;
-	private final int capacity;
+	private final SimpleIntegerProperty capacity;
 	private final Collection<LocalDate> bannedDates;
 	private final String color;
 	
@@ -43,7 +44,7 @@ public class Gymnasium implements Comparable<Gymnasium>{
 		}
 		this.name = name;
 		this.city = city;
-		this.capacity = capacity;
+		this.capacity = new SimpleIntegerProperty(capacity);
 		this.color = color;
 		this.bannedDates = new HashSet<>();
 	}
@@ -121,6 +122,10 @@ public class Gymnasium implements Comparable<Gymnasium>{
 	 * @return The capacity.
 	 */
 	public int getCapacity(){
+		return this.capacityProperty().get();
+	}
+	
+	public SimpleIntegerProperty capacityProperty(){
 		return this.capacity;
 	}
 	

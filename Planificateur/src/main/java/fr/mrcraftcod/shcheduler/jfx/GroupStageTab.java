@@ -2,12 +2,14 @@ package fr.mrcraftcod.shcheduler.jfx;
 
 import fr.mrcraftcod.shcheduler.jfx.table.MatchTableView;
 import fr.mrcraftcod.shcheduler.model.GroupStage;
+import fr.mrcraftcod.shcheduler.utils.StringUtils;
 import javafx.collections.FXCollections;
 import javafx.scene.control.Tab;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
 
 /**
  * Tab containing infos about a group stage.
@@ -26,18 +28,18 @@ public class GroupStageTab extends Tab{
 	 * @param controller The controller.
 	 * @param groupStage The group stage of this tab.
 	 */
-	public GroupStageTab(final MainController controller, final GroupStage groupStage){
+	public GroupStageTab(final Stage parentStage, final MainController controller, final GroupStage groupStage){
 		super(groupStage.getName());
 		this.groupStage = groupStage;
 		
 		final var matchPool = FXCollections.observableArrayList(groupStage.getMatches());
 		
 		final var root = new VBox();
-		final var matchesTableView = new MatchTableView(controller);
+		final var matchesTableView = new MatchTableView(parentStage, controller);
 		matchesTableView.loadGroupStage(groupStage, matchPool);
 		
 		final var infos = new HBox();
-		final var remainingMatchesLabel = new Text("Remaining matches: ");
+		final var remainingMatchesLabel = new Text(StringUtils.getString("remaining_matches_to_set"));
 		final var remainingMatches = new Text();
 		remainingMatches.setText("" + matchPool.stream().filter(m -> !m.isAssigned()).count());
 		matchPool.forEach(m -> m.assignedProperty().addListener(observable -> {

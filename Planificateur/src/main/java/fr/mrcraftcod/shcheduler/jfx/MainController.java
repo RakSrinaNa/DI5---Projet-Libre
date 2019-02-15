@@ -77,6 +77,10 @@ public class MainController{
 		return Optional.ofNullable(this.remainingPlaces.get(gymnasium)).map(m -> m.get(date)).orElse(new SimpleIntegerProperty(-1));
 	}
 	
+	public Championship getChampionship(){
+		return this.championship;
+	}
+	
 	public void setChampionship(final Championship championship){
 		this.championship = championship;
 		this.remainingPlaces = championship.getGroupStages().stream().flatMap(gs -> gs.getTeams().stream()).map(Team::getGymnasium).distinct().collect(Collectors.toMap(g -> g, g -> championship.getDates().stream().collect(Collectors.toMap(d -> d, d -> new SimpleIntegerProperty(getRemainingPlace(g, d, List.of()))))));

@@ -5,11 +5,13 @@ import fr.mrcraftcod.shcheduler.model.GroupStage;
 import fr.mrcraftcod.shcheduler.model.Gymnasium;
 import fr.mrcraftcod.shcheduler.model.Match;
 import fr.mrcraftcod.shcheduler.model.Team;
+import fr.mrcraftcod.shcheduler.utils.StringUtils;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.stage.Stage;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
@@ -23,14 +25,16 @@ import java.util.stream.Collectors;
 public class MatchTableView extends TableView<Gymnasium>{
 	private final MainController controller;
 	private static final DateTimeFormatter weekFormatter = DateTimeFormatter.ofPattern("ww");
+	private final Stage parentStage;
 	
 	/**
 	 * Constructor.
 	 *
 	 * @param controller The main controller.
 	 */
-	public MatchTableView(final MainController controller){
+	public MatchTableView(final Stage parentStage, final MainController controller){
 		super();
+		this.parentStage = parentStage;
 		this.controller = controller;
 		this.setItems(FXCollections.observableList(new ArrayList<>()));
 		this.getStylesheets().add(getClass().getResource("/jfx/cell.css").toExternalForm());
@@ -51,15 +55,15 @@ public class MatchTableView extends TableView<Gymnasium>{
 		final var colCount = 10;
 		final var padding = 2;
 		
-		final var columnGymnasium = new TableColumn<Gymnasium, Gymnasium>("Gymnasium");
+		final var columnGymnasium = new TableColumn<Gymnasium, Gymnasium>(StringUtils.getString("gymnasium_column_name"));
 		columnGymnasium.setCellValueFactory(value -> new SimpleObjectProperty<>(value.getValue()));
-		columnGymnasium.setCellFactory(col -> new GymnasiumTableCell());
+		columnGymnasium.setCellFactory(col -> new GymnasiumTableCell(parentStage));
 		columnGymnasium.prefWidthProperty().bind(widthProperty().subtract(padding).divide(colCount));
 		columnGymnasium.setEditable(false);
 		getColumns().add(columnGymnasium);
 		
 		groupStage.getChampionship().getDates().stream().sorted().forEach(date -> {
-			final var column = new TableColumn<Gymnasium, ObservableList<Match>>("Week " + weekFormatter.format(date));
+			final var column = new TableColumn<Gymnasium, ObservableList<Match>>(StringUtils.getString("week_column_name", weekFormatter.format(date)));
 			column.setCellValueFactory(value -> new SimpleObjectProperty<>(null));
 			column.setCellFactory(list -> new GymnasiumMatchTableCell(groupStage, controller, date, matchPool));
 			column.prefWidthProperty().bind(widthProperty().subtract(padding).divide(colCount));

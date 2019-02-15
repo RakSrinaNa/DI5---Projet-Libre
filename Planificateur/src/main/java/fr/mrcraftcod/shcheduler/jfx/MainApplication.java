@@ -6,6 +6,8 @@ import fr.mrcraftcod.shcheduler.CLIParameters;
 import fr.mrcraftcod.shcheduler.Parser;
 import fr.mrcraftcod.shcheduler.exceptions.ParserException;
 import fr.mrcraftcod.shcheduler.model.GroupStage;
+import fr.mrcraftcod.shcheduler.model.Team;
+import fr.mrcraftcod.shcheduler.utils.StringUtils;
 import javafx.application.Application;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.Parent;
@@ -22,6 +24,7 @@ import org.slf4j.LoggerFactory;
 import java.awt.Taskbar;
 import java.io.IOException;
 import java.util.Comparator;
+import java.util.stream.Collectors;
 
 /**
  * Main application window.
@@ -42,7 +45,7 @@ public class MainApplication extends Application{
 		this.stage = stage;
 		this.controller = new MainController();
 		final var scene = buildScene();
-		stage.setTitle("Scheduler");
+		stage.setTitle(StringUtils.getString("frame_title"));
 		stage.setScene(scene);
 		stage.sizeToScene();
 		setIcon();
@@ -81,13 +84,13 @@ public class MainApplication extends Application{
 		if (os != null && os.startsWith("Mac"))
 			menuBar.useSystemMenuBarProperty().set(true);
 		
-		final var menuConstraints = new Menu("Constraints");
-		final var menuConstraintsBannedGymnasiumDates = new MenuItem("Banned gymnasium dates");
+		final var menuConstraints = new Menu(StringUtils.getString("menu_edit"));
+		final var menuConstraintsBannedGymnasiumDates = new MenuItem(StringUtils.getString("menu_edit_gymnasiums"));
 		menuConstraintsBannedGymnasiumDates.setOnAction(evt -> {
 			final var selectedTab = tabPane.getSelectionModel().selectedItemProperty().get();
 			if(selectedTab instanceof  GroupStageTab)
 			{
-				new GymnasiumBannedDatesStage(getStage(), ((GroupStageTab)selectedTab).getGroupStage());
+				new EditGymnasiumListStage(getStage(), MainApplication.this.controller.getChampionship().getGroupStages().stream().flatMap(gs -> gs.getTeams().stream()).map(Team::getGymnasium).distinct().collect(Collectors.toList()));
 			}
 		});
 		
@@ -126,7 +129,7 @@ public class MainApplication extends Application{
 		try{
 			final var championship = new Parser(';').parse(parameters.getCsvGymnasiumConfigFile(), parameters.getCsvTeamConfigFile());
 			controller.setChampionship(championship);
-			championship.getGroupStages().stream().sorted(Comparator.comparing(GroupStage::getName)).forEach(gs -> tabPane.getTabs().add(new GroupStageTab(controller, gs)));
+			championship.getGroupStages().stream().sorted(Comparator.comparing(GroupStage::getName)).forEach(gs -> tabPane.getTabs().add(new GroupStageTab(getStage(), controller, gs)));
 		}
 		catch(final ParserException | IOException e){
 			LOGGER.error("Error parsing config", e);
