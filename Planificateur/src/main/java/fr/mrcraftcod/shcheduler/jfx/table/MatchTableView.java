@@ -1,6 +1,6 @@
-package fr.mrcraftcod.shcheduler.jfx;
+package fr.mrcraftcod.shcheduler.jfx.table;
 
-import fr.mrcraftcod.shcheduler.jfx.utils.SortedTableView;
+import fr.mrcraftcod.shcheduler.jfx.MainController;
 import fr.mrcraftcod.shcheduler.model.GroupStage;
 import fr.mrcraftcod.shcheduler.model.Gymnasium;
 import fr.mrcraftcod.shcheduler.model.Match;
@@ -9,9 +9,9 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.stream.Collectors;
 
 /**
@@ -20,8 +20,9 @@ import java.util.stream.Collectors;
  * @author Thomas Couchoud
  * @since 2017-05-24
  */
-public class MatchTableView extends SortedTableView<Gymnasium>{
+public class MatchTableView extends TableView<Gymnasium>{
 	private final MainController controller;
+	private static final DateTimeFormatter weekFormatter = DateTimeFormatter.ofPattern("ww");
 	
 	/**
 	 * Constructor.
@@ -35,10 +36,17 @@ public class MatchTableView extends SortedTableView<Gymnasium>{
 		this.getStylesheets().add(getClass().getResource("/jfx/cell.css").toExternalForm());
 		setEditable(true);
 		
+		setSortPolicy(p -> true);
 		getSelectionModel().setCellSelectionEnabled(true);
 		this.setStyle("-fx-my-cell-background: -fx-background;");
 	}
 	
+	/**
+	 * Load the group stage into the table view.
+	 *
+	 * @param groupStage The group stage to load.
+	 * @param matchPool  The matches to assign for this group stage.
+	 */
 	public void loadGroupStage(final GroupStage groupStage, final ObservableList<Match> matchPool){
 		final var colCount = 10;
 		final var padding = 2;
@@ -47,11 +55,9 @@ public class MatchTableView extends SortedTableView<Gymnasium>{
 		columnGymnasium.setCellValueFactory(value -> new SimpleObjectProperty<>(value.getValue()));
 		columnGymnasium.setCellFactory(col -> new GymnasiumTableCell());
 		columnGymnasium.prefWidthProperty().bind(widthProperty().subtract(padding).divide(colCount));
-		//column.setCellFactory(list -> new ManagerComboBoxTableCell(controller.getCompany().getManagers()));
 		columnGymnasium.setEditable(false);
 		getColumns().add(columnGymnasium);
 		
-		final var weekFormatter = DateTimeFormatter.ofPattern("ww");
 		groupStage.getChampionship().getDates().stream().sorted().forEach(date -> {
 			final var column = new TableColumn<Gymnasium, ObservableList<Match>>("Week " + weekFormatter.format(date));
 			column.setCellValueFactory(value -> new SimpleObjectProperty<>(null));
@@ -61,6 +67,6 @@ public class MatchTableView extends SortedTableView<Gymnasium>{
 			getColumns().add(column);
 		});
 		
-		setItems(FXCollections.observableArrayList(groupStage.getTeams().stream().map(Team::getGymnasium).distinct().sorted(Comparator.comparing(Gymnasium::getName)).collect(Collectors.toList())));
+		setItems(FXCollections.observableArrayList(groupStage.getTeams().stream().map(Team::getGymnasium).distinct().collect(Collectors.toList())).sorted());
 	}
 }

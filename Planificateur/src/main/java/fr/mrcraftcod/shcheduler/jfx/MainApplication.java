@@ -18,8 +18,6 @@ import org.slf4j.LoggerFactory;
 import java.awt.Taskbar;
 import java.io.IOException;
 import java.util.Comparator;
-import java.util.Objects;
-import java.util.function.Consumer;
 
 /**
  * Main application window.
@@ -40,14 +38,12 @@ public class MainApplication extends Application{
 		this.stage = stage;
 		this.controller = new MainController();
 		final var scene = buildScene();
-		stage.setTitle(this.getFrameTitle());
+		stage.setTitle("Scheduler");
 		stage.setScene(scene);
 		stage.sizeToScene();
-		if(getIcon() != null){
-			setIcon(getIcon());
-		}
+		setIcon();
 		stage.show();
-		Objects.requireNonNull(this.getOnStageDisplayed()).accept(stage);
+		onStageDisplayed();
 	}
 	
 	/**
@@ -79,29 +75,10 @@ public class MainApplication extends Application{
 	}
 	
 	/**
-	 * Get the title of the frame.
-	 *
-	 * @return The title.
-	 */
-	private String getFrameTitle(){
-		return "Scheduler";
-	}
-	
-	/**
-	 * Get the icon to set for the application.
-	 *
-	 * @return The application icon to set.
-	 */
-	private Image getIcon(){
-		return new Image("/jfx/icon.png");
-	}
-	
-	/**
 	 * Set the icon of the application.
-	 *
-	 * @param icon The icon to set.
 	 */
-	private void setIcon(final Image icon){
+	private void setIcon(){
+		final var icon = new Image("/jfx/icon.png");
 		this.stage.getIcons().clear();
 		this.stage.getIcons().add(icon);
 		Taskbar.getTaskbar().setIconImage(SwingFXUtils.fromFXImage(icon, null));
@@ -109,33 +86,25 @@ public class MainApplication extends Application{
 	
 	/**
 	 * Called when the stage is displayed.
-	 *
-	 * @return The consumer to execute.
 	 */
-	@SuppressWarnings("Duplicates")
-	private Consumer<Stage> getOnStageDisplayed(){
-		return stage -> {
-			final var parameters = new CLIParameters();
-			try{
-				JCommander.newBuilder().addObject(parameters).build().parse(this.getParameters().getRaw().toArray(new String[0]));
-			}
-			catch(final ParameterException e){
-				LOGGER.error("Failed to parse arguments", e);
-				e.usage();
-				System.exit(1);
-			}
-			try{
-				final var championship = new Parser(';').parse(parameters.getCsvGymnasiumConfigFile(), parameters.getCsvTeamConfigFile());
-				controller.setChampionship(championship);
-				championship.getGroupStages().stream().sorted(Comparator.comparing(GroupStage::getName)).forEach(gs -> {
-					tabPane.getTabs().add(new GroupStageTab(controller, gs));
-				});
-			}
-			catch(final ParserException | IOException e){
-				LOGGER.error("Error parsing config", e);
-			}
-			//TODO: Load data into view
-		};
+	private void onStageDisplayed(){
+		final var parameters = new CLIParameters();
+		try{
+			JCommander.newBuilder().addObject(parameters).build().parse(this.getParameters().getRaw().toArray(new String[0]));
+		}
+		catch(final ParameterException e){
+			LOGGER.error("Failed to parse arguments", e);
+			e.usage();
+			System.exit(1);
+		}
+		try{
+			final var championship = new Parser(';').parse(parameters.getCsvGymnasiumConfigFile(), parameters.getCsvTeamConfigFile());
+			controller.setChampionship(championship);
+			championship.getGroupStages().stream().sorted(Comparator.comparing(GroupStage::getName)).forEach(gs -> tabPane.getTabs().add(new GroupStageTab(controller, gs)));
+		}
+		catch(final ParserException | IOException e){
+			LOGGER.error("Error parsing config", e);
+		}
 	}
 	
 	/**
@@ -143,6 +112,7 @@ public class MainApplication extends Application{
 	 *
 	 * @return The stage.
 	 */
+	@SuppressWarnings("unused")
 	public Stage getStage(){
 		return stage;
 	}

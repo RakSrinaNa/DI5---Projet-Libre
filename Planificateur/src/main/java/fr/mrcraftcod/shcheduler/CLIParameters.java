@@ -10,7 +10,6 @@ import java.nio.file.Path;
  * @author Thomas Couchoud
  * @since 2018-09-01
  */
-@SuppressWarnings("unused")
 public class CLIParameters{
 	@Parameter(names = {
 			"-g",

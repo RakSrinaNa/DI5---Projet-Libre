@@ -56,19 +56,16 @@ public class Parser{
 	 *
 	 * @throws ParserException If the parser encountered an error.
 	 */
+	@SuppressWarnings("WeakerAccess")
 	public Championship parse(final InputStream gymnasiumsCsvFile, final InputStream teamsCsvFile) throws ParserException{
-		List<String> gymnasiumLines = new BufferedReader(new InputStreamReader(gymnasiumsCsvFile, StandardCharsets.UTF_8)).lines().collect(Collectors.toList());
-		List<String> teamLines = new BufferedReader(new InputStreamReader(teamsCsvFile, StandardCharsets.UTF_8)).lines().collect(Collectors.toList());
+		final var gymnasiumLines = new BufferedReader(new InputStreamReader(gymnasiumsCsvFile, StandardCharsets.UTF_8)).lines().collect(Collectors.toList());
+		final var teamLines = new BufferedReader(new InputStreamReader(teamsCsvFile, StandardCharsets.UTF_8)).lines().collect(Collectors.toList());
 		
-		Set<Gymnasium> gymnasiums = new HashSet<>();
-		Set<GroupStage> groupStages = new HashSet<>();
+		final var championship = new Championship();
 		
-		Championship championship = new Championship();
-		
-		gymnasiums.addAll(getGymnasiums(gymnasiumLines));
-		groupStages.addAll(getGroupStages(championship, gymnasiums, teamLines));
+		final var gymnasiums = new HashSet<>(getGymnasiums(gymnasiumLines));
+		final var groupStages = new HashSet<>(getGroupStages(championship, gymnasiums, teamLines));
 		buildMatches(groupStages);
-		
 		championship.addAllGroupStages(groupStages);
 		
 		final var numberOfWeeks = 10;
@@ -89,37 +86,37 @@ public class Parser{
 	 *
 	 * @throws ParserException If the parser encountered an error.
 	 */
-	public Collection<Gymnasium> getGymnasiums(final Collection<String> gymnasiumLines) throws ParserException{
-		final List<String> colors = Arrays.asList("blue", "green", "red", "violet", "yellow", "rgb(255,125,75)");
+	Collection<Gymnasium> getGymnasiums(final Collection<String> gymnasiumLines) throws ParserException{
+		final var colors = Arrays.asList("blue", "green", "red", "violet", "yellow", "rgb(255,125,75)");
 		final var gyms = new ArrayList<Gymnasium>();
-		int i = 0;
-		for(String gym : gymnasiumLines){
-			if(gym.isBlank()){
+		var colorIndex = 0;
+		for(final var gymnasiumLine : gymnasiumLines){
+			if(gymnasiumLine.isBlank()){
 				continue;
 			}
-			String[] elements = gym.split(csvSeparator, -1);
+			final var elements = gymnasiumLine.split(csvSeparator, -1);
 			
 			if(elements.length != 3){
 				throw new ParserException("Wrong format", new IllegalCSVFormatException("No 3 elements"));
 			}
 			
-			int cap;
+			final int capacity;
 			try{
-				cap = Integer.parseInt(elements[1]);
+				capacity = Integer.parseInt(elements[1]);
 			}
-			catch(NumberFormatException e){
+			catch(final NumberFormatException e){
 				throw new ParserException("Invalid gymnasium capacity", e);
 			}
-			String name = elements[0];
-			String city = elements[2];
+			final var name = elements[0];
+			final var city = elements[2];
 			
 			try{
-				Gymnasium g = new Gymnasium(name, city, cap, colors.get(i++ % colors.size()));
-				if(!gyms.contains(g)){
-					gyms.add(g);
+				final var gymnasium = new Gymnasium(name, city, capacity, colors.get(colorIndex++ % colors.size()));
+				if(!gyms.contains(gymnasium)){
+					gyms.add(gymnasium);
 				}
 			}
-			catch(IllegalArgumentException e){
+			catch(final IllegalArgumentException e){
 				throw new ParserException("Gymnasium parsing error", e);
 			}
 		}
@@ -129,22 +126,21 @@ public class Parser{
 	/**
 	 * Parse the group stages and teams.
 	 *
-	 *
-	 * @param championship
-	 * @param gymnasiums The gymnasiums.
-	 * @param teamLines  The CSV lines of the teams/group stages.
+	 * @param championship The championship.
+	 * @param gymnasiums   The gymnasiums.
+	 * @param teamLines    The CSV lines of the teams/group stages.
 	 *
 	 * @return The group stages.
 	 *
 	 * @throws ParserException If the parser encountered an error.
 	 */
-	public Collection<GroupStage> getGroupStages(Championship championship, final Collection<Gymnasium> gymnasiums, final Collection<String> teamLines) throws ParserException{
+	private Collection<GroupStage> getGroupStages(final Championship championship, final Collection<Gymnasium> gymnasiums, final Collection<String> teamLines) throws ParserException{
 		final var groups = new ArrayList<GroupStage>();
-		for(String team : teamLines){
-			if(team.isBlank()){
+		for(final var teamLine : teamLines){
+			if(teamLine.isBlank()){
 				continue;
 			}
-			String[] elements = team.split(csvSeparator, -1);
+			final var elements = teamLine.split(csvSeparator, -1);
 			
 			if(elements.length != 4){
 				throw new ParserException("Wrong format", new IllegalCSVFormatException("No 3 elements"));
@@ -156,26 +152,32 @@ public class Parser{
 					groups.add(group);
 				}
 			}
-			catch(IllegalArgumentException e){
+			catch(final IllegalArgumentException e){
 				throw new ParserException("Team parsing error", e);
 			}
-			GroupStage group = groups.stream().filter(g -> g.getName().equals(elements[3])).findFirst().get();
-			
-			Gymnasium gym = gymnasiums.stream().filter(g -> g.getName().equals(elements[1])).findFirst().get();
+			final var group = groups.stream().filter(g -> g.getName().equals(elements[3])).findFirst().orElseThrow(() -> new ParserException("Group stage " + elements[3] + " not found", new IllegalStateException()));
+			final var gymnasium = gymnasiums.stream().filter(g -> g.getName().equals(elements[1])).findFirst().orElseThrow(() -> new ParserException("Gymnasium " + elements[1] + " not found", new IllegalStateException()));
 			
 			try{
-				Team t = new Team(gym, elements[0], DayOfWeek.MONDAY);
-				if(!groups.contains(t)){
-					group.addTeam(t);
+				final var team = new Team(gymnasium, elements[0], DayOfWeek.MONDAY);
+				if(!group.containsTeam(team)){
+					group.addTeam(team);
 				}
 			}
-			catch(IllegalArgumentException e){
+			catch(final IllegalArgumentException e){
 				throw new ParserException("Team parsing error", e);
 			}
 		}
 		return groups;
 	}
 	
+	/**
+	 * Get the difference between monday and the other days.
+	 *
+	 * @param dayOfWeek The day to get the difference with.
+	 *
+	 * @return The number of days between monday and the given day.
+	 */
 	private long getDaysToRemove(final DayOfWeek dayOfWeek){
 		switch(dayOfWeek){
 			case MONDAY:
@@ -201,10 +203,10 @@ public class Parser{
 	 *
 	 * @param groupStages The group stages.
 	 */
-	public void buildMatches(final Collection<GroupStage> groupStages){
-		for(GroupStage group : groupStages){
-			for(Team team1 : group.getTeams()){
-				for(Team team2 : group.getTeams()){
+	private void buildMatches(final Collection<GroupStage> groupStages){
+		for(final var group : groupStages){
+			for(final var team1 : group.getTeams()){
+				for(final var team2 : group.getTeams()){
 					if(!team1.equals(team2)){
 						group.addMatch(new Match(team1, team2, null, null));
 					}

@@ -1,6 +1,5 @@
 package fr.mrcraftcod.shcheduler.jfx.table;
 
-import fr.mrcraftcod.shcheduler.jfx.GymnasiumMatchTableCell;
 import fr.mrcraftcod.shcheduler.jfx.MainController;
 import fr.mrcraftcod.shcheduler.model.Match;
 import javafx.collections.FXCollections;
@@ -8,20 +7,32 @@ import javafx.collections.ObservableList;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.CustomMenuItem;
 import javafx.scene.control.MenuButton;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import java.util.Comparator;
 import java.util.Objects;
 import java.util.function.Predicate;
 
+/**
+ * Menu button to select matches.
+ * <p>
+ * Created by Thomas Couchoud (MrCraftCod - zerderr@gmail.com) on 2019-01-17.
+ *
+ * @author Thomas Couchoud
+ * @since 2019-01-17
+ */
 public class MatchMenuButton extends MenuButton{
-	private static final Logger LOGGER = LoggerFactory.getLogger(MatchMenuButton.class);
 	private final ObservableList<Match> items;
 	private final ObservableList<Match> selected;
 	private final Predicate<Match> strong;
 	private final Predicate<Match> weak;
 	private final GymnasiumMatchTableCell parent;
 	
+	/**
+	 * Constructor.
+	 *
+	 * @param parent     The parent.
+	 * @param items      The items to select.
+	 * @param controller The controller.
+	 */
 	public MatchMenuButton(final GymnasiumMatchTableCell parent, final ObservableList<Match> items, final MainController controller){
 		super("Select matches");
 		this.items = items;
@@ -33,17 +44,23 @@ public class MatchMenuButton extends MenuButton{
 		items.stream().sorted(Comparator.comparing(Match::getDisplayName)).forEachOrdered(m -> createMatchComboBox(m, controller));
 	}
 	
-	private void createMatchComboBox(final Match m, final MainController controller){
-		final var checkBox = new CheckBox(m.getDisplayName());
+	/**
+	 * Create a combobox for the given match.
+	 *
+	 * @param match      The match.
+	 * @param controller The controller.
+	 */
+	private void createMatchComboBox(final Match match, final MainController controller){
+		final var checkBox = new CheckBox(match.getDisplayName());
 		final var customMenuItem = new CustomMenuItem(checkBox);
 		customMenuItem.setHideOnClick(false);
 		this.getItems().add(customMenuItem);
 		
-		if(!controller.getWeakConstraintsSelection(this).test(m)){
+		if(!controller.getWeakConstraintsSelection(this).test(match)){
 			customMenuItem.getStyleClass().add("check-warning");
 		}
-		checkBox.setDisable(!strong.test(m));
-		if(!weak.test(m)){
+		checkBox.setDisable(!strong.test(match));
+		if(!weak.test(match)){
 			customMenuItem.getStyleClass().add("check-warning");
 		}
 		else{
@@ -52,17 +69,17 @@ public class MatchMenuButton extends MenuButton{
 		
 		checkBox.selectedProperty().addListener((observableValue, oldValue, newValue) -> {
 			if(newValue){
-				selected.add(m);
+				selected.add(match);
 			}
 			else{
-				selected.remove(m);
+				selected.remove(match);
 			}
 			
 			MatchMenuButton.this.getItems().stream().filter(i -> i instanceof CustomMenuItem).map(i -> ((CustomMenuItem) i).getContent()).filter(i -> i instanceof CheckBox).forEach(i -> {
-				final var match = getMatchById(i.getId());
-				if(Objects.nonNull(match)){
-					i.setDisable(!strong.test(match) && !((CheckBox) i).isSelected());
-					if(!weak.test(match)){
+				final var matchFound = getMatchById(i.getId());
+				if(Objects.nonNull(matchFound)){
+					i.setDisable(!strong.test(matchFound) && !((CheckBox) i).isSelected());
+					if(!weak.test(matchFound)){
 						i.getParent().getStyleClass().add("check-warning");
 					}
 					else{
@@ -72,17 +89,34 @@ public class MatchMenuButton extends MenuButton{
 			});
 		});
 		
-		checkBox.setId(m.getId());
+		checkBox.setId(match.getId());
 	}
 	
+	/**
+	 * Get a match by its id.
+	 *
+	 * @param id The id of the match.
+	 *
+	 * @return The match.
+	 */
 	private Match getMatchById(final String id){
 		return items.stream().filter(n -> Objects.equals(n.getId(), id)).findFirst().orElse(null);
 	}
 	
+	/**
+	 * Get the checked items.
+	 *
+	 * @return The checked items.
+	 */
 	public ObservableList<Match> getCheckedItems(){
 		return selected;
 	}
 	
+	/**
+	 * Get the parent cell.
+	 *
+	 * @return The parent cell.
+	 */
 	public GymnasiumMatchTableCell getParentCell(){
 		return this.parent;
 	}

@@ -1,6 +1,6 @@
-package fr.mrcraftcod.shcheduler.jfx;
+package fr.mrcraftcod.shcheduler.jfx.table;
 
-import fr.mrcraftcod.shcheduler.jfx.table.MatchMenuButton;
+import fr.mrcraftcod.shcheduler.jfx.MainController;
 import fr.mrcraftcod.shcheduler.model.GroupStage;
 import fr.mrcraftcod.shcheduler.model.Gymnasium;
 import fr.mrcraftcod.shcheduler.model.Match;
@@ -16,24 +16,37 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import java.time.LocalDate;
 import java.util.Objects;
 
+/**
+ * Cell displaying matches.
+ * <p>
+ * Created by Thomas Couchoud (MrCraftCod - zerderr@gmail.com) on 2019-01-17.
+ *
+ * @author Thomas Couchoud
+ * @since 2019-01-17
+ */
 public class GymnasiumMatchTableCell extends TableCell<Gymnasium, ObservableList<Match>>{
-	private static final Logger LOGGER = LoggerFactory.getLogger(GymnasiumMatchTableCell.class);
 	private final ObservableList<Match> matchPool;
 	private final LocalDate date;
 	private final MainController controller;
 	private ObservableList<Match> matches;
 	private MatchMenuButton matchMenuButton;
-	private GroupStage groupStage;
+	private final GroupStage groupStage;
 	
-	public GymnasiumMatchTableCell(final GroupStage gs, final MainController controller, final LocalDate date, final ObservableList<Match> matchPool){
+	/**
+	 * Constructor.
+	 *
+	 * @param groupStage The group stage the cell belongs to.
+	 * @param controller The controller.
+	 * @param date       The date this cell represents.
+	 * @param matchPool  The matches to assign.
+	 */
+	public GymnasiumMatchTableCell(final GroupStage groupStage, final MainController controller, final LocalDate date, final ObservableList<Match> matchPool){
 		super();
 		this.controller = controller;
-		this.groupStage = gs;
+		this.groupStage = groupStage;
 		this.matches = null;
 		this.matchPool = matchPool;
 		this.date = date;
@@ -60,6 +73,11 @@ public class GymnasiumMatchTableCell extends TableCell<Gymnasium, ObservableList
 		}
 	}
 	
+	/**
+	 * Get the gymnasium associated with this cell.
+	 *
+	 * @return The gymnasium.
+	 */
 	public Gymnasium getGymnasium(){
 		if(this.getTableView().getItems().size() > this.getTableRow().getIndex() && this.getTableRow().getIndex() >= 0){
 			return this.getTableView().getItems().get(this.getTableRow().getIndex());
@@ -67,6 +85,13 @@ public class GymnasiumMatchTableCell extends TableCell<Gymnasium, ObservableList
 		return null;
 	}
 	
+	/**
+	 * Builds the content of the cell.
+	 *
+	 * @param matches The matches to display.
+	 *
+	 * @return The node to display.
+	 */
 	private Node getCellContent(final ObservableList<Match> matches){
 		final var vBox = new VBox(5);
 		if(Objects.nonNull(matches)){
@@ -129,6 +154,11 @@ public class GymnasiumMatchTableCell extends TableCell<Gymnasium, ObservableList
 		setGraphic(vBox);
 	}
 	
+	/**
+	 * Get the date this cell represents.
+	 *
+	 * @return The date of the cell.
+	 */
 	public LocalDate getDate(){
 		return date;
 	}
@@ -138,6 +168,12 @@ public class GymnasiumMatchTableCell extends TableCell<Gymnasium, ObservableList
 		this.commitEdit(matchMenuButton.getCheckedItems());
 	}
 	
+	/**
+	 * Get the group stage the cell represents.
+	 *
+	 * @return The group stage.
+	 */
+	@SuppressWarnings("unused")
 	public GroupStage getGroupStage(){
 		return this.groupStage;
 	}

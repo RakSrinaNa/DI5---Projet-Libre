@@ -1,5 +1,6 @@
 package fr.mrcraftcod.shcheduler.jfx;
 
+import fr.mrcraftcod.shcheduler.jfx.table.MatchTableView;
 import fr.mrcraftcod.shcheduler.model.GroupStage;
 import javafx.collections.FXCollections;
 import javafx.scene.control.Tab;
@@ -7,12 +8,22 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
+/**
+ * Tab containing infos about a group stage.
+ * <p>
+ * Created by Thomas Couchoud (MrCraftCod - zerderr@gmail.com) on 2019-01-17.
+ *
+ * @author Thomas Couchoud
+ * @since 2019-01-17
+ */
 public class GroupStageTab extends Tab{
-	private static final Logger LOGGER = LoggerFactory.getLogger(GroupStageTab.class);
-	
+	/**
+	 * Constructor.
+	 *
+	 * @param controller The controller.
+	 * @param groupStage The group stage of this tab.
+	 */
 	public GroupStageTab(final MainController controller, final GroupStage groupStage){
 		super(groupStage.getName());
 		
@@ -23,7 +34,7 @@ public class GroupStageTab extends Tab{
 		matchesTableView.loadGroupStage(groupStage, matchPool);
 		
 		final var infos = new HBox();
-		final var remainingMatchesLabel = new Text("Remaining maches: ");
+		final var remainingMatchesLabel = new Text("Remaining matches: ");
 		final var remainingMatches = new Text();
 		remainingMatches.setText("" + matchPool.stream().filter(m -> !m.isAssigned()).count());
 		matchPool.forEach(m -> m.assignedProperty().addListener(observable -> {

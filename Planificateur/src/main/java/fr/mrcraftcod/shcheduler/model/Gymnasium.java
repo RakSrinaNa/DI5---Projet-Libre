@@ -1,5 +1,6 @@
 package fr.mrcraftcod.shcheduler.model;
 
+import org.jetbrains.annotations.NotNull;
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.LinkedList;
@@ -13,7 +14,7 @@ import java.util.Objects;
  * @author Thomas Couchoud
  * @since 2019-01-21
  */
-public class Gymnasium{
+public class Gymnasium implements Comparable<Gymnasium>{
 	private final String name;
 	private final String city;
 	private final int capacity;
@@ -26,6 +27,7 @@ public class Gymnasium{
 	 * @param name     The name.
 	 * @param city     The city.
 	 * @param capacity The capacity.
+	 * @param color    The color of the gymnasium.
 	 *
 	 * @throws IllegalArgumentException If the name is empty, or the city is empty or the capacity isn't positive.
 	 */
@@ -59,6 +61,16 @@ public class Gymnasium{
 		return false;
 	}
 	
+	@Override
+	public int compareTo(@NotNull final Gymnasium o){
+		return this.compareTo(o);
+	}
+	
+	/**
+	 * Get the color representing this gymnasium.
+	 *
+	 * @return The color of the gymnasium.
+	 */
 	public String getColor(){
 		return this.color;
 	}
@@ -72,6 +84,7 @@ public class Gymnasium{
 	 *
 	 * @return The city.
 	 */
+	@SuppressWarnings("WeakerAccess")
 	public String getCity(){
 		return this.city;
 	}

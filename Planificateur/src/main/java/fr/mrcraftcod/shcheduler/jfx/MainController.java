@@ -1,5 +1,6 @@
 package fr.mrcraftcod.shcheduler.jfx;
 
+import fr.mrcraftcod.shcheduler.jfx.table.GymnasiumMatchTableCell;
 import fr.mrcraftcod.shcheduler.jfx.table.MatchMenuButton;
 import fr.mrcraftcod.shcheduler.model.*;
 import javafx.beans.property.SimpleIntegerProperty;

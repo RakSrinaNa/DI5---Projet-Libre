@@ -50,7 +50,14 @@ public class Match{
 		return obj instanceof Match && Objects.equals(((Match) obj).getTeam1(), this.getTeam1()) && Objects.equals(((Match) obj).getTeam2(), this.getTeam2());
 	}
 	
-	public boolean isTeamPlaying(Team team){
+	/**
+	 * Tell if a team is playing in this match.
+	 *
+	 * @param team The team to test for.
+	 *
+	 * @return True if the team is playing, false otherwise.
+	 */
+	public boolean isTeamPlaying(final Team team){
 		return Objects.equals(team, team1) || Objects.equals(team, team2);
 	}
 	
@@ -69,14 +76,29 @@ public class Match{
 		assignedProperty.set(Objects.nonNull(gymnasium) && Objects.nonNull(date));
 	}
 	
+	/**
+	 * Tell if this match is assigned (i.e the gymnasium and date are set).
+	 *
+	 * @return True if assigned, false otherwise.
+	 */
 	public boolean isAssigned(){
 		return assignedProperty().get();
 	}
 	
+	/**
+	 * Get the display name of the match.
+	 *
+	 * @return The display name.
+	 */
 	public String getDisplayName(){
 		return getTeam1().getName() + " VS " + getTeam2().getName();
 	}
 	
+	/**
+	 * Get the id of the match.
+	 *
+	 * @return The match id.
+	 */
 	public String getId(){
 		return getTeam1().getName() + getTeam2().getName();
 	}
@@ -104,6 +126,7 @@ public class Match{
 	 *
 	 * @return The city, or null if the gymnasium isn't known yet.
 	 */
+	@SuppressWarnings("WeakerAccess")
 	public String getCity(){
 		if(this.gymnasium == null){
 			return null;
@@ -120,6 +143,11 @@ public class Match{
 		return this.date;
 	}
 	
+	/**
+	 * Get the assigned property.
+	 *
+	 * @return The assigned property.
+	 */
 	public SimpleBooleanProperty assignedProperty(){
 		return this.assignedProperty;
 	}
