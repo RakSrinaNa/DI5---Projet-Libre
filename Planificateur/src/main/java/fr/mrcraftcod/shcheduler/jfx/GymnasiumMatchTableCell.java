@@ -20,13 +20,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.time.LocalDate;
 import java.util.Objects;
-import java.util.function.Predicate;
 
 public class GymnasiumMatchTableCell extends TableCell<Gymnasium, ObservableList<Match>>{
 	private static final Logger LOGGER = LoggerFactory.getLogger(GymnasiumMatchTableCell.class);
 	private final ObservableList<Match> matchPool;
-	private final Predicate<Match> filters;
-	private final Predicate<Match> warnings;
 	private final LocalDate date;
 	private final MainController controller;
 	private ObservableList<Match> matches;
@@ -41,8 +38,6 @@ public class GymnasiumMatchTableCell extends TableCell<Gymnasium, ObservableList
 		this.matchPool = matchPool;
 		this.date = date;
 		
-		this.filters = controller.getStrongConstraints(this);
-		this.warnings = controller.getWeakConstraints(this);
 		this.setAlignment(Pos.CENTER);
 		setPrefHeight(Control.USE_COMPUTED_SIZE);
 	}
@@ -118,7 +113,6 @@ public class GymnasiumMatchTableCell extends TableCell<Gymnasium, ObservableList
 		if(matchMenuButton == null){
 			matchMenuButton = new MatchMenuButton(this, matchPool.filtered(m -> Objects.equals(getGymnasium(), m.getTeam1().getGymnasium()) || Objects.equals(getGymnasium(), m.getTeam2().getGymnasium())), controller);
 		}
-		
 		final var valid = new Button("OK");
 		valid.setOnAction(evt -> GymnasiumMatchTableCell.this.commitEdit(matchMenuButton.getCheckedItems()));
 		valid.setMaxWidth(Double.MAX_VALUE);
@@ -141,11 +135,7 @@ public class GymnasiumMatchTableCell extends TableCell<Gymnasium, ObservableList
 	
 	@Override
 	public void cancelEdit(){
-		super.cancelEdit();
-		matchMenuButton = null;
-		
-		setText(null);
-		setGraphic(getCellContent(matches));
+		this.commitEdit(matchMenuButton.getCheckedItems());
 	}
 	
 	public GroupStage getGroupStage(){
