@@ -18,6 +18,8 @@ import javafx.scene.text.Text;
  * @since 2019-01-17
  */
 public class GroupStageTab extends Tab{
+	private final GroupStage groupStage;
+	
 	/**
 	 * Constructor.
 	 *
@@ -26,6 +28,7 @@ public class GroupStageTab extends Tab{
 	 */
 	public GroupStageTab(final MainController controller, final GroupStage groupStage){
 		super(groupStage.getName());
+		this.groupStage = groupStage;
 		
 		final var matchPool = FXCollections.observableArrayList(groupStage.getMatches());
 		
@@ -47,5 +50,14 @@ public class GroupStageTab extends Tab{
 		
 		this.setContent(root);
 		this.setClosable(false);
+	}
+	
+	/**
+	 * Get the group stage this tab represents.
+	 *
+	 * @return The groupstage.
+	 */
+	public GroupStage getGroupStage(){
+		return this.groupStage;
 	}
 }

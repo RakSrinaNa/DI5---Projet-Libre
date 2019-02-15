@@ -3,7 +3,7 @@ package fr.mrcraftcod.shcheduler.model;
 import org.jetbrains.annotations.NotNull;
 import java.time.LocalDate;
 import java.util.Collection;
-import java.util.LinkedList;
+import java.util.HashSet;
 import java.util.Objects;
 
 /**
@@ -45,7 +45,7 @@ public class Gymnasium implements Comparable<Gymnasium>{
 		this.city = city;
 		this.capacity = capacity;
 		this.color = color;
-		this.bannedDates = new LinkedList<>();
+		this.bannedDates = new HashSet<>();
 	}
 	
 	@Override
@@ -53,17 +53,29 @@ public class Gymnasium implements Comparable<Gymnasium>{
 		return obj instanceof Gymnasium && Objects.equals(((Gymnasium) obj).getCity(), this.getCity()) && Objects.equals(((Gymnasium) obj).getName(), this.getName());
 	}
 	
+	/**
+	 * Add a banned date.
+	 *
+	 * @param date The date to ban.
+	 */
 	public void addBannedDate(final LocalDate date){
-	
+		this.bannedDates.add(date);
 	}
 	
+	/**
+	 * Tell if a date is banned.
+	 *
+	 * @param date The date to test.
+	 *
+	 * @return True if banned, false otherwise.
+	 */
 	public boolean isDateBanned(final LocalDate date){
-		return false;
+		return this.bannedDates.contains(date);
 	}
 	
 	@Override
 	public int compareTo(@NotNull final Gymnasium o){
-		return this.compareTo(o);
+		return getName().compareTo(o.getName());
 	}
 	
 	/**
@@ -75,6 +87,11 @@ public class Gymnasium implements Comparable<Gymnasium>{
 		return this.color;
 	}
 	
+	/**
+	 * Get the banned dates.
+	 *
+	 * @return The banned dates.
+	 */
 	public Collection<LocalDate> getBannedDates(){
 		return bannedDates;
 	}

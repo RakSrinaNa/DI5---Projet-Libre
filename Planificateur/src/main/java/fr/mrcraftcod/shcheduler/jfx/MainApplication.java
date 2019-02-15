@@ -10,8 +10,12 @@ import javafx.application.Application;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuBar;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.TabPane;
 import javafx.scene.image.Image;
+import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -71,7 +75,29 @@ public class MainApplication extends Application{
 	 */
 	private Parent createContent(){
 		tabPane = new TabPane();
-		return tabPane;
+		
+		final var menuBar = new MenuBar();
+		final var os = System.getProperty("os.name");
+		if (os != null && os.startsWith("Mac"))
+			menuBar.useSystemMenuBarProperty().set(true);
+		
+		final var menuConstraints = new Menu("Constraints");
+		final var menuConstraintsBannedGymnasiumDates = new MenuItem("Banned gymnasium dates");
+		menuConstraintsBannedGymnasiumDates.setOnAction(evt -> {
+			final var selectedTab = tabPane.getSelectionModel().selectedItemProperty().get();
+			if(selectedTab instanceof  GroupStageTab)
+			{
+				new GymnasiumBannedDatesStage(getStage(), ((GroupStageTab)selectedTab).getGroupStage());
+			}
+		});
+		
+		menuConstraints.getItems().addAll(menuConstraintsBannedGymnasiumDates);
+		menuBar.getMenus().addAll(menuConstraints);
+		
+		final var root = new BorderPane();
+		root.setCenter(tabPane);
+		root.setTop(menuBar);
+		return root;
 	}
 	
 	/**
