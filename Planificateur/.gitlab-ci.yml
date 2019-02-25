@@ -15,14 +15,6 @@ build:
     - cd Planificateur
     - mvn $MAVEN_CLI_OPTS compile
 
-#test:
-#  stage: test
-#  dependencies:
-#    - build
-#  script:
-#    - cd Planificateur
-#    - mvn $MAVEN_CLI_OPTS -B test
-
 app:
   stage: deploy
   script:
