@@ -17,16 +17,12 @@ build:
 
 test:
   stage: test
-  dependencies:
-    - build
   script:
     - cd Planificateur
     - mvn -B test
 
-app:
+deploy:
   stage: deploy
-  dependencies:
-    - test
   script:
     - cd Planificateur
     - mvn $MAVEN_CLI_OPTS -DskipTests=true -B package
