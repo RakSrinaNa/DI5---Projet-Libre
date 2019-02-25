@@ -36,7 +36,7 @@ class GroupStageTest{
 	
 	@Test
 	void addMatch(){
-		final var gs = new GroupStage("gs");
+		final var gs = new GroupStage(null, "gs");
 		gs.addAllTeams(List.of(team1, team2));
 		gs.addMatch(match1);
 		assertTrue(gs.getMatches().contains(match1));
@@ -52,7 +52,7 @@ class GroupStageTest{
 	
 	@Test
 	void addAllMatches(){
-		final var gs = new GroupStage("gs");
+		final var gs = new GroupStage(null, "gs");
 		gs.addAllTeams(List.of(team1, team2));
 		assertTrue(gs.addAllMatches(List.of(match1, match2)));
 		assertTrue(gs.getMatches().contains(match1));
@@ -71,7 +71,7 @@ class GroupStageTest{
 	
 	@Test
 	void addTeam(){
-		final var gs = new GroupStage("gs");
+		final var gs = new GroupStage(null, "gs");
 		gs.addTeam(team1);
 		assertTrue(gs.getTeams().contains(team1));
 		assertFalse(gs.getTeams().contains(team2));
@@ -86,7 +86,7 @@ class GroupStageTest{
 	
 	@Test
 	void addAllTeams(){
-		final var gs = new GroupStage("gs");
+		final var gs = new GroupStage(null, "gs");
 		gs.addAllTeams(List.of(team1, team2));
 		assertTrue(gs.getTeams().contains(team1));
 		assertTrue(gs.getTeams().contains(team2));
@@ -102,22 +102,22 @@ class GroupStageTest{
 			"robert1"
 	})
 	void getName(final String name){
-		final var gs = new GroupStage(name);
+		final var gs = new GroupStage(null, name);
 		assertEquals(name, gs.getName());
 	}
 	
 	@Test
 	void equals(){
-		final var gs1 = new GroupStage("gs1");
-		final var gs2 = new GroupStage("gs1");
-		final var gs3 = new GroupStage("gs2");
+		final var gs1 = new GroupStage(null, "gs1");
+		final var gs2 = new GroupStage(null, "gs1");
+		final var gs3 = new GroupStage(null, "gs2");
 		assertEquals(gs1, gs2);
 		assertNotEquals(gs1, gs3);
 	}
 	
 	@Test
 	void addWrongMatch(){
-		final var gs = new GroupStage("gs");
+		final var gs = new GroupStage(null, "gs");
 		gs.addAllTeams(List.of(team1, team2));
 		final var wMatch1 = new Match(team1, new Team(new Gymnasium("gNameA", "gCityA", 2, "red"), "tNameA", DayOfWeek.MONDAY), team1.getGymnasium(), date);
 		gs.addAllTeams(List.of(team1, team2));

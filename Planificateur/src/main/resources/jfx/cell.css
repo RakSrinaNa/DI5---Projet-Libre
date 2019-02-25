@@ -4,6 +4,12 @@
     -fx-border-width: 0.05;
 }
 
+.moncul {
+    -fx-background-color: -fx-my-cell-background;
+    -fx-border-color: gray;
+    -fx-border-width: 0.05;
+}
+
 .table-view:row-selection .table-row-cell:selected .table-cell {
     -fx-background-color: null;
 }
@@ -15,4 +21,23 @@
 .table-row-cell {
     -fx-cell-size: 50px;
     -fx-wrap-text: true;
+}
+
+.check-warning {
+    -fx-background-color: yellow;
+}
+
+.check-warning:hover {
+    -fx-text-fill: black;
+}
+
+.check-warning:hover .check-box {
+    -fx-text-fill: black;
+}
+
+.places-counter {
+    -fx-border-style: dashed;
+    -fx-border-width: 3px;
+    -fx-border-radius: 5px;
+    -fx-border-color: salmon;
 }

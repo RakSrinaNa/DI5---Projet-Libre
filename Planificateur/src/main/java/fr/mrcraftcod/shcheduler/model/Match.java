@@ -1,5 +1,6 @@
 package fr.mrcraftcod.shcheduler.model;
 
+import javafx.beans.property.SimpleBooleanProperty;
 import java.time.LocalDate;
 import java.util.Objects;
 
@@ -16,6 +17,7 @@ public class Match{
 	private final Team team2;
 	private Gymnasium gymnasium;
 	private LocalDate date;
+	private final SimpleBooleanProperty assignedProperty;
 	
 	/**
 	 * Constructor.
@@ -36,6 +38,7 @@ public class Match{
 		if(team2 == null){
 			throw new IllegalArgumentException("Match Team 2 is null");
 		}
+		this.assignedProperty = new SimpleBooleanProperty(Objects.nonNull(gymnasium) && Objects.nonNull(date));
 		this.team1 = team1;
 		this.team2 = team2;
 		setGymnasium(gymnasium);
@@ -47,8 +50,57 @@ public class Match{
 		return obj instanceof Match && Objects.equals(((Match) obj).getTeam1(), this.getTeam1()) && Objects.equals(((Match) obj).getTeam2(), this.getTeam2());
 	}
 	
-	public boolean isTeamPlaying(Team team){
+	/**
+	 * Tell if a team is playing in this match.
+	 *
+	 * @param team The team to test for.
+	 *
+	 * @return True if the team is playing, false otherwise.
+	 */
+	public boolean isTeamPlaying(final Team team){
 		return Objects.equals(team, team1) || Objects.equals(team, team2);
+	}
+	
+	/**
+	 * Set the gymnasium of the match.
+	 *
+	 * @param gymnasium The gymnasium to set.
+	 */
+	public void setGymnasium(final Gymnasium gymnasium){
+		if(gymnasium != null){
+			if(!gymnasium.equals(team1.getGymnasium()) && !gymnasium.equals(team2.getGymnasium())){
+				throw new IllegalArgumentException("Match gymnasium not corresponding to a team");
+			}
+		}
+		this.gymnasium = gymnasium;
+		assignedProperty.set(Objects.nonNull(gymnasium) && Objects.nonNull(date));
+	}
+	
+	/**
+	 * Tell if this match is assigned (i.e the gymnasium and date are set).
+	 *
+	 * @return True if assigned, false otherwise.
+	 */
+	public boolean isAssigned(){
+		return assignedProperty().get();
+	}
+	
+	/**
+	 * Get the display name of the match.
+	 *
+	 * @return The display name.
+	 */
+	public String getDisplayName(){
+		return getTeam1().getName() + " VS " + getTeam2().getName();
+	}
+	
+	/**
+	 * Get the id of the match.
+	 *
+	 * @return The match id.
+	 */
+	public String getId(){
+		return getTeam1().getName() + getTeam2().getName();
 	}
 	
 	/**
@@ -74,6 +126,7 @@ public class Match{
 	 *
 	 * @return The city, or null if the gymnasium isn't known yet.
 	 */
+	@SuppressWarnings("WeakerAccess")
 	public String getCity(){
 		if(this.gymnasium == null){
 			return null;
@@ -91,12 +144,12 @@ public class Match{
 	}
 	
 	/**
-	 * Set the date of the match.
+	 * Get the assigned property.
 	 *
-	 * @param date The date to set.
+	 * @return The assigned property.
 	 */
-	public void setDate(final LocalDate date){
-		this.date = date;
+	public SimpleBooleanProperty assignedProperty(){
+		return this.assignedProperty;
 	}
 	
 	/**
@@ -109,17 +162,13 @@ public class Match{
 	}
 	
 	/**
-	 * Set the gymnasium of the match.
+	 * Set the date of the match.
 	 *
-	 * @param gymnasium The gymnasium to set.
+	 * @param date The date to set.
 	 */
-	public void setGymnasium(final Gymnasium gymnasium){
-		if(gymnasium != null){
-			if(!gymnasium.equals(team1.getGymnasium()) && !gymnasium.equals(team2.getGymnasium())){
-				throw new IllegalArgumentException("Match gymnasium not corresponding to a team");
-			}
-		}
-		this.gymnasium = gymnasium;
+	public void setDate(final LocalDate date){
+		this.date = date;
+		assignedProperty.set(Objects.nonNull(gymnasium) && Objects.nonNull(date));
 	}
 	
 	@Override

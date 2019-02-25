@@ -21,8 +21,8 @@ public class Team{
 	 *
 	 * @param gymnasium The gymnasium the team is associated with.
 	 * @param name      The name.
+	 * @param playDay   The day of the week the team is playing.
 	 *
-	 * @param playDay
 	 * @throws IllegalArgumentException If the gymnasium is null or if the name is empty.
 	 */
 	public Team(final Gymnasium gymnasium, final String name, final DayOfWeek playDay) throws IllegalArgumentException{
@@ -65,10 +65,17 @@ public class Team{
 	 *
 	 * @return The city.
 	 */
+	@SuppressWarnings("WeakerAccess")
 	public String getCity(){
 		return this.gymnasium.getCity();
 	}
 	
+	/**
+	 * Get the day of the week the team is playing.
+	 *
+	 * @return The day of the week the team plays.
+	 */
+	@SuppressWarnings("unused")
 	public DayOfWeek getPlayDay(){
 		return playDay;
 	}

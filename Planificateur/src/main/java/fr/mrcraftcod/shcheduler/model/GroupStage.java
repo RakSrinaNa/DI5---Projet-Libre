@@ -17,13 +17,16 @@ public class GroupStage{
 	private final List<Match> matches;
 	private final Collection<Team> teams;
 	private final String name;
+	private final Championship championship;
 	
 	/**
 	 * Constructor.
 	 *
-	 * @param name The name of the group stage.
+	 * @param championship The championship.
+	 * @param name         The name of the group stage.
 	 */
-	public GroupStage(final String name){
+	public GroupStage(final Championship championship, final String name){
+		this.championship = championship;
 		this.name = name;
 		this.matches = new ArrayList<>();
 		this.teams = new ArrayList<>();
@@ -37,17 +40,17 @@ public class GroupStage{
 	 *
 	 * @return True if all elements were added, false otherwise.
 	 */
+	@SuppressWarnings("WeakerAccess")
 	public boolean addAllMatches(final Collection<Match> matches){
-		//noinspection ReplaceInefficientStreamCount
-		return matches.stream().filter(Objects::nonNull).map(m -> {
+		return matches.stream().filter(Objects::nonNull).allMatch(m -> {
 			try{
 				this.addMatch(m);
 				return true;
 			}
-			catch(Exception e){
+			catch(final Exception e){
 				return false;
 			}
-		}).filter(m -> !m).count() == 0;
+		});
 	}
 	
 	/**
@@ -77,6 +80,7 @@ public class GroupStage{
 	 *
 	 * @param teams The teams to add.
 	 */
+	@SuppressWarnings("WeakerAccess")
 	public void addAllTeams(final Collection<Team> teams){
 		teams.stream().filter(Objects::nonNull).forEach(this::addTeam);
 	}
@@ -105,7 +109,28 @@ public class GroupStage{
 	}
 	
 	/**
+	 * Tell if the group stage contains the given team.
+	 *
+	 * @param team The team to test for.
+	 *
+	 * @return True of the team is in this group stage, false otherwise.
+	 */
+	public boolean containsTeam(final Team team){
+		return teams.contains(team);
+	}
+	
+	/**
+	 * Get the championship.
+	 *
+	 * @return The championship.
+	 */
+	public Championship getChampionship(){
+		return this.championship;
+	}
+	
+	/**
 	 * Get the name of the group stage.
+	 *
 	 * @return The name.
 	 */
 	public String getName(){
@@ -123,6 +148,7 @@ public class GroupStage{
 	
 	/**
 	 * Get the teams.
+	 *
 	 * @return The teams.
 	 */
 	public Collection<Team> getTeams(){

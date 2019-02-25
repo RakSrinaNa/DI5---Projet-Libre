@@ -33,12 +33,12 @@ class ChampionshipTest{
 		match1112 = new Match(team11, team12, team11.getGymnasium(), date);
 		match2122 = new Match(team21, team22, team21.getGymnasium(), date);
 		
-		gs1 = new GroupStage("gs1");
+		gs1 = new GroupStage(null, "gs1");
 		gs1.addTeam(team11);
 		gs1.addTeam(team12);
 		gs1.addMatch(match1112);
 		
-		gs2 = new GroupStage("gs2");
+		gs2 = new GroupStage(null, "gs2");
 		gs2.addTeam(team21);
 		gs2.addTeam(team22);
 		gs2.addMatch(match2122);

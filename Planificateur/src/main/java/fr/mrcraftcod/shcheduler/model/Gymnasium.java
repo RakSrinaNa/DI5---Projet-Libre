@@ -1,8 +1,10 @@
 package fr.mrcraftcod.shcheduler.model;
 
+import javafx.beans.property.SimpleIntegerProperty;
+import org.jetbrains.annotations.NotNull;
 import java.time.LocalDate;
 import java.util.Collection;
-import java.util.LinkedList;
+import java.util.HashSet;
 import java.util.Objects;
 
 /**
@@ -13,12 +15,12 @@ import java.util.Objects;
  * @author Thomas Couchoud
  * @since 2019-01-21
  */
-public class Gymnasium{
+public class Gymnasium implements Comparable<Gymnasium>{
 	private final String name;
 	private final String city;
-	private final int capacity;
+	private final SimpleIntegerProperty capacity;
 	private final Collection<LocalDate> bannedDates;
-	private String color;
+	private final String color;
 	
 	/**
 	 * Constructor.
@@ -26,6 +28,7 @@ public class Gymnasium{
 	 * @param name     The name.
 	 * @param city     The city.
 	 * @param capacity The capacity.
+	 * @param color    The color of the gymnasium.
 	 *
 	 * @throws IllegalArgumentException If the name is empty, or the city is empty or the capacity isn't positive.
 	 */
@@ -41,9 +44,9 @@ public class Gymnasium{
 		}
 		this.name = name;
 		this.city = city;
-		this.capacity = capacity;
+		this.capacity = new SimpleIntegerProperty(capacity);
 		this.color = color;
-		this.bannedDates = new LinkedList<>();
+		this.bannedDates = new HashSet<>();
 	}
 	
 	@Override
@@ -51,18 +54,45 @@ public class Gymnasium{
 		return obj instanceof Gymnasium && Objects.equals(((Gymnasium) obj).getCity(), this.getCity()) && Objects.equals(((Gymnasium) obj).getName(), this.getName());
 	}
 	
+	/**
+	 * Add a banned date.
+	 *
+	 * @param date The date to ban.
+	 */
 	public void addBannedDate(final LocalDate date){
-	
+		this.bannedDates.add(date);
 	}
 	
+	/**
+	 * Tell if a date is banned.
+	 *
+	 * @param date The date to test.
+	 *
+	 * @return True if banned, false otherwise.
+	 */
 	public boolean isDateBanned(final LocalDate date){
-		return false;
+		return this.bannedDates.contains(date);
 	}
 	
+	@Override
+	public int compareTo(@NotNull final Gymnasium o){
+		return getName().compareTo(o.getName());
+	}
+	
+	/**
+	 * Get the color representing this gymnasium.
+	 *
+	 * @return The color of the gymnasium.
+	 */
 	public String getColor(){
 		return this.color;
 	}
 	
+	/**
+	 * Get the banned dates.
+	 *
+	 * @return The banned dates.
+	 */
 	public Collection<LocalDate> getBannedDates(){
 		return bannedDates;
 	}
@@ -72,6 +102,7 @@ public class Gymnasium{
 	 *
 	 * @return The city.
 	 */
+	@SuppressWarnings("WeakerAccess")
 	public String getCity(){
 		return this.city;
 	}
@@ -91,6 +122,10 @@ public class Gymnasium{
 	 * @return The capacity.
 	 */
 	public int getCapacity(){
+		return this.capacityProperty().get();
+	}
+	
+	public SimpleIntegerProperty capacityProperty(){
 		return this.capacity;
 	}
 	

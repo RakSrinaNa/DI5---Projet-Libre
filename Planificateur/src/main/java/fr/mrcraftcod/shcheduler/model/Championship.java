@@ -16,11 +16,14 @@ import java.util.Objects;
 public class Championship{
 	private final Collection<GroupStage> groupStages;
 	
+	private final Collection<LocalDate> dates;
+	
 	/**
 	 * Constructor.
 	 */
 	public Championship(){
 		this.groupStages = new ArrayList<>();
+		this.dates = new ArrayList<>();
 	}
 	
 	/**
@@ -41,6 +44,7 @@ public class Championship{
 	 *
 	 * @throws IllegalArgumentException If the group stage is null.
 	 */
+	@SuppressWarnings("WeakerAccess")
 	public void addGroupStage(final GroupStage groupStage) throws IllegalArgumentException{
 		if(groupStage == null){
 			throw new IllegalArgumentException("Championship GroupStage is null");
@@ -58,6 +62,7 @@ public class Championship{
 	 *
 	 * @return True if full, false otherwise.
 	 */
+	@SuppressWarnings("WeakerAccess")
 	public boolean isGymnasiumFull(final Gymnasium gymnasium, final LocalDate date){
 		return this.groupStages.stream().flatMap(groupStage -> groupStage.getMatches().stream()).filter(match -> Objects.equals(gymnasium, match.getGymnasium()) && Objects.equals(date, match.getDate())).count() >= gymnasium.getCapacity();
 	}
@@ -69,5 +74,25 @@ public class Championship{
 	 */
 	public Collection<GroupStage> getGroupStages(){
 		return this.groupStages;
+	}
+	
+	/**
+	 * Add a date to the championship.
+	 *
+	 * @param date The date to add.
+	 */
+	public void addDate(final LocalDate date){
+		if(!this.dates.contains(date)){
+			this.dates.add(date);
+		}
+	}
+	
+	/**
+	 * Get the dates (one per week) of the championship.
+	 *
+	 * @return The dates of the championship.
+	 */
+	public Collection<LocalDate> getDates(){
+		return this.dates;
 	}
 }
