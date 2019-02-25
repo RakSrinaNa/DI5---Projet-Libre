@@ -1,0 +1,35 @@
+image: maven:3.6.0-jdk-11-slim
+
+variables:
+  MAVEN_OPTS: "-Dmaven.repo.local=$CI_PROJECT_DIR/.m2/repository"
+  MAVEN_CLI_OPTS: "--batch-mode --show-version"
+
+cache:
+  paths:
+    - .m2/repository
+    - Planificateur/target/
+
+build:
+  stage: build
+  script:
+    - cd Planificateur
+    - mvn $MAVEN_CLI_OPTS compile
+
+#test:
+#  stage: test
+#  dependencies:
+#    - build
+#  script:
+#    - cd Planificateur
+#    - mvn $MAVEN_CLI_OPTS -B test
+
+app:
+  stage: deploy
+  script:
+    - cd Planificateur
+    - mvn $MAVEN_CLI_OPTS -DskipTests=true -B package
+    - cp target/Planificateur.jar Planificateur.jar
+  artifacts:
+    paths:
+      - Planificateur/Planificateur.jar
+    expire_in: 30 days
