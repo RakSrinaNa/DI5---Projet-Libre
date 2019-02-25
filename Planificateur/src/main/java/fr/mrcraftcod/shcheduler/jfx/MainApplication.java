@@ -122,7 +122,7 @@ public class MainApplication extends Application{
 			JCommander.newBuilder().addObject(parameters).build().parse(this.getParameters().getRaw().toArray(new String[0]));
 		}
 		catch(final ParameterException e){
-			LOGGER.error("Failed to parse arguments", e);
+			// LOGGER.error("Failed to parse arguments", e);
 			e.usage();
 			System.exit(1);
 		}

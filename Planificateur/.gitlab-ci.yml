@@ -15,8 +15,18 @@ build:
     - cd Planificateur
     - mvn $MAVEN_CLI_OPTS compile
 
+test:
+  stage: test
+  dependencies:
+    - build
+  script:
+    - cd Planificateur
+    - mvn -B test
+
 app:
   stage: deploy
+  dependencies:
+    - test
   script:
     - cd Planificateur
     - mvn $MAVEN_CLI_OPTS -DskipTests=true -B package
@@ -24,4 +34,5 @@ app:
   artifacts:
     paths:
       - Planificateur/Scheduler.jar
+      - Planificateur/README.md
     expire_in: 30 days
