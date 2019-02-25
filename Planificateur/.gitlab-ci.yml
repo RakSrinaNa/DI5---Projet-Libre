@@ -28,8 +28,8 @@ app:
   script:
     - cd Planificateur
     - mvn $MAVEN_CLI_OPTS -DskipTests=true -B package
-    - cp target/Planificateur.jar Planificateur.jar
+    - cp target/Scheduler.jar Scheduler.jar
   artifacts:
     paths:
-      - Planificateur/Planificateur.jar
+      - Planificateur/Scheduler.jar
     expire_in: 30 days
