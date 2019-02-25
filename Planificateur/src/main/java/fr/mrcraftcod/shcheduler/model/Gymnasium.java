@@ -79,6 +79,10 @@ public class Gymnasium implements Comparable<Gymnasium>{
 		return getName().compareTo(o.getName());
 	}
 	
+	public void setCapacity(int capacity){
+		this.capacityProperty().set(capacity);
+	}
+	
 	/**
 	 * Get the color representing this gymnasium.
 	 *

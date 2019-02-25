@@ -20,6 +20,8 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import java.time.LocalDate;
 import java.util.Objects;
 
@@ -32,12 +34,14 @@ import java.util.Objects;
  * @since 2019-01-17
  */
 public class GymnasiumMatchTableCell extends TableCell<Gymnasium, ObservableList<Match>> implements InvalidationListener{
+	private static final Logger LOGGER = LoggerFactory.getLogger(GymnasiumMatchTableCell.class);
 	private final ObservableList<Match> matchPool;
 	private final LocalDate date;
 	private final MainController controller;
 	private ObservableList<Match> matches;
 	private MatchMenuButton matchMenuButton;
 	private final GroupStage groupStage;
+	private boolean isListening;
 	
 	/**
 	 * Constructor.
@@ -54,6 +58,7 @@ public class GymnasiumMatchTableCell extends TableCell<Gymnasium, ObservableList
 		this.matches = FXCollections.emptyObservableList();
 		this.matchPool = matchPool;
 		this.date = date;
+		this.isListening = false;
 		
 		this.setAlignment(Pos.CENTER);
 		setPrefHeight(Control.USE_COMPUTED_SIZE);
@@ -62,13 +67,15 @@ public class GymnasiumMatchTableCell extends TableCell<Gymnasium, ObservableList
 	@Override
 	public void updateItem(final ObservableList<Match> item, final boolean empty){
 		super.updateItem(item, empty);
+		if(!isListening && Objects.nonNull(getGymnasium())){
+			getGymnasium().capacityProperty().addListener(this);
+			isListening = true;
+		}
+		LOGGER.warn("{} // {} // {} // {}", this.getTableRow().getIndex(), getGymnasium(), item, empty);
 		if(!empty){
 			if(Objects.nonNull(item)){
 				matches = item;
-				matches.forEach(match -> {
-					match.getGymnasium().capacityProperty().addListener(this);
-					controller.assignMatch(match, getGymnasium(), getDate());
-				});
+				matches.forEach(match -> controller.assignMatch(match, getGymnasium(), getDate()));
 			}
 			else if(!matches.isEmpty()){
 				matches.forEach(match -> {
