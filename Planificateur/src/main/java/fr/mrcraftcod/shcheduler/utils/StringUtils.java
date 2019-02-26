@@ -15,14 +15,16 @@ public class StringUtils{
 	private static StringUtils INSTANCE;
 	private ResourceBundle properties;
 	
-	public static String getString(final String key, final Object... args)
-	{
-		return MessageFormat.format(getInstance().getResources().getString(key), args);
+	public static String getString(final String key, final Object... args){
+		final var resources = getInstance().getResources();
+		if(resources.containsKey(key)){
+			return MessageFormat.format(resources.getString(key), args);
+		}
+		return "UNKNOWN KEY " + key;
 	}
 	
 	private ResourceBundle getResources(){
-		if(Objects.isNull(this.properties))
-		{
+		if(Objects.isNull(this.properties)){
 			this.properties = ResourceBundle.getBundle("strings.strings", Locale.getDefault());
 		}
 		return this.properties;

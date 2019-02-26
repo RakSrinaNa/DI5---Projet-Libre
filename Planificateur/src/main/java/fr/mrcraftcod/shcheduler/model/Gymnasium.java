@@ -1,10 +1,10 @@
 package fr.mrcraftcod.shcheduler.model;
 
 import javafx.beans.property.SimpleIntegerProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import org.jetbrains.annotations.NotNull;
 import java.time.LocalDate;
-import java.util.Collection;
-import java.util.HashSet;
 import java.util.Objects;
 
 /**
@@ -19,7 +19,7 @@ public class Gymnasium implements Comparable<Gymnasium>{
 	private final String name;
 	private final String city;
 	private final SimpleIntegerProperty capacity;
-	private final Collection<LocalDate> bannedDates;
+	private final ObservableList<LocalDate> bannedDates;
 	private final String color;
 	
 	/**
@@ -46,7 +46,7 @@ public class Gymnasium implements Comparable<Gymnasium>{
 		this.city = city;
 		this.capacity = new SimpleIntegerProperty(capacity);
 		this.color = color;
-		this.bannedDates = new HashSet<>();
+		this.bannedDates = FXCollections.observableArrayList();
 	}
 	
 	@Override
@@ -97,7 +97,7 @@ public class Gymnasium implements Comparable<Gymnasium>{
 	 *
 	 * @return The banned dates.
 	 */
-	public Collection<LocalDate> getBannedDates(){
+	public ObservableList<LocalDate> getBannedDates(){
 		return bannedDates;
 	}
 	

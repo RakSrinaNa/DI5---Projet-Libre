@@ -50,14 +50,19 @@ public class EditGymnasiumStage{
 		
 		capacityBox.getChildren().addAll(new Text(StringUtils.getString("edit_gymnasium_capacity")), capacityInput);
 		
+		final var bannedDates = new Button(StringUtils.getString("banned_dates_button"));
+		bannedDates.setOnAction(evt -> new EditGymnasiumBannedDatesStage(dialog, gymnasium));
+		bannedDates.setMaxWidth(Double.MAX_VALUE);
+		
 		final var validate = new Button(StringUtils.getString("ok_button"));
 		validate.setMaxWidth(Double.MAX_VALUE);
 		validate.setOnAction(evt -> {
 			gymnasium.setCapacity(capacityInput.numberProperty().intValue());
 			EditGymnasiumStage.this.dialog.close();
 		});
+		validate.setDefaultButton(true);
 		
-		root.getChildren().addAll(capacityBox, validate);
+		root.getChildren().addAll(capacityBox, bannedDates, validate);
 		
 		return root;
 	}

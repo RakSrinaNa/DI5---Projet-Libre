@@ -71,7 +71,6 @@ public class GymnasiumMatchTableCell extends TableCell<Gymnasium, ObservableList
 			getGymnasium().capacityProperty().addListener(this);
 			isListening = true;
 		}
-		LOGGER.warn("{} // {} // {} // {}", this.getTableRow().getIndex(), getGymnasium(), item, empty);
 		if(!empty){
 			if(Objects.nonNull(item)){
 				matches = item;
