@@ -78,10 +78,7 @@ public class GymnasiumMatchTableCell extends TableCell<Gymnasium, ObservableList
 				matches.forEach(match -> controller.assignMatch(match, getGymnasium(), getDate()));
 			}
 			else if(!matches.isEmpty()){
-				matches.forEach(match -> {
-					match.getGymnasium().capacityProperty().removeListener(this);
-					controller.assignMatch(match, null, null);
-				});
+				matches.forEach(match -> controller.assignMatch(match, null, null));
 				this.setStyle("");
 				matches = FXCollections.emptyObservableList();
 			}
@@ -189,7 +186,7 @@ public class GymnasiumMatchTableCell extends TableCell<Gymnasium, ObservableList
 	
 	@Override
 	public void cancelEdit(){
-		this.commitEdit(matchMenuButton.getCheckedItems());
+		this.commitEdit(Objects.isNull(matchMenuButton) ? FXCollections.emptyObservableList() : matchMenuButton.getCheckedItems());
 	}
 	
 	/**

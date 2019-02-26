@@ -83,6 +83,10 @@ public class MainController{
 	
 	public void setChampionship(final Championship championship){
 		this.championship = championship;
-		this.remainingPlaces = championship.getGroupStages().stream().flatMap(gs -> gs.getTeams().stream()).map(Team::getGymnasium).distinct().collect(Collectors.toMap(g -> g, g -> championship.getDates().stream().collect(Collectors.toMap(d -> d, d -> new SimpleIntegerProperty(getRemainingPlace(g, d, List.of()))))));
+		this.remainingPlaces = championship.getGroupStages().stream().flatMap(gs -> gs.getTeams().stream()).map(Team::getGymnasium).distinct().collect(Collectors.toMap(g -> g, g -> championship.getDates().stream().collect(Collectors.toMap(d -> d, d -> {
+			final var prop = new SimpleIntegerProperty(getRemainingPlace(g, d, List.of()));
+			g.capacityProperty().addListener((obs, oldValue, newValue) -> prop.set(prop.get() - oldValue.intValue() + newValue.intValue()));
+			return prop;
+		}))));
 	}
 }
