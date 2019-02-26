@@ -21,7 +21,7 @@ public class NumberTextField extends TextField{
 	public void replaceText(final int start, final int end, final String text){
 		if(validate(text)){
 			super.replaceText(start, end, text);
-			number.set(Integer.parseInt(text));
+			number.set(Integer.parseInt(getText()));
 		}
 	}
 	
@@ -29,7 +29,7 @@ public class NumberTextField extends TextField{
 	public void replaceSelection(final String text){
 		if(validate(text)){
 			super.replaceSelection(text);
-			number.set(Integer.parseInt(text));
+			number.set(Integer.parseInt(getText()));
 		}
 	}
 	
