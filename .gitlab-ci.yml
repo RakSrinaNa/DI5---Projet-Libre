@@ -31,4 +31,6 @@ deploy:
     paths:
       - Planificateur/Scheduler.jar
       - Planificateur/README.md
+      - Planificateur/gyms.csv
+      - Planificateur/teams.csv
     expire_in: 30 days
