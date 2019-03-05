@@ -1,9 +1,13 @@
 package fr.mrcraftcod.shcheduler.jfx;
 
+import fr.mrcraftcod.shcheduler.Utils;
 import fr.mrcraftcod.shcheduler.jfx.table.GymnasiumMatchTableCell;
 import fr.mrcraftcod.shcheduler.jfx.table.MatchMenuButton;
 import fr.mrcraftcod.shcheduler.model.*;
 import javafx.beans.property.SimpleIntegerProperty;
+import javafx.collections.ListChangeListener;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.function.Predicate;
@@ -12,6 +16,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class MainController{
+	private static final Logger LOGGER = LoggerFactory.getLogger(MainController.class);
 	private Championship championship;
 	private Map<Gymnasium, Map<LocalDate, SimpleIntegerProperty>> remainingPlaces;
 	
@@ -85,7 +90,26 @@ public class MainController{
 		this.championship = championship;
 		this.remainingPlaces = championship.getGroupStages().stream().flatMap(gs -> gs.getTeams().stream()).map(Team::getGymnasium).distinct().collect(Collectors.toMap(g -> g, g -> championship.getDates().stream().collect(Collectors.toMap(d -> d, d -> {
 			final var prop = new SimpleIntegerProperty(getRemainingPlace(g, d, List.of()));
-			g.capacityProperty().addListener((obs, oldValue, newValue) -> prop.set(prop.get() - oldValue.intValue() + newValue.intValue()));
+			g.capacityProperty().addListener((obs, oldValue, newValue) -> {
+				prop.set(prop.get() - oldValue.intValue() + newValue.intValue());
+			});
+			g.getBannedDates().addListener(new ListChangeListener<LocalDate>(){
+				@Override
+				public void onChanged(Change<? extends LocalDate> change){
+					while(change.next()){
+						for(var added : change.getAddedSubList()){
+							if(Objects.equals(added.minusDays(Utils.getDaysToRemove(added.getDayOfWeek())), d)){
+								prop.set(0);
+							}
+						}
+						for(var removed : change.getRemoved()){
+							if(Objects.equals(removed.minusDays(Utils.getDaysToRemove(removed.getDayOfWeek())), d)){
+								prop.set(g.getCapacity());
+							}
+						}
+					}
+				}
+			});
 			return prop;
 		}))));
 	}

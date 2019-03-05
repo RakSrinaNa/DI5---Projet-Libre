@@ -13,6 +13,8 @@ import javafx.stage.Modality;
 import javafx.stage.Popup;
 import javafx.stage.Stage;
 import javafx.util.Callback;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.Collection;
@@ -26,6 +28,7 @@ import java.util.concurrent.atomic.AtomicReference;
  * @since 2019-02-15
  */
 public class EditGymnasiumBannedDatesStage{
+	private static final Logger LOGGER = LoggerFactory.getLogger(EditGymnasiumBannedDatesStage.class);
 	private final Stage dialog;
 	
 	public EditGymnasiumBannedDatesStage(final Stage parentStage, final Gymnasium gymnasium){
