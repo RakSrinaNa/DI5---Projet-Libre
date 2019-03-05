@@ -8,7 +8,10 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.stream.Collectors;
 
 /**
@@ -69,7 +72,7 @@ public class Parser{
 		championship.addAllGroupStages(groupStages);
 		
 		final var numberOfWeeks = 10;
-		final var initialDate = LocalDate.now().minusDays(getDaysToRemove(LocalDate.now().getDayOfWeek()));
+		final var initialDate = LocalDate.now().minusDays(Utils.getDaysToRemove(LocalDate.now().getDayOfWeek()));
 		for(var i = 0; i < numberOfWeeks; i++){
 			championship.addDate(initialDate.plusDays(i * 7));
 		}
@@ -169,33 +172,6 @@ public class Parser{
 			}
 		}
 		return groups;
-	}
-	
-	/**
-	 * Get the difference between monday and the other days.
-	 *
-	 * @param dayOfWeek The day to get the difference with.
-	 *
-	 * @return The number of days between monday and the given day.
-	 */
-	private long getDaysToRemove(final DayOfWeek dayOfWeek){
-		switch(dayOfWeek){
-			case MONDAY:
-				return 0;
-			case TUESDAY:
-				return 1;
-			case WEDNESDAY:
-				return 2;
-			case THURSDAY:
-				return 3;
-			case FRIDAY:
-				return 4;
-			case SATURDAY:
-				return 5;
-			case SUNDAY:
-				return 6;
-		}
-		return 0;
 	}
 	
 	/**

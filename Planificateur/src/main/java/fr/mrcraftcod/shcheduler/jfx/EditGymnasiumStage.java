@@ -5,6 +5,7 @@ import fr.mrcraftcod.shcheduler.model.Gymnasium;
 import fr.mrcraftcod.shcheduler.utils.StringUtils;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
@@ -19,8 +20,10 @@ import javafx.stage.Stage;
  * @since 2019-02-15
  */
 public class EditGymnasiumStage{
+	private final Stage dialog;
+	
 	public EditGymnasiumStage(final Stage parentStage, final Gymnasium gymnasium){
-		final var dialog = new Stage();
+		dialog = new Stage();
 		
 		final var scene = buildScene(dialog, gymnasium);
 		dialog.setTitle(StringUtils.getString("frame_title_gymnasium_edit", gymnasium.getName()));
@@ -41,14 +44,25 @@ public class EditGymnasiumStage{
 		
 		final var capacityBox = new HBox();
 		
-		final var capacityInput = new NumberTextField();
+		final var capacityInput = new NumberTextField(gymnasium.getCapacity());
 		capacityInput.setMaxWidth(Double.MAX_VALUE);
 		HBox.setHgrow(capacityInput, Priority.ALWAYS);
 		
-		capacityInput.numberProperty().bindBidirectional(gymnasium.capacityProperty());
-		
 		capacityBox.getChildren().addAll(new Text(StringUtils.getString("edit_gymnasium_capacity")), capacityInput);
-		root.getChildren().add(capacityBox);
+		
+		final var bannedDates = new Button(StringUtils.getString("banned_dates_button"));
+		bannedDates.setOnAction(evt -> new EditGymnasiumBannedDatesStage(dialog, gymnasium));
+		bannedDates.setMaxWidth(Double.MAX_VALUE);
+		
+		final var validate = new Button(StringUtils.getString("ok_button"));
+		validate.setMaxWidth(Double.MAX_VALUE);
+		validate.setOnAction(evt -> {
+			gymnasium.setCapacity(capacityInput.numberProperty().intValue());
+			EditGymnasiumStage.this.dialog.close();
+		});
+		validate.setDefaultButton(true);
+		
+		root.getChildren().addAll(capacityBox, bannedDates, validate);
 		
 		return root;
 	}

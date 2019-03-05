@@ -81,15 +81,15 @@ public class MainApplication extends Application{
 		
 		final var menuBar = new MenuBar();
 		final var os = System.getProperty("os.name");
-		if (os != null && os.startsWith("Mac"))
+		if(os != null && os.startsWith("Mac")){
 			menuBar.useSystemMenuBarProperty().set(true);
+		}
 		
 		final var menuConstraints = new Menu(StringUtils.getString("menu_edit"));
 		final var menuConstraintsBannedGymnasiumDates = new MenuItem(StringUtils.getString("menu_edit_gymnasiums"));
 		menuConstraintsBannedGymnasiumDates.setOnAction(evt -> {
 			final var selectedTab = tabPane.getSelectionModel().selectedItemProperty().get();
-			if(selectedTab instanceof  GroupStageTab)
-			{
+			if(selectedTab instanceof GroupStageTab){
 				new EditGymnasiumListStage(getStage(), MainApplication.this.controller.getChampionship().getGroupStages().stream().flatMap(gs -> gs.getTeams().stream()).map(Team::getGymnasium).distinct().collect(Collectors.toList()));
 			}
 		});
@@ -110,7 +110,9 @@ public class MainApplication extends Application{
 		final var icon = new Image("/jfx/icon.png");
 		this.stage.getIcons().clear();
 		this.stage.getIcons().add(icon);
-		Taskbar.getTaskbar().setIconImage(SwingFXUtils.fromFXImage(icon, null));
+		if(Taskbar.isTaskbarSupported() && Taskbar.getTaskbar().isSupported(Taskbar.Feature.ICON_IMAGE)){
+			Taskbar.getTaskbar().setIconImage(SwingFXUtils.fromFXImage(icon, null));
+		}
 	}
 	
 	/**

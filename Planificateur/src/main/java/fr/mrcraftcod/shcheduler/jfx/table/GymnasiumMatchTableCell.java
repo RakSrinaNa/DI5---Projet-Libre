@@ -5,8 +5,6 @@ import fr.mrcraftcod.shcheduler.model.GroupStage;
 import fr.mrcraftcod.shcheduler.model.Gymnasium;
 import fr.mrcraftcod.shcheduler.model.Match;
 import fr.mrcraftcod.shcheduler.utils.StringUtils;
-import javafx.beans.InvalidationListener;
-import javafx.beans.Observable;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
@@ -20,6 +18,8 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import java.time.LocalDate;
 import java.util.Objects;
 
@@ -31,7 +31,8 @@ import java.util.Objects;
  * @author Thomas Couchoud
  * @since 2019-01-17
  */
-public class GymnasiumMatchTableCell extends TableCell<Gymnasium, ObservableList<Match>> implements InvalidationListener{
+public class GymnasiumMatchTableCell extends TableCell<Gymnasium, ObservableList<Match>>{
+	private static final Logger LOGGER = LoggerFactory.getLogger(GymnasiumMatchTableCell.class);
 	private final ObservableList<Match> matchPool;
 	private final LocalDate date;
 	private final MainController controller;
@@ -63,30 +64,16 @@ public class GymnasiumMatchTableCell extends TableCell<Gymnasium, ObservableList
 	public void updateItem(final ObservableList<Match> item, final boolean empty){
 		super.updateItem(item, empty);
 		if(!empty){
+			if(Objects.nonNull(matches) && !matches.isEmpty()){
+				matches.stream().filter(m -> Objects.isNull(item) || !item.contains(m)).forEach(match -> controller.assignMatch(match, null, null));
+			}
 			if(Objects.nonNull(item)){
-				matches = item;
-				matches.forEach(match -> {
-					match.getGymnasium().capacityProperty().addListener(this);
-					controller.assignMatch(match, getGymnasium(), getDate());
-				});
+				item.forEach(match -> controller.assignMatch(match, getGymnasium(), getDate()));
 			}
-			else if(!matches.isEmpty()){
-				matches.forEach(match -> {
-					match.getGymnasium().capacityProperty().removeListener(this);
-					controller.assignMatch(match, null, null);
-				});
-				this.setStyle("");
-				matches = FXCollections.emptyObservableList();
-			}
+			matches = item;
 			setGraphic(getCellContent(item));
 			setText(null);
 		}
-	}
-	
-	@Override
-	public void invalidated(final Observable observable){
-		final var strongConstraints = controller.getStrongConstraints(this);
-		this.matches.removeIf(match -> !strongConstraints.test(match));
 	}
 	
 	/**
@@ -121,12 +108,30 @@ public class GymnasiumMatchTableCell extends TableCell<Gymnasium, ObservableList
 					text.setTextAlignment(TextAlignment.CENTER);
 					group.setStyle(String.format("-fx-background-color: linear-gradient(to bottom, %s 35%%, %s 65%% 10%%);", match.getTeam1().getGymnasium().getColor(), match.getTeam2().getGymnasium().getColor()));
 					group.getChildren().add(text);
+					group.setAlignment(Pos.CENTER);
+					group.setPrefHeight(75);
 					vBox.getChildren().add(group);
 				}
 			}
 		}
 		
 		final var prop = controller.remainingPlaceProperty(getGymnasium(), getDate());
+		prop.addListener((obs, oldValue, newValue) -> {
+			if(Objects.nonNull(matches)){
+				if(newValue.intValue() < oldValue.intValue()){
+					if(newValue.intValue() < 0){
+						if(!matches.isEmpty()){
+							final var newMatches = FXCollections.observableArrayList(matches);
+							for(var i = 0; i > newValue.intValue(); i--){
+								newMatches.remove(newMatches.size() - 1);
+							}
+							this.updateItem(newMatches, false);
+						}
+					}
+				}
+			}
+		});
+		
 		final var group = new FlowPane();
 		final var t = new Text();
 		t.wrappingWidthProperty().bind(widthProperty().add(-30));
@@ -152,11 +157,13 @@ public class GymnasiumMatchTableCell extends TableCell<Gymnasium, ObservableList
 			return;
 		}
 		
+		this.updateItem(null, false);
+		
 		if(matchMenuButton == null){
-			matchMenuButton = new MatchMenuButton(this, matchPool.filtered(m -> Objects.equals(getGymnasium(), m.getTeam1().getGymnasium()) || Objects.equals(getGymnasium(), m.getTeam2().getGymnasium())), matches, controller);
+			matchMenuButton = new MatchMenuButton(this, matchPool.filtered(m -> Objects.equals(getGymnasium(), m.getTeam1().getGymnasium()) || Objects.equals(getGymnasium(), m.getTeam2().getGymnasium())), FXCollections.observableArrayList(), controller);
 		}
 		final var valid = new Button(StringUtils.getString("ok_button"));
-		valid.setOnAction(evt -> GymnasiumMatchTableCell.this.commitEdit(matchMenuButton.getCheckedItems()));
+		valid.setOnAction(evt -> GymnasiumMatchTableCell.this.commitEdit(Objects.isNull(matchMenuButton) ? matches : matchMenuButton.getCheckedItems()));
 		valid.setMaxWidth(Double.MAX_VALUE);
 		
 		final var vBox = new VBox(matchMenuButton, valid);
@@ -181,8 +188,17 @@ public class GymnasiumMatchTableCell extends TableCell<Gymnasium, ObservableList
 	}
 	
 	@Override
+	public void commitEdit(final ObservableList<Match> matches){
+		this.matchMenuButton = null;
+		super.commitEdit(Objects.isNull(matches) ? FXCollections.emptyObservableList() : matches);
+	}
+	
+	@Override
 	public void cancelEdit(){
-		this.commitEdit(matchMenuButton.getCheckedItems());
+		this.matchMenuButton = null;
+		super.cancelEdit();
+		setGraphic(getCellContent(matches));
+		setText(null);
 	}
 	
 	/**

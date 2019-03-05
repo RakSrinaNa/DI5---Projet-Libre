@@ -12,10 +12,16 @@ import javafx.scene.control.TextField;
 public class NumberTextField extends TextField{
 	private final SimpleIntegerProperty number = new SimpleIntegerProperty(1);
 	
+	public NumberTextField(int defaultValue){
+		super(Integer.toString(defaultValue));
+		number.set(defaultValue);
+	}
+	
 	@Override
 	public void replaceText(final int start, final int end, final String text){
 		if(validate(text)){
 			super.replaceText(start, end, text);
+			number.set(getText().isBlank() ? 0 : Integer.parseInt(getText()));
 		}
 	}
 	
@@ -23,12 +29,12 @@ public class NumberTextField extends TextField{
 	public void replaceSelection(final String text){
 		if(validate(text)){
 			super.replaceSelection(text);
-			number.set(Integer.parseInt(text));
+			number.set(getText().isBlank() ? 0 : Integer.parseInt(getText()));
 		}
 	}
 	
 	private boolean validate(final String text){
-		return text.matches("[0-9]*") && !text.equals("0"); //TODO Why can't put 90?
+		return text.matches("[0-9]*");
 	}
 	
 	public SimpleIntegerProperty numberProperty(){
