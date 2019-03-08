@@ -110,6 +110,9 @@ public class Parser{
 			catch(final NumberFormatException e){
 				throw new ParserException("Invalid gymnasium capacity", e);
 			}
+			if(capacity < 0){
+				throw new ParserException("Capacity must be positive", new IllegalArgumentException());
+			}
 			final var name = elements[0];
 			final var city = elements[2];
 			
