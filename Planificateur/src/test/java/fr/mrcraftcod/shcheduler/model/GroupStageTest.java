@@ -1,5 +1,6 @@
 package fr.mrcraftcod.shcheduler.model;
 
+import fr.mrcraftcod.shcheduler.utils.GymnasiumColor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
@@ -24,12 +25,13 @@ class GroupStageTest{
 	private LocalDate date;
 	private Match match1;
 	private Match match2;
+	private GymnasiumColor color = new GymnasiumColor();
 	
 	@BeforeEach
 	void setUp(){
 		date = LocalDate.now();
-		team1 = new Team(new Gymnasium("gName1", "gCity1", Integer.MAX_VALUE, "red"), "tName1", DayOfWeek.MONDAY);
-		team2 = new Team(new Gymnasium("gName2", "gCity2", Integer.MAX_VALUE, "red"), "tName2", DayOfWeek.MONDAY);
+		team1 = new Team(new Gymnasium("gName1", "gCity1", Integer.MAX_VALUE, color), "tName1", DayOfWeek.MONDAY);
+		team2 = new Team(new Gymnasium("gName2", "gCity2", Integer.MAX_VALUE, color), "tName2", DayOfWeek.MONDAY);
 		match1 = new Match(team1, team2, team1.getGymnasium(), date);
 		match2 = new Match(team2, team1, team2.getGymnasium(), date);
 	}
@@ -119,7 +121,7 @@ class GroupStageTest{
 	void addWrongMatch(){
 		final var gs = new GroupStage(null, "gs");
 		gs.addAllTeams(List.of(team1, team2));
-		final var wMatch1 = new Match(team1, new Team(new Gymnasium("gNameA", "gCityA", 2, "red"), "tNameA", DayOfWeek.MONDAY), team1.getGymnasium(), date);
+		final var wMatch1 = new Match(team1, new Team(new Gymnasium("gNameA", "gCityA", 2, color), "tNameA", DayOfWeek.MONDAY), team1.getGymnasium(), date);
 		gs.addAllTeams(List.of(team1, team2));
 		final Executable executable1 = () -> gs.addMatch(null);
 		assertThrows(IllegalArgumentException.class, executable1);
