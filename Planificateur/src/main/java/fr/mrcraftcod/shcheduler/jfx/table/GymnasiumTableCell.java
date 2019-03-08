@@ -4,6 +4,7 @@ import fr.mrcraftcod.shcheduler.jfx.EditGymnasiumStage;
 import fr.mrcraftcod.shcheduler.model.Gymnasium;
 import javafx.geometry.Pos;
 import javafx.scene.control.TableCell;
+import javafx.scene.control.Tooltip;
 import javafx.scene.input.MouseButton;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
@@ -52,8 +53,9 @@ public class GymnasiumTableCell extends TableCell<Gymnasium, Gymnasium>{
 			setStyle("");
 		}
 		else{
-			this.setStyle("-fx-my-cell-background: " + item.getColor() + ";");
+			this.setStyle(String.format("-fx-my-cell-background: #%s; -fx-my-cell-text: #%s;", item.getColor().getBackgroundColor().toString().substring(2), item.getColor().getTextColor().toString().substring(2)));
 			setText(item.getName());
+			setTooltip(new Tooltip(item.getCity()));
 		}
 	}
 }

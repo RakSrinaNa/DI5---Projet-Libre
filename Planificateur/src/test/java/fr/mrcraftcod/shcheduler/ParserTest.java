@@ -14,7 +14,7 @@ class ParserTest{
 	
 	@BeforeEach
 	void setUp(){
-		parser = new Parser(',');
+		parser = new Parser(',', 10);
 	}
 	
 	@Test

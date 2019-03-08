@@ -3,15 +3,17 @@ package fr.mrcraftcod.shcheduler;
 import fr.mrcraftcod.shcheduler.exceptions.IllegalCSVFormatException;
 import fr.mrcraftcod.shcheduler.exceptions.ParserException;
 import fr.mrcraftcod.shcheduler.model.*;
+import fr.mrcraftcod.shcheduler.utils.GymnasiumColor;
+import javafx.scene.paint.Color;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.stream.Collectors;
 
 /**
@@ -24,14 +26,18 @@ import java.util.stream.Collectors;
  */
 public class Parser{
 	private final String csvSeparator;
+	private final List<GymnasiumColor> colors = List.of(new GymnasiumColor(Color.valueOf("#22c1c3"), Color.valueOf("#000000")), new GymnasiumColor(Color.valueOf("#fdbb2d"), Color.valueOf("#000000")), new GymnasiumColor(Color.valueOf("#833ab4"), Color.valueOf("#ffffff")), new GymnasiumColor(Color.valueOf("#f8cdda"), Color.valueOf("#000000")), new GymnasiumColor(Color.valueOf("#ff512f"), Color.valueOf("#000000")), new GymnasiumColor(Color.valueOf("#f09819"), Color.valueOf("#000000")), new GymnasiumColor(Color.valueOf("#1a2980"), Color.valueOf("#ffffff")), new GymnasiumColor(Color.valueOf("#dd2476"), Color.valueOf("#000000")), new GymnasiumColor(Color.valueOf("#403b4a"), Color.valueOf("#ffffff")), new GymnasiumColor(Color.valueOf("#3ca55c"), Color.valueOf("#000000")), new GymnasiumColor(Color.valueOf("#603813"), Color.valueOf("#ffffff")));
+	private final int numberOfWeeks;
 	
 	/**
 	 * Constructor.
 	 *
 	 * @param csvSeparator The separator used in the CSV files.
+	 * @param numberOfWeeks The number of weeks of the championship.
 	 */
-	public Parser(final char csvSeparator){
+	public Parser(final char csvSeparator, final int numberOfWeeks){
 		this.csvSeparator = "" + csvSeparator;
+		this.numberOfWeeks = numberOfWeeks;
 	}
 	
 	/**
@@ -59,19 +65,17 @@ public class Parser{
 	 *
 	 * @throws ParserException If the parser encountered an error.
 	 */
-	@SuppressWarnings("WeakerAccess")
 	public Championship parse(final InputStream gymnasiumsCsvFile, final InputStream teamsCsvFile) throws ParserException{
 		final var gymnasiumLines = new BufferedReader(new InputStreamReader(gymnasiumsCsvFile, StandardCharsets.UTF_8)).lines().collect(Collectors.toList());
 		final var teamLines = new BufferedReader(new InputStreamReader(teamsCsvFile, StandardCharsets.UTF_8)).lines().collect(Collectors.toList());
 		
-		final var championship = new Championship();
+		final var championship = new Championship(this.numberOfWeeks);
 		
 		final var gymnasiums = new HashSet<>(getGymnasiums(gymnasiumLines));
 		final var groupStages = new HashSet<>(getGroupStages(championship, gymnasiums, teamLines));
 		buildMatches(groupStages);
 		championship.addAllGroupStages(groupStages);
 		
-		final var numberOfWeeks = 10;
 		final var initialDate = LocalDate.now().minusDays(Utils.getDaysToRemove(LocalDate.now().getDayOfWeek()));
 		for(var i = 0; i < numberOfWeeks; i++){
 			championship.addDate(initialDate.plusDays(i * 7));
@@ -90,7 +94,6 @@ public class Parser{
 	 * @throws ParserException If the parser encountered an error.
 	 */
 	Collection<Gymnasium> getGymnasiums(final Collection<String> gymnasiumLines) throws ParserException{
-		final var colors = Arrays.asList("blue", "green", "red", "violet", "yellow", "rgb(255,125,75)");
 		final var gyms = new ArrayList<Gymnasium>();
 		var colorIndex = 0;
 		for(final var gymnasiumLine : gymnasiumLines){
@@ -109,6 +112,9 @@ public class Parser{
 			}
 			catch(final NumberFormatException e){
 				throw new ParserException("Invalid gymnasium capacity", e);
+			}
+			if(capacity < 0){
+				throw new ParserException("Capacity must be positive", new IllegalArgumentException());
 			}
 			final var name = elements[0];
 			final var city = elements[2];

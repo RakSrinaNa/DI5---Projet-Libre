@@ -1,5 +1,6 @@
 package fr.mrcraftcod.shcheduler.model;
 
+import fr.mrcraftcod.shcheduler.utils.GymnasiumColor;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -20,7 +21,7 @@ public class Gymnasium implements Comparable<Gymnasium>{
 	private final String city;
 	private final SimpleIntegerProperty capacity;
 	private final ObservableList<LocalDate> bannedDates;
-	private final String color;
+	private final GymnasiumColor color;
 	
 	/**
 	 * Constructor.
@@ -32,7 +33,7 @@ public class Gymnasium implements Comparable<Gymnasium>{
 	 *
 	 * @throws IllegalArgumentException If the name is empty, or the city is empty or the capacity isn't positive.
 	 */
-	public Gymnasium(final String name, final String city, final int capacity, final String color) throws IllegalArgumentException{
+	public Gymnasium(final String name, final String city, final int capacity, final GymnasiumColor color) throws IllegalArgumentException{
 		if(name == null || name.isBlank()){
 			throw new IllegalArgumentException("Gymnasium name is empty");
 		}
@@ -79,7 +80,12 @@ public class Gymnasium implements Comparable<Gymnasium>{
 		return getName().compareTo(o.getName());
 	}
 	
-	public void setCapacity(int capacity){
+	/**
+	 * Set the capacity of the gymnasium.
+	 *
+	 * @param capacity The capacity to set.
+	 */
+	public void setCapacity(final int capacity){
 		this.capacityProperty().set(capacity);
 	}
 	
@@ -88,7 +94,7 @@ public class Gymnasium implements Comparable<Gymnasium>{
 	 *
 	 * @return The color of the gymnasium.
 	 */
-	public String getColor(){
+	public GymnasiumColor getColor(){
 		return this.color;
 	}
 	
@@ -106,7 +112,6 @@ public class Gymnasium implements Comparable<Gymnasium>{
 	 *
 	 * @return The city.
 	 */
-	@SuppressWarnings("WeakerAccess")
 	public String getCity(){
 		return this.city;
 	}
@@ -129,6 +134,11 @@ public class Gymnasium implements Comparable<Gymnasium>{
 		return this.capacityProperty().get();
 	}
 	
+	/**
+	 * Get the capacity property.
+	 *
+	 * @return The capacity property.
+	 */
 	public SimpleIntegerProperty capacityProperty(){
 		return this.capacity;
 	}

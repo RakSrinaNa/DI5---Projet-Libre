@@ -16,6 +16,8 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import org.slf4j.Logger;
@@ -57,7 +59,7 @@ public class GymnasiumMatchTableCell extends TableCell<Gymnasium, ObservableList
 		this.date = date;
 		
 		this.setAlignment(Pos.CENTER);
-		setPrefHeight(Control.USE_COMPUTED_SIZE);
+		this.setPrefHeight(Control.USE_COMPUTED_SIZE);
 	}
 	
 	@Override
@@ -102,12 +104,27 @@ public class GymnasiumMatchTableCell extends TableCell<Gymnasium, ObservableList
 			for(final var match : matches){
 				if(Objects.nonNull(match)){
 					final var group = new FlowPane();
-					final var text = new Text();
-					text.wrappingWidthProperty().bind(widthProperty());
-					text.setText(match.getTeam1().getName() + "\nVS\n" + match.getTeam2().getName());
-					text.setTextAlignment(TextAlignment.CENTER);
-					group.setStyle(String.format("-fx-background-color: linear-gradient(to bottom, %s 35%%, %s 65%% 10%%);", match.getTeam1().getGymnasium().getColor(), match.getTeam2().getGymnasium().getColor()));
-					group.getChildren().add(text);
+					final var textM1 = new Text();
+					final var textVS = new Text();
+					final var textM2 = new Text();
+					textM1.wrappingWidthProperty().bind(widthProperty());
+					textM1.setText(match.getTeam1().getName());
+					textM1.setFill(match.getTeam1().getGymnasium().getColor().getTextColor());
+					textM1.setTextAlignment(TextAlignment.CENTER);
+					
+					textVS.wrappingWidthProperty().bind(widthProperty());
+					textVS.setText("\nVS\n");
+					textVS.setFill(match.getTeam1().getGymnasium().getColor().getTextColor().interpolate(match.getTeam2().getGymnasium().getColor().getTextColor(), 0.5));
+					textVS.setFont(Font.font(textVS.getFont().getFamily(), FontWeight.EXTRA_BOLD, textVS.getFont().getSize()));
+					textVS.setTextAlignment(TextAlignment.CENTER);
+					
+					textM2.wrappingWidthProperty().bind(widthProperty());
+					textM2.setText(match.getTeam2().getName());
+					textM2.setFill(match.getTeam2().getGymnasium().getColor().getTextColor());
+					textM2.setTextAlignment(TextAlignment.CENTER);
+					
+					group.setStyle(String.format("-fx-background-color: linear-gradient(to bottom, #%s 35%%, #%s 65%% 10%%);", match.getTeam1().getGymnasium().getColor().getBackgroundColor().toString().substring(2), match.getTeam2().getGymnasium().getColor().getBackgroundColor().toString().substring(2)));
+					group.getChildren().addAll(textM1, textVS, textM2);
 					group.setAlignment(Pos.CENTER);
 					group.setPrefHeight(75);
 					vBox.getChildren().add(group);

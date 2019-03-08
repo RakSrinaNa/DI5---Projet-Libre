@@ -18,4 +18,5 @@ open module fr.mrcraftcod.simulator {
 	
 	exports fr.mrcraftcod.shcheduler.jfx to javafx.graphics;
 	exports fr.mrcraftcod.shcheduler.model;
+	exports fr.mrcraftcod.shcheduler.utils;
 }

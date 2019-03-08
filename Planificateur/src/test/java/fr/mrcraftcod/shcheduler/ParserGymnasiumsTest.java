@@ -3,6 +3,7 @@ package fr.mrcraftcod.shcheduler;
 import fr.mrcraftcod.shcheduler.exceptions.IllegalCSVFormatException;
 import fr.mrcraftcod.shcheduler.exceptions.ParserException;
 import fr.mrcraftcod.shcheduler.model.Gymnasium;
+import fr.mrcraftcod.shcheduler.utils.GymnasiumColor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
@@ -26,19 +27,20 @@ import static org.junit.jupiter.api.Assertions.*;
 class ParserGymnasiumsTest{
 	private Parser parserComma;
 	private Parser parserSemicolon;
+	private final GymnasiumColor color = new GymnasiumColor();
 	
 	@BeforeEach
 	void setUp(){
-		parserComma = new Parser(',');
-		parserSemicolon = new Parser(';');
+		parserComma = new Parser(',', 10);
+		parserSemicolon = new Parser(';', 10);
 	}
 	
 	@Test
 	void getGymsValid1(){
-		final var g1 = new Gymnasium("G1", "C1", 1, "red");
-		final var g2 = new Gymnasium("G2", "C2", 2, "red");
-		final var g3 = new Gymnasium("G3", "C3", 3, "red");
-		final var g4 = new Gymnasium("G4", "C4", 4, "red");
+		final var g1 = new Gymnasium("G1", "C1", 1, color);
+		final var g2 = new Gymnasium("G2", "C2", 2, color);
+		final var g3 = new Gymnasium("G3", "C3", 3, color);
+		final var g4 = new Gymnasium("G4", "C4", 4, color);
 		
 		final var gyms = parserComma.getGymnasiums(getLines(Parser.class.getResourceAsStream("/gymnasiums/valid1.csv")));
 		assertEquals(4, gyms.size());
@@ -50,7 +52,7 @@ class ParserGymnasiumsTest{
 	
 	@Test
 	void getGymsValid2(){
-		final var g1 = new Gymnasium("G1,1", "C1", 1, "red");
+		final var g1 = new Gymnasium("G1,1", "C1", 1, color);
 		
 		final var gyms = parserSemicolon.getGymnasiums(getLines(Parser.class.getResourceAsStream("/gymnasiums/valid2.csv")));
 		assertEquals(1, gyms.size());
@@ -63,10 +65,10 @@ class ParserGymnasiumsTest{
 	
 	@Test
 	void getGymsDuplicates1(){
-		final var g1 = new Gymnasium("G1", "C1", 1, "red");
-		final var g2 = new Gymnasium("G2", "C2", 2, "red");
-		final var g3 = new Gymnasium("G3", "C3", 3, "red");
-		final var g4 = new Gymnasium("G4", "C4", 4, "red");
+		final var g1 = new Gymnasium("G1", "C1", 1, color);
+		final var g2 = new Gymnasium("G2", "C2", 2, color);
+		final var g3 = new Gymnasium("G3", "C3", 3, color);
+		final var g4 = new Gymnasium("G4", "C4", 4, color);
 		
 		final var gyms = parserComma.getGymnasiums(getLines(Parser.class.getResourceAsStream("/gymnasiums/duplicates1.csv")));
 		assertEquals(4, gyms.size());

@@ -17,6 +17,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 import java.util.Collection;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicReference;
@@ -88,6 +90,7 @@ public class EditGymnasiumBannedDatesStage{
 			}
 		});
 		
+		final var formatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.LONG);
 		final var dateList = new ListView<>(gymnasium.getBannedDates());
 		dateList.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
 		dateList.setOnKeyPressed(event -> {
@@ -96,6 +99,23 @@ public class EditGymnasiumBannedDatesStage{
 			}
 		});
 		dateList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+		dateList.setCellFactory(new Callback<>(){
+			@Override
+			public ListCell<LocalDate> call(final ListView<LocalDate> param){
+				return new ListCell<>(){
+					@Override
+					protected void updateItem(final LocalDate item, final boolean empty){
+						super.updateItem(item, empty);
+						if(item != null){
+							setText(item.format(formatter));
+						}
+						else{
+							setText(null);
+						}
+					}
+				};
+			}
+		});
 		VBox.setVgrow(dateList, Priority.ALWAYS);
 		
 		final var addButton = new Button(StringUtils.getString("add_date_button"));

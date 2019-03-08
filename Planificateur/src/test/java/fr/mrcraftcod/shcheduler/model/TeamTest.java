@@ -1,5 +1,6 @@
 package fr.mrcraftcod.shcheduler.model;
 
+import fr.mrcraftcod.shcheduler.utils.GymnasiumColor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
@@ -20,7 +21,7 @@ class TeamTest{
 	
 	@BeforeEach
 	void setUp(){
-		this.gym = new Gymnasium("gName", "gCity", Integer.MAX_VALUE, "red");
+		this.gym = new Gymnasium("gName", "gCity", Integer.MAX_VALUE, new GymnasiumColor());
 	}
 	
 	@Test

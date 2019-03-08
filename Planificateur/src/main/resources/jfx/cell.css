@@ -1,11 +1,6 @@
 .table-cell:filled {
     -fx-background-color: -fx-my-cell-background;
-    -fx-border-color: gray;
-    -fx-border-width: 0.05;
-}
-
-.moncul {
-    -fx-background-color: -fx-my-cell-background;
+    -fx-text-fill: -fx-my-cell-text;
     -fx-border-color: gray;
     -fx-border-width: 0.05;
 }
@@ -39,5 +34,6 @@
     -fx-border-style: dashed;
     -fx-border-width: 3px;
     -fx-border-radius: 5px;
+    -fx-border-insets: 2px;
     -fx-border-color: salmon;
 }

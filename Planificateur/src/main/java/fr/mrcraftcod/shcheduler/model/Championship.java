@@ -17,11 +17,14 @@ public class Championship{
 	private final Collection<GroupStage> groupStages;
 	
 	private final Collection<LocalDate> dates;
+	private int weeksCount;
 	
 	/**
 	 * Constructor.
+	 * @param weeksCount
 	 */
-	public Championship(){
+	public Championship(final int weeksCount){
+		this.weeksCount = weeksCount;
 		this.groupStages = new ArrayList<>();
 		this.dates = new ArrayList<>();
 	}
@@ -65,6 +68,10 @@ public class Championship{
 	@SuppressWarnings("WeakerAccess")
 	public boolean isGymnasiumFull(final Gymnasium gymnasium, final LocalDate date){
 		return this.groupStages.stream().flatMap(groupStage -> groupStage.getMatches().stream()).filter(match -> Objects.equals(gymnasium, match.getGymnasium()) && Objects.equals(date, match.getDate())).count() >= gymnasium.getCapacity();
+	}
+	
+	public int getWeeksCount(){
+		return this.weeksCount;
 	}
 	
 	/**

@@ -1,5 +1,6 @@
 package fr.mrcraftcod.shcheduler.model;
 
+import fr.mrcraftcod.shcheduler.utils.GymnasiumColor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
@@ -17,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * @since 2019-01-22
  */
 class ChampionshipTest{
-	private LocalDate date = LocalDate.now();
+	private final LocalDate date = LocalDate.now();
 	private GroupStage gs1;
 	private GroupStage gs2;
 	private Match match1112;
@@ -25,10 +26,11 @@ class ChampionshipTest{
 	
 	@BeforeEach
 	void setUp(){
-		final var team11 = new Team(new Gymnasium("g11", "c11", 1, "red"), "t11", DayOfWeek.MONDAY);
-		final var team12 = new Team(new Gymnasium("g12", "c12", 1, "red"), "t12", DayOfWeek.MONDAY);
-		final var team21 = new Team(new Gymnasium("g21", "c21", 2, "red"), "t21", DayOfWeek.MONDAY);
-		final var team22 = new Team(new Gymnasium("g22", "c22", 2, "red"), "t22", DayOfWeek.MONDAY);
+		final var color = new GymnasiumColor();
+		final var team11 = new Team(new Gymnasium("g11", "c11", 1, color), "t11", DayOfWeek.MONDAY);
+		final var team12 = new Team(new Gymnasium("g12", "c12", 1, color), "t12", DayOfWeek.MONDAY);
+		final var team21 = new Team(new Gymnasium("g21", "c21", 2, color), "t21", DayOfWeek.MONDAY);
+		final var team22 = new Team(new Gymnasium("g22", "c22", 2, color), "t22", DayOfWeek.MONDAY);
 		
 		match1112 = new Match(team11, team12, team11.getGymnasium(), date);
 		match2122 = new Match(team21, team22, team21.getGymnasium(), date);
@@ -46,7 +48,7 @@ class ChampionshipTest{
 	
 	@Test
 	void addGroupStage(){
-		final var c = new Championship();
+		final var c = new Championship(10);
 		c.addGroupStage(gs1);
 		assertTrue(c.getGroupStages().contains(gs1));
 		c.addGroupStage(gs2);
@@ -56,7 +58,7 @@ class ChampionshipTest{
 	
 	@Test
 	void addAllGroupStage(){
-		final var c = new Championship();
+		final var c = new Championship(10);
 		c.addAllGroupStages(List.of(gs1, gs2));
 		assertTrue(c.getGroupStages().contains(gs1));
 		assertTrue(c.getGroupStages().contains(gs2));
@@ -64,7 +66,7 @@ class ChampionshipTest{
 	
 	@Test
 	void isGymnasiumFull(){
-		final var c = new Championship();
+		final var c = new Championship(10);
 		c.addAllGroupStages(List.of(gs1, gs2));
 		assertTrue(c.isGymnasiumFull(match1112.getGymnasium(), date));
 		assertFalse(c.isGymnasiumFull(match2122.getGymnasium(), date));
@@ -72,7 +74,7 @@ class ChampionshipTest{
 	
 	@Test
 	void addGroupStageDuplicate(){
-		final var gs = new Championship();
+		final var gs = new Championship(10);
 		gs.addGroupStage(gs1);
 		assertTrue(gs.getGroupStages().contains(gs1));
 		assertFalse(gs.getGroupStages().contains(gs2));
@@ -87,7 +89,7 @@ class ChampionshipTest{
 	
 	@Test
 	void addAllGroupStageDuplicate(){
-		final var championship = new Championship();
+		final var championship = new Championship(10);
 		championship.addAllGroupStages(List.of(gs1, gs2));
 		assertTrue(championship.getGroupStages().contains(gs1));
 		assertTrue(championship.getGroupStages().contains(gs2));
@@ -105,7 +107,7 @@ class ChampionshipTest{
 	
 	@Test
 	void addWrongGroupStage(){
-		final var championship = new Championship();
+		final var championship = new Championship(10);
 		final Executable executable1 = () -> championship.addGroupStage(null);
 		assertThrows(IllegalArgumentException.class, executable1);
 	}
