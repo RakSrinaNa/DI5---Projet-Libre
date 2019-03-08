@@ -52,13 +52,13 @@ public class MatchTableView extends TableView<Gymnasium>{
 	 * @param matchPool  The matches to assign for this group stage.
 	 */
 	public void loadGroupStage(final GroupStage groupStage, final ObservableList<Match> matchPool){
-		final var colCount = 10;
+		final var colCount = groupStage.getChampionship().getWeeksCount();
 		final var padding = 2;
 		
 		final var columnGymnasium = new TableColumn<Gymnasium, Gymnasium>(StringUtils.getString("gymnasium_column_name"));
 		columnGymnasium.setCellValueFactory(value -> new SimpleObjectProperty<>(value.getValue()));
 		columnGymnasium.setCellFactory(col -> new GymnasiumTableCell(parentStage));
-		columnGymnasium.prefWidthProperty().bind(widthProperty().subtract(padding).divide(colCount));
+		//columnGymnasium.prefWidthProperty().bind(widthProperty().subtract(padding).divide(colCount));
 		columnGymnasium.setEditable(false);
 		getColumns().add(columnGymnasium);
 		

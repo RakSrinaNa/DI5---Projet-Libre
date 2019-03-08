@@ -29,8 +29,8 @@ class ParserGymnasiumsTest{
 	
 	@BeforeEach
 	void setUp(){
-		parserComma = new Parser(',');
-		parserSemicolon = new Parser(';');
+		parserComma = new Parser(',', 10);
+		parserSemicolon = new Parser(';', 10);
 	}
 	
 	@Test

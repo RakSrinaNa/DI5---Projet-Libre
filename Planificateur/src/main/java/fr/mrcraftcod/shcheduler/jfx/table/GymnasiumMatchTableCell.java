@@ -57,7 +57,7 @@ public class GymnasiumMatchTableCell extends TableCell<Gymnasium, ObservableList
 		this.date = date;
 		
 		this.setAlignment(Pos.CENTER);
-		setPrefHeight(Control.USE_COMPUTED_SIZE);
+		this.setPrefHeight(Control.USE_COMPUTED_SIZE);
 	}
 	
 	@Override

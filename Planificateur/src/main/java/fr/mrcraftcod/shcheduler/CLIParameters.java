@@ -23,6 +23,16 @@ public class CLIParameters{
 	}, description = "Path to the csv team configuration", converter = PathConverter.class, required = true)
 	private Path csvTeamConfigFile;
 	
+	@Parameter(names = {
+			"-w",
+			"--weeks"
+	}, description = "The number of weeks of the championship")
+	private int championshipWeeks = 10;
+	
+	public int getChampionshipWeeks(){
+		return this.championshipWeeks;
+	}
+	
 	/**
 	 * Get the path to the CSV file for the gymnasiums.
 	 *

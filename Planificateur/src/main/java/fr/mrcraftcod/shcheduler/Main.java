@@ -9,7 +9,7 @@ import fr.mrcraftcod.shcheduler.jfx.MainApplication;
  * @since 2019-02-25
  */
 public class Main{
-	public static void main(String[] args){
+	public static void main(final String[] args){
 		MainApplication.main(args);
 	}
 }

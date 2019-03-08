@@ -46,7 +46,7 @@ class ChampionshipTest{
 	
 	@Test
 	void addGroupStage(){
-		final var c = new Championship();
+		final var c = new Championship(10);
 		c.addGroupStage(gs1);
 		assertTrue(c.getGroupStages().contains(gs1));
 		c.addGroupStage(gs2);
@@ -56,7 +56,7 @@ class ChampionshipTest{
 	
 	@Test
 	void addAllGroupStage(){
-		final var c = new Championship();
+		final var c = new Championship(10);
 		c.addAllGroupStages(List.of(gs1, gs2));
 		assertTrue(c.getGroupStages().contains(gs1));
 		assertTrue(c.getGroupStages().contains(gs2));
@@ -64,7 +64,7 @@ class ChampionshipTest{
 	
 	@Test
 	void isGymnasiumFull(){
-		final var c = new Championship();
+		final var c = new Championship(10);
 		c.addAllGroupStages(List.of(gs1, gs2));
 		assertTrue(c.isGymnasiumFull(match1112.getGymnasium(), date));
 		assertFalse(c.isGymnasiumFull(match2122.getGymnasium(), date));
@@ -72,7 +72,7 @@ class ChampionshipTest{
 	
 	@Test
 	void addGroupStageDuplicate(){
-		final var gs = new Championship();
+		final var gs = new Championship(10);
 		gs.addGroupStage(gs1);
 		assertTrue(gs.getGroupStages().contains(gs1));
 		assertFalse(gs.getGroupStages().contains(gs2));
@@ -87,7 +87,7 @@ class ChampionshipTest{
 	
 	@Test
 	void addAllGroupStageDuplicate(){
-		final var championship = new Championship();
+		final var championship = new Championship(10);
 		championship.addAllGroupStages(List.of(gs1, gs2));
 		assertTrue(championship.getGroupStages().contains(gs1));
 		assertTrue(championship.getGroupStages().contains(gs2));
@@ -105,7 +105,7 @@ class ChampionshipTest{
 	
 	@Test
 	void addWrongGroupStage(){
-		final var championship = new Championship();
+		final var championship = new Championship(10);
 		final Executable executable1 = () -> championship.addGroupStage(null);
 		assertThrows(IllegalArgumentException.class, executable1);
 	}

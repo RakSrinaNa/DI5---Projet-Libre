@@ -24,14 +24,17 @@ import java.util.stream.Collectors;
  */
 public class Parser{
 	private final String csvSeparator;
+	private int numberOfWeeks;
 	
 	/**
 	 * Constructor.
 	 *
 	 * @param csvSeparator The separator used in the CSV files.
+	 * @param numberOfWeeks The number of weeks of the championship.
 	 */
-	public Parser(final char csvSeparator){
+	public Parser(final char csvSeparator, final int numberOfWeeks){
 		this.csvSeparator = "" + csvSeparator;
+		this.numberOfWeeks = numberOfWeeks;
 	}
 	
 	/**
@@ -64,14 +67,13 @@ public class Parser{
 		final var gymnasiumLines = new BufferedReader(new InputStreamReader(gymnasiumsCsvFile, StandardCharsets.UTF_8)).lines().collect(Collectors.toList());
 		final var teamLines = new BufferedReader(new InputStreamReader(teamsCsvFile, StandardCharsets.UTF_8)).lines().collect(Collectors.toList());
 		
-		final var championship = new Championship();
+		final var championship = new Championship(this.numberOfWeeks);
 		
 		final var gymnasiums = new HashSet<>(getGymnasiums(gymnasiumLines));
 		final var groupStages = new HashSet<>(getGroupStages(championship, gymnasiums, teamLines));
 		buildMatches(groupStages);
 		championship.addAllGroupStages(groupStages);
 		
-		final var numberOfWeeks = 10;
 		final var initialDate = LocalDate.now().minusDays(Utils.getDaysToRemove(LocalDate.now().getDayOfWeek()));
 		for(var i = 0; i < numberOfWeeks; i++){
 			championship.addDate(initialDate.plusDays(i * 7));

@@ -5,10 +5,13 @@ import com.beust.jcommander.ParameterException;
 import fr.mrcraftcod.shcheduler.CLIParameters;
 import fr.mrcraftcod.shcheduler.Parser;
 import fr.mrcraftcod.shcheduler.exceptions.ParserException;
+import fr.mrcraftcod.shcheduler.jfx.utils.JFXUtils;
 import fr.mrcraftcod.shcheduler.model.GroupStage;
 import fr.mrcraftcod.shcheduler.model.Team;
 import fr.mrcraftcod.shcheduler.utils.StringUtils;
 import javafx.application.Application;
+import javafx.application.Platform;
+import javafx.embed.swing.JFXPanel;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -21,6 +24,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import javax.swing.SwingUtilities;
 import java.awt.Taskbar;
 import java.io.IOException;
 import java.util.Comparator;
@@ -129,12 +133,19 @@ public class MainApplication extends Application{
 			System.exit(1);
 		}
 		try{
-			final var championship = new Parser(';').parse(parameters.getCsvGymnasiumConfigFile(), parameters.getCsvTeamConfigFile());
+			final var championship = new Parser(';', parameters.getChampionshipWeeks()).parse(parameters.getCsvGymnasiumConfigFile(), parameters.getCsvTeamConfigFile());
 			controller.setChampionship(championship);
 			championship.getGroupStages().stream().sorted(Comparator.comparing(GroupStage::getName)).forEach(gs -> tabPane.getTabs().add(new GroupStageTab(getStage(), controller, gs)));
 		}
 		catch(final ParserException | IOException e){
 			LOGGER.error("Error parsing config", e);
+			SwingUtilities.invokeLater(() -> {
+				new JFXPanel(); // this will prepare JavaFX toolkit and environment
+				Platform.runLater(() -> {
+					JFXUtils.displayExceptionAlert(e, "Scheduler error", "Error while starting", "Failed to parse configuration");
+					System.exit(1);
+				});
+			});
 		}
 	}
 	
