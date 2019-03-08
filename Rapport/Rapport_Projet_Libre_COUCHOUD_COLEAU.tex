@@ -32,11 +32,37 @@
 	\section{Environnement du projet}
 	\section{Caractéristiques des utilisateurs}
 	\section{Fonctionnalités du système}	
-	\section{Description des interface}
+	\section{Description des interface prévues}
 	
 \chapter{Réalisation du logiciel}
+	\section{Parser}
+	\section{Interface}
+	\section{Exportation}
 
 \chapter{Gestion de projet}
+	Afin de pouvoir travailler de manière efficace sur le peu de temps qui nous est alloué pour ce projet, nous avons mis quelques éléments de gestion de projet en place.
+	Cela inclut par exemple du versionning de code et de l'intégration continue.
+	
+	\section{Maven\label{sec:maven}}
+		Comme nous avons pu le voir précédemment notre code est développé en Java.
+		Afin de réduire au maximum les étapes nécessaires à l'installation d'un environnement de développement pour le projet, nous avons décidé d'utilise Maven.
+		
+		Cet outil permet de gérer de manière uniformisé les processus de build, test, packaging ainsi que les dépendances.
+		De cette manière il n'est pas nécessaire de télécharger manuellement des libraries à chaque fois ou bien être sûr que les même versions sont utilisées entre les différents environnements.
+		Il suffit simplement de déclarer la librairie à utiliser ainsi que sa version.
+		Maven se chargera lui même de récupérer la librairie adéquate.
+		
+		De plus toute la phase de build et test est déclaré auprès de maven ce qui permet d'avoir un code compilé de manière similaire peu importe l'environnement ou IDE utilisé.
+		Cela est notamment pratique pour la partie intégration continue où le code est compilé sans IDE.
+		
+		Ainsi si le projet est repris par la suite, il suffit d'avoir un JDK version 11 ou plus, installer maven et coder.
+		Les IDEs les plus connus supportent tous maven ce qui facilite encore plus la prise en main (il suffit d'ouvrir le pom.xml en tant que projet et ce dernier se configure automatiquement pour l'IDE utilisé).
+	
+		\img{Maven1.png}{Exemple de maven qui package notre application en un JAR exécutable multiplateformes}{scale=0.5}
+		
+	\section{Git}
+	
+	\section{Intégration continue} 
 
 \chapter{Améliorations à prévoir}
 
