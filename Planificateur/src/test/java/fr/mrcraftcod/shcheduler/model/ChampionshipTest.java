@@ -18,15 +18,15 @@ import static org.junit.jupiter.api.Assertions.*;
  * @since 2019-01-22
  */
 class ChampionshipTest{
-	private LocalDate date = LocalDate.now();
+	private final LocalDate date = LocalDate.now();
 	private GroupStage gs1;
 	private GroupStage gs2;
 	private Match match1112;
 	private Match match2122;
-	private GymnasiumColor color = new GymnasiumColor();
 	
 	@BeforeEach
 	void setUp(){
+		final var color = new GymnasiumColor();
 		final var team11 = new Team(new Gymnasium("g11", "c11", 1, color), "t11", DayOfWeek.MONDAY);
 		final var team12 = new Team(new Gymnasium("g12", "c12", 1, color), "t12", DayOfWeek.MONDAY);
 		final var team21 = new Team(new Gymnasium("g21", "c21", 2, color), "t21", DayOfWeek.MONDAY);

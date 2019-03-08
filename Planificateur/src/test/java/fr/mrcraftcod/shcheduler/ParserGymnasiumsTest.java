@@ -27,7 +27,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class ParserGymnasiumsTest{
 	private Parser parserComma;
 	private Parser parserSemicolon;
-	private GymnasiumColor color = new GymnasiumColor();
+	private final GymnasiumColor color = new GymnasiumColor();
 	
 	@BeforeEach
 	void setUp(){

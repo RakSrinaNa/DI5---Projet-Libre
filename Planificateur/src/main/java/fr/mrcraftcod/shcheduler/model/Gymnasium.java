@@ -80,7 +80,12 @@ public class Gymnasium implements Comparable<Gymnasium>{
 		return getName().compareTo(o.getName());
 	}
 	
-	public void setCapacity(int capacity){
+	/**
+	 * Set the capacity of the gymnasium.
+	 *
+	 * @param capacity The capacity to set.
+	 */
+	public void setCapacity(final int capacity){
 		this.capacityProperty().set(capacity);
 	}
 	
@@ -107,7 +112,6 @@ public class Gymnasium implements Comparable<Gymnasium>{
 	 *
 	 * @return The city.
 	 */
-	@SuppressWarnings("WeakerAccess")
 	public String getCity(){
 		return this.city;
 	}
@@ -130,6 +134,11 @@ public class Gymnasium implements Comparable<Gymnasium>{
 		return this.capacityProperty().get();
 	}
 	
+	/**
+	 * Get the capacity property.
+	 *
+	 * @return The capacity property.
+	 */
 	public SimpleIntegerProperty capacityProperty(){
 		return this.capacity;
 	}

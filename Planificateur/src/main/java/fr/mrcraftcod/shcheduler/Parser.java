@@ -4,17 +4,15 @@ import fr.mrcraftcod.shcheduler.exceptions.IllegalCSVFormatException;
 import fr.mrcraftcod.shcheduler.exceptions.ParserException;
 import fr.mrcraftcod.shcheduler.model.*;
 import fr.mrcraftcod.shcheduler.utils.GymnasiumColor;
-
-import java.awt.*;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.stream.Collectors;
 
 /**
@@ -27,9 +25,7 @@ import java.util.stream.Collectors;
  */
 public class Parser{
 	private final String csvSeparator;
-	private final List<GymnasiumColor> colors = new ArrayList<>(){{
-		add(new GymnasiumColor());
-	}};
+	private final List<GymnasiumColor> colors = List.of(new GymnasiumColor());
 	private int numberOfWeeks;
 	
 	/**
@@ -68,7 +64,6 @@ public class Parser{
 	 *
 	 * @throws ParserException If the parser encountered an error.
 	 */
-	@SuppressWarnings("WeakerAccess")
 	public Championship parse(final InputStream gymnasiumsCsvFile, final InputStream teamsCsvFile) throws ParserException{
 		final var gymnasiumLines = new BufferedReader(new InputStreamReader(gymnasiumsCsvFile, StandardCharsets.UTF_8)).lines().collect(Collectors.toList());
 		final var teamLines = new BufferedReader(new InputStreamReader(teamsCsvFile, StandardCharsets.UTF_8)).lines().collect(Collectors.toList());

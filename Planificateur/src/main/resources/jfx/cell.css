@@ -1,5 +1,6 @@
 .table-cell:filled {
     -fx-background-color: -fx-my-cell-background;
+    -fx-text-fill: -fx-my-cell-text;
     -fx-border-color: gray;
     -fx-border-width: 0.05;
 }

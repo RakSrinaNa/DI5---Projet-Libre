@@ -18,7 +18,7 @@ class MatchTest{
 	private Team team1;
 	private Team team2;
 	private LocalDate date;
-	private GymnasiumColor color = new GymnasiumColor();
+	private final GymnasiumColor color = new GymnasiumColor();
 	
 	@BeforeEach
 	void setUp(){

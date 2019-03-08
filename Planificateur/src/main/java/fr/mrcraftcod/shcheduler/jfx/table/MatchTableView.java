@@ -42,7 +42,7 @@ public class MatchTableView extends TableView<Gymnasium>{
 		
 		setSortPolicy(p -> true);
 		getSelectionModel().setCellSelectionEnabled(true);
-		this.setStyle("-fx-my-cell-background: -fx-background;");
+		this.setStyle("-fx-my-cell-background: -fx-background; -fx-my-cell-text: rgb(80, 80, 80);");
 	}
 	
 	/**
@@ -58,7 +58,7 @@ public class MatchTableView extends TableView<Gymnasium>{
 		final var columnGymnasium = new TableColumn<Gymnasium, Gymnasium>(StringUtils.getString("gymnasium_column_name"));
 		columnGymnasium.setCellValueFactory(value -> new SimpleObjectProperty<>(value.getValue()));
 		columnGymnasium.setCellFactory(col -> new GymnasiumTableCell(parentStage));
-		//columnGymnasium.prefWidthProperty().bind(widthProperty().subtract(padding).divide(colCount));
+		columnGymnasium.prefWidthProperty().bind(widthProperty().subtract(padding).divide(colCount));
 		columnGymnasium.setEditable(false);
 		getColumns().add(columnGymnasium);
 		

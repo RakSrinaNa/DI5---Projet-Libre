@@ -15,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
  * @since 2019-01-21
  */
 class GymnasiumTest{
-	private GymnasiumColor color = new GymnasiumColor();
+	private final GymnasiumColor color = new GymnasiumColor();
 	
 	@ParameterizedTest
 	@ValueSource(ints = {

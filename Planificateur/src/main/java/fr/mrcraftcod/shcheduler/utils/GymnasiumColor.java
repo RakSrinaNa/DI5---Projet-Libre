@@ -10,15 +10,14 @@ import javafx.scene.paint.Color;
 public class GymnasiumColor {
     private final Color backgroundColor;
     private final Color textColor;
-
-    public GymnasiumColor(Color backgroundColor, Color textColor) {
+    
+    public GymnasiumColor(){
+        this(Color.rgb(0, 0, 0), Color.rgb(255, 255, 255));
+    }
+    
+    public GymnasiumColor(final Color backgroundColor, final Color textColor){
         this.backgroundColor = backgroundColor;
         this.textColor = textColor;
-    }
-
-    public GymnasiumColor() {
-        this.backgroundColor = Color.rgb(0, 0, 0);
-        this.textColor = Color.rgb(255, 255, 255);
     }
 
     public Color getBackgroundColor() {

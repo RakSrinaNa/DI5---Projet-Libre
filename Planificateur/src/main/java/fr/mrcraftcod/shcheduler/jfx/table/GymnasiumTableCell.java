@@ -53,7 +53,7 @@ public class GymnasiumTableCell extends TableCell<Gymnasium, Gymnasium>{
 			setStyle("");
 		}
 		else{
-			this.setStyle("-fx-my-cell-background: " + item.getColor() + ";");
+			this.setStyle(String.format("-fx-my-cell-background: #%s; -fx-my-cell-text: #%s;", item.getColor().getBackgroundColor().toString().substring(2), item.getColor().getTextColor().toString().substring(2)));
 			setText(item.getName());
 			setTooltip(new Tooltip(item.getCity()));
 		}
