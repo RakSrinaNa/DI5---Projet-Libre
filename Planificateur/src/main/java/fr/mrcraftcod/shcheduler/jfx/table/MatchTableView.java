@@ -40,7 +40,7 @@ public class MatchTableView extends TableView<Gymnasium>{
 		this.getStylesheets().add(getClass().getResource("/jfx/cell.css").toExternalForm());
 		setEditable(true);
 		
-		setSortPolicy(p -> true);
+		setSortPolicy(p -> false);
 		getSelectionModel().setCellSelectionEnabled(true);
 		this.setStyle("-fx-my-cell-background: -fx-background; -fx-my-cell-text: rgb(80, 80, 80);");
 	}
@@ -60,6 +60,7 @@ public class MatchTableView extends TableView<Gymnasium>{
 		columnGymnasium.setCellFactory(col -> new GymnasiumTableCell(parentStage));
 		columnGymnasium.prefWidthProperty().bind(widthProperty().subtract(padding).divide(colCount));
 		columnGymnasium.setEditable(false);
+		columnGymnasium.setMinWidth(100);
 		getColumns().add(columnGymnasium);
 		
 		groupStage.getChampionship().getDates().stream().sorted().forEach(date -> {
@@ -68,6 +69,7 @@ public class MatchTableView extends TableView<Gymnasium>{
 			column.setCellFactory(list -> new GymnasiumMatchTableCell(groupStage, controller, date, matchPool));
 			column.prefWidthProperty().bind(widthProperty().subtract(padding).divide(colCount));
 			column.setEditable(true);
+			column.setMinWidth(100);
 			getColumns().add(column);
 		});
 		
