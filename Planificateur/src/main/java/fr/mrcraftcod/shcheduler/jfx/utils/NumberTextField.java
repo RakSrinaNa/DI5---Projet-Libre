@@ -20,8 +20,14 @@ public class NumberTextField extends TextField{
 	@Override
 	public void replaceText(final int start, final int end, final String text){
 		if(validate(text)){
-			super.replaceText(start, end, text);
-			number.set(getText().isBlank() ? 0 : Integer.parseInt(getText()));
+			try{
+				final var value = Integer.parseInt(getText());
+				super.replaceText(start, end, text);
+				number.set(getText().isBlank() ? 0 : value);
+			}
+			catch(final Exception ignored){
+			
+			}
 		}
 	}
 	
