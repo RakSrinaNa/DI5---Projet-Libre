@@ -1,4 +1,4 @@
-package fr.mrcraftcod.shcheduler;
+package fr.mrcraftcod.shcheduler.utils;
 
 import java.time.DayOfWeek;
 

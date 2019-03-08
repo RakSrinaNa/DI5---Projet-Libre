@@ -1,6 +1,7 @@
 package fr.mrcraftcod.shcheduler.model;
 
 import javafx.beans.property.SimpleBooleanProperty;
+import org.jetbrains.annotations.NotNull;
 import java.time.LocalDate;
 import java.util.Objects;
 
@@ -12,7 +13,7 @@ import java.util.Objects;
  * @author Thomas Couchoud
  * @since 2019-01-21
  */
-public class Match{
+public class Match implements Comparable<Match>{
 	private final Team team1;
 	private final Team team2;
 	private Gymnasium gymnasium;
@@ -59,6 +60,11 @@ public class Match{
 	 */
 	public boolean isTeamPlaying(final Team team){
 		return Objects.equals(team, team1) || Objects.equals(team, team2);
+	}
+	
+	@Override
+	public int compareTo(@NotNull final Match o){
+		return getDate().compareTo(o.getDate());
 	}
 	
 	/**

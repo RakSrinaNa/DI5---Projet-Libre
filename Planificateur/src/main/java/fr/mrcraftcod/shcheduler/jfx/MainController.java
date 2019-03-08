@@ -1,9 +1,9 @@
 package fr.mrcraftcod.shcheduler.jfx;
 
-import fr.mrcraftcod.shcheduler.Utils;
 import fr.mrcraftcod.shcheduler.jfx.table.GymnasiumMatchTableCell;
 import fr.mrcraftcod.shcheduler.jfx.table.MatchMenuButton;
 import fr.mrcraftcod.shcheduler.model.*;
+import fr.mrcraftcod.shcheduler.utils.Utils;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.collections.ListChangeListener;
 import org.slf4j.Logger;
@@ -91,7 +91,9 @@ public class MainController{
 		this.remainingPlaces = championship.getGroupStages().stream().flatMap(gs -> gs.getTeams().stream()).map(Team::getGymnasium).distinct().collect(Collectors.toMap(g -> g, g -> championship.getDates().stream().collect(Collectors.toMap(d -> d, d -> {
 			final var prop = new SimpleIntegerProperty(getRemainingPlace(g, d, List.of()));
 			g.capacityProperty().addListener((obs, oldValue, newValue) -> {
-				prop.set(prop.get() - oldValue.intValue() + newValue.intValue());
+				if(!g.getBannedDates().contains(d)){
+					prop.set(prop.get() - oldValue.intValue() + newValue.intValue());
+				}
 			});
 			g.getBannedDates().addListener(new ListChangeListener<LocalDate>(){
 				@Override
