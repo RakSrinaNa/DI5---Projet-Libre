@@ -4,6 +4,7 @@ import fr.mrcraftcod.shcheduler.exceptions.IllegalCSVFormatException;
 import fr.mrcraftcod.shcheduler.exceptions.ParserException;
 import fr.mrcraftcod.shcheduler.model.*;
 import fr.mrcraftcod.shcheduler.utils.GymnasiumColor;
+import fr.mrcraftcod.shcheduler.utils.Utils;
 import javafx.scene.paint.Color;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
