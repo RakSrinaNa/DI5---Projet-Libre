@@ -31,12 +31,64 @@
 \chapter{Description générale}	
 	\section{Environnement du projet}
 	\section{Caractéristiques des utilisateurs}
-	\section{Fonctionnalités du système}	
+		Les utilisateurs finaux du programme sont des gens n'ayant aucuun lien avec l'informatique. De ce fait, le programme doit être utilisable de la manière la plus simple et intuitive possible. Pour cela il faut que l'utilisateur est le moins de paramètres à définir en amont à l'exception des fichiers d'entrée à fournir. De plus, il est nécessaire que l'interface graphique soit claire, propre et intuitive ainsi que simple de prise en main et d'utilisation. \\
+ 		
+		Dans le cas où le développement serait par la suite continuer par une autre équipe, le projet fut conçu de sorte à être facilement reprit. Il suffit d'avoir un environnement de développement adapté (Voir \autoref{sec:maven}). De plus, la Javadoc est présente au sein du code afin de facilité sa prise en main.
+
+	\section{Fonctionnalités du système}
+		\subsection{Importer les données}
+			La première chose que le programme doit faire est de lire un certain nombre de fichiers (2 dans le cas présent - un pour les gymnases et un pour les équipes) afin de pouvoir générer son modèle initial. Cette étape est nécessaire afin de le logiciel sache qu'elles données il aura à traiter par la suite. \\
+
+			Les fichiers CSV d'entrée sont attendus sous la forme suivante :
+
+			\paragraph{Gymnases}
+				Trois colonnes doivent être présentes : le nom du gymnase, sa capacité maximale et sa ville.
+				\img{img:gym.png}{Exemple de fichier CSV pour les gymnases}{}
+
+			\paragraph{Equipes}
+				Quatre colonnes doivent être présentes : le nom de l'équipe, le nom du gymanse dans lequel jour l'équipe, la ville du gymnase et la poule à laquelle appatient l'équipe.
+				\img{img:team.png}{Exemple de fichier CSV pour les équipes}{}
+				Une importance particulière doit être portée sur les noms de poule puisque c'est à partir des valeurs de cette colonnes que seront définies les poules dans le modèle sous-jacent pour la suite des opération. La moindre erreur dans le nom du poule la différencierait des autres et en créerait donc une nouvelle.
+
+			\paragraph{Equipes}
+
+		\subsection{Afficher le planning}
+
+		\subsection{Plannification des matches}
+
+		\subsection{Exporter les résultats}
+
 	\section{Description des interface}
 	
 \chapter{Réalisation du logiciel}
+	\section{Parser}
+	\section{Interface}
+	\section{Exportation}
 
 \chapter{Gestion de projet}
+	Afin de pouvoir travailler de manière efficace sur le peu de temps qui nous est alloué pour ce projet, nous avons mis quelques éléments de gestion de projet en place.
+	Cela inclut par exemple du versionning de code et de l'intégration continue.
+	
+	\section{Maven\label{sec:maven}}
+		Comme nous avons pu le voir précédemment notre code est développé en Java.
+		Afin de réduire au maximum les étapes nécessaires à l'installation d'un environnement de développement pour le projet, nous avons décidé d'utilise Maven.
+		
+		Cet outil permet de gérer de manière uniformisé les processus de build, test, packaging ainsi que les dépendances.
+		De cette manière il n'est pas nécessaire de télécharger manuellement des libraries à chaque fois ou bien être sûr que les même versions sont utilisées entre les différents environnements.
+		Il suffit simplement de déclarer la librairie à utiliser ainsi que sa version.
+		Maven se chargera lui même de récupérer la librairie adéquate.
+		
+		De plus toute la phase de build et test est déclaré auprès de maven ce qui permet d'avoir un code compilé de manière similaire peu importe l'environnement ou IDE utilisé.
+		Cela est notamment pratique pour la partie intégration continue où le code est compilé sans IDE.
+		
+		Ainsi si le projet est repris par la suite, il suffit d'avoir un JDK version 11 ou plus, installer maven et coder.
+		Les IDEs les plus connus supportent tous maven ce qui facilite encore plus la prise en main (il suffit d'ouvrir le pom.xml en tant que projet et ce dernier se configure automatiquement pour l'IDE utilisé).
+	
+		\img{Maven1.png}{Exemple de maven qui package notre application en un JAR exécutable multiplateformes}{scale=0.5}
+		
+	\section{Git}
+	
+	\section{Intégration continue} 
 
 \chapter{Améliorations à prévoir}
 

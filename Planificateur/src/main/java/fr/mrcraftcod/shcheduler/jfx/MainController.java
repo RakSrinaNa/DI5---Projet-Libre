@@ -1,9 +1,9 @@
 package fr.mrcraftcod.shcheduler.jfx;
 
-import fr.mrcraftcod.shcheduler.Utils;
 import fr.mrcraftcod.shcheduler.jfx.table.GymnasiumMatchTableCell;
 import fr.mrcraftcod.shcheduler.jfx.table.MatchMenuButton;
 import fr.mrcraftcod.shcheduler.model.*;
+import fr.mrcraftcod.shcheduler.utils.Utils;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.collections.ListChangeListener;
 import org.slf4j.Logger;

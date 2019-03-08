@@ -1,7 +1,14 @@
+Planificateur/Données Championnat.xlsx
+Planificateur/EquipesUfolep.csv
+Planificateur/GymnasesUfolep.csv
+
 *.img
 
 Planificateur/\.idea/
 Planificateur/log/
 Planificateur/target/
+
+Rapport/polytech
+Rapport/.texpadtmp
 
 *.iml

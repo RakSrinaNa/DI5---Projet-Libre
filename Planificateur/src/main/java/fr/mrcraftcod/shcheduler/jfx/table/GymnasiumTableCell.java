@@ -24,6 +24,7 @@ public class GymnasiumTableCell extends TableCell<Gymnasium, Gymnasium>{
 	GymnasiumTableCell(final Stage parentStage){
 		this.setAlignment(Pos.CENTER);
 		this.setTextAlignment(TextAlignment.CENTER);
+		this.setWrapText(true);
 		this.setOnMouseClicked(evt -> {
 			if(evt.getClickCount() == 2 && evt.getButton() == MouseButton.PRIMARY)
 			{

@@ -3,6 +3,7 @@ package fr.mrcraftcod.shcheduler.jfx;
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.ParameterException;
 import fr.mrcraftcod.shcheduler.CLIParameters;
+import fr.mrcraftcod.shcheduler.Exporter;
 import fr.mrcraftcod.shcheduler.Parser;
 import fr.mrcraftcod.shcheduler.exceptions.ParserException;
 import fr.mrcraftcod.shcheduler.jfx.utils.JFXUtils;
@@ -15,19 +16,20 @@ import javafx.embed.swing.JFXPanel;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuBar;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.TabPane;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
+import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import javax.swing.SwingUtilities;
 import java.awt.Taskbar;
 import java.io.IOException;
+import java.nio.file.Paths;
 import java.util.Comparator;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -98,8 +100,64 @@ public class MainApplication extends Application{
 			}
 		});
 		
+		final var menuExport = new Menu(StringUtils.getString("menu_export"));
+		final var menuExportSchedule = new MenuItem(StringUtils.getString("menu_export_schedule"));
+		final var menuExportScheduleGroupStage = new MenuItem(StringUtils.getString("menu_export_schedule_group_stage"));
+		menuExportSchedule.setOnAction(evt -> {
+			final var directoryChooser = new DirectoryChooser();
+			final var selectedDirectory = directoryChooser.showDialog(stage);
+			
+			if(Objects.nonNull(selectedDirectory)){
+				Exporter.exportChampionship(MainApplication.this.controller.getChampionship(), Paths.get(selectedDirectory.toURI()));
+				final var alert = new Alert(Alert.AlertType.INFORMATION);
+				alert.setTitle(StringUtils.getString("alert_success"));
+				alert.setHeaderText("");
+				alert.setContentText(StringUtils.getString("alert_export_success"));
+				alert.setGraphic(new ImageView(this.getClass().getResource("/jfx/checkmark.png").toString()));
+				alert.showAndWait();
+			}
+			else{
+				final var alert = new Alert(Alert.AlertType.WARNING);
+				alert.setTitle(StringUtils.getString("alert_error"));
+				alert.setHeaderText("");
+				alert.setContentText(StringUtils.getString("alert_error_export_no_folder"));
+				alert.showAndWait();
+			}
+		});
+		menuExportScheduleGroupStage.setOnAction(evt -> {
+			final var selectedTab = tabPane.getSelectionModel().selectedItemProperty().get();
+			if(selectedTab instanceof GroupStageTab){
+				final var directoryChooser = new DirectoryChooser();
+				final var selectedDirectory = directoryChooser.showDialog(stage);
+				
+				if(Objects.nonNull(selectedDirectory)){
+					Exporter.exportGroupStage(((GroupStageTab) selectedTab).getGroupStage(), Paths.get(selectedDirectory.toURI()));
+					final var alert = new Alert(Alert.AlertType.INFORMATION);
+					alert.setTitle(StringUtils.getString("alert_success"));
+					alert.setHeaderText("");
+					alert.setContentText(StringUtils.getString("alert_export_success"));
+					alert.setGraphic(new ImageView(this.getClass().getResource("/jfx/checkmark.png").toString()));
+					alert.showAndWait();
+				}
+				else{
+					final var alert = new Alert(Alert.AlertType.WARNING);
+					alert.setTitle(StringUtils.getString("alert_error"));
+					alert.setHeaderText("");
+					alert.setContentText(StringUtils.getString("alert_error_export_no_folder"));
+					alert.showAndWait();
+				}
+			}
+			else{
+				final var alert = new Alert(Alert.AlertType.ERROR);
+				alert.setTitle(StringUtils.getString("alert_error"));
+				alert.setContentText(StringUtils.getString("alert_error_export_no_tab"));
+				alert.showAndWait();
+			}
+		});
+		
 		menuConstraints.getItems().addAll(menuConstraintsBannedGymnasiumDates);
-		menuBar.getMenus().addAll(menuConstraints);
+		menuExport.getItems().addAll(menuExportSchedule, menuExportScheduleGroupStage);
+		menuBar.getMenus().addAll(menuConstraints, menuExport);
 		
 		final var root = new BorderPane();
 		root.setCenter(tabPane);

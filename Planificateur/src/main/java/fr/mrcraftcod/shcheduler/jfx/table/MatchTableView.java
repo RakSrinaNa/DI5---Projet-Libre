@@ -69,7 +69,7 @@ public class MatchTableView extends TableView<Gymnasium>{
 			column.setCellFactory(list -> new GymnasiumMatchTableCell(groupStage, controller, date, matchPool));
 			column.prefWidthProperty().bind(widthProperty().subtract(padding).divide(colCount));
 			column.setEditable(true);
-			column.setMinWidth(100);
+			column.setMinWidth(70);
 			getColumns().add(column);
 		});
 		
