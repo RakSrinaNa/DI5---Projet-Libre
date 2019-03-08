@@ -16,6 +16,8 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import org.slf4j.Logger;
@@ -112,6 +114,8 @@ public class GymnasiumMatchTableCell extends TableCell<Gymnasium, ObservableList
 					
 					textVS.wrappingWidthProperty().bind(widthProperty());
 					textVS.setText("\nVS\n");
+					textVS.setFill(match.getTeam1().getGymnasium().getColor().getTextColor().interpolate(match.getTeam2().getGymnasium().getColor().getTextColor(), 0.5));
+					textVS.setFont(Font.font(textVS.getFont().getFamily(), FontWeight.EXTRA_BOLD, textVS.getFont().getSize()));
 					textVS.setTextAlignment(TextAlignment.CENTER);
 					
 					textM2.wrappingWidthProperty().bind(widthProperty());

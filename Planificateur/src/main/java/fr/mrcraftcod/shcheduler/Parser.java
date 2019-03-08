@@ -27,7 +27,7 @@ import java.util.stream.Collectors;
 public class Parser{
 	private final String csvSeparator;
 	private final List<GymnasiumColor> colors = List.of(new GymnasiumColor(Color.valueOf("#22c1c3"), Color.valueOf("#000000")), new GymnasiumColor(Color.valueOf("#fdbb2d"), Color.valueOf("#000000")), new GymnasiumColor(Color.valueOf("#833ab4"), Color.valueOf("#ffffff")), new GymnasiumColor(Color.valueOf("#f8cdda"), Color.valueOf("#000000")), new GymnasiumColor(Color.valueOf("#ff512f"), Color.valueOf("#000000")), new GymnasiumColor(Color.valueOf("#f09819"), Color.valueOf("#000000")), new GymnasiumColor(Color.valueOf("#1a2980"), Color.valueOf("#ffffff")), new GymnasiumColor(Color.valueOf("#dd2476"), Color.valueOf("#000000")), new GymnasiumColor(Color.valueOf("#403b4a"), Color.valueOf("#ffffff")), new GymnasiumColor(Color.valueOf("#3ca55c"), Color.valueOf("#000000")), new GymnasiumColor(Color.valueOf("#603813"), Color.valueOf("#ffffff")));
-	private int numberOfWeeks;
+	private final int numberOfWeeks;
 	
 	/**
 	 * Constructor.
