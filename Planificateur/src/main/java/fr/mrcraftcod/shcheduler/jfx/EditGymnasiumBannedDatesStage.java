@@ -18,8 +18,8 @@ import org.slf4j.LoggerFactory;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 import java.util.Collection;
-import java.util.Locale;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -90,7 +90,7 @@ public class EditGymnasiumBannedDatesStage{
 			}
 		});
 		
-		final var formatter = DateTimeFormatter.ISO_DATE.withLocale(Locale.getDefault());
+		final var formatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.LONG);
 		final var dateList = new ListView<>(gymnasium.getBannedDates());
 		dateList.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
 		dateList.setOnKeyPressed(event -> {
