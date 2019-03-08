@@ -4,8 +4,7 @@ import fr.mrcraftcod.shcheduler.exceptions.IllegalCSVFormatException;
 import fr.mrcraftcod.shcheduler.exceptions.ParserException;
 import fr.mrcraftcod.shcheduler.model.*;
 import fr.mrcraftcod.shcheduler.utils.GymnasiumColor;
-
-import java.awt.*;
+import javafx.scene.paint.Color;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
@@ -27,19 +26,7 @@ import java.util.stream.Collectors;
  */
 public class Parser{
 	private final String csvSeparator;
-	private final List<GymnasiumColor> colors = new ArrayList<>(){{
-		add(new GymnasiumColor(Color.valueOf("#22c1c3"), Color.valueOf("#000000")));
-		add(new GymnasiumColor(Color.valueOf("#fdbb2d"), Color.valueOf("#000000")));
-		add(new GymnasiumColor(Color.valueOf("#833ab4"), Color.valueOf("#FFFFF")));
-		add(new GymnasiumColor(Color.valueOf("#F8CDDA"), Color.valueOf("#000000")));
-		add(new GymnasiumColor(Color.valueOf("#FF512F"), Color.valueOf("#000000")));
-		add(new GymnasiumColor(Color.valueOf("#F09819"), Color.valueOf("#000000")));
-		add(new GymnasiumColor(Color.valueOf("#1A2980"), Color.valueOf("#FFFFFF")));
-		add(new GymnasiumColor(Color.valueOf("#DD2476"), Color.valueOf("#000000")));
-		add(new GymnasiumColor(Color.valueOf("#403B4A"), Color.valueOf("#FFFFFF")));
-		add(new GymnasiumColor(Color.valueOf("#3CA55C"), Color.valueOf("#000000")));
-		add(new GymnasiumColor(Color.valueOf("#603813"), Color.valueOf("#FFFFFF")));
-	}};
+	private final List<GymnasiumColor> colors = List.of(new GymnasiumColor(Color.valueOf("#22c1c3"), Color.valueOf("#000000")), new GymnasiumColor(Color.valueOf("#fdbb2d"), Color.valueOf("#000000")), new GymnasiumColor(Color.valueOf("#833ab4"), Color.valueOf("#FFFFF")), new GymnasiumColor(Color.valueOf("#F8CDDA"), Color.valueOf("#000000")), new GymnasiumColor(Color.valueOf("#FF512F"), Color.valueOf("#000000")), new GymnasiumColor(Color.valueOf("#F09819"), Color.valueOf("#000000")), new GymnasiumColor(Color.valueOf("#1A2980"), Color.valueOf("#FFFFFF")), new GymnasiumColor(Color.valueOf("#DD2476"), Color.valueOf("#000000")), new GymnasiumColor(Color.valueOf("#403B4A"), Color.valueOf("#FFFFFF")), new GymnasiumColor(Color.valueOf("#3CA55C"), Color.valueOf("#000000")), new GymnasiumColor(Color.valueOf("#603813"), Color.valueOf("#FFFFFF")));
 	private int numberOfWeeks;
 	
 	/**
