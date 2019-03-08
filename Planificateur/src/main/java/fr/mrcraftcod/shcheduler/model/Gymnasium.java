@@ -1,5 +1,6 @@
 package fr.mrcraftcod.shcheduler.model;
 
+import fr.mrcraftcod.shcheduler.utils.GymnasiumColor;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -20,7 +21,7 @@ public class Gymnasium implements Comparable<Gymnasium>{
 	private final String city;
 	private final SimpleIntegerProperty capacity;
 	private final ObservableList<LocalDate> bannedDates;
-	private final String color;
+	private final GymnasiumColor color;
 	
 	/**
 	 * Constructor.
@@ -32,7 +33,7 @@ public class Gymnasium implements Comparable<Gymnasium>{
 	 *
 	 * @throws IllegalArgumentException If the name is empty, or the city is empty or the capacity isn't positive.
 	 */
-	public Gymnasium(final String name, final String city, final int capacity, final String color) throws IllegalArgumentException{
+	public Gymnasium(final String name, final String city, final int capacity, final GymnasiumColor color) throws IllegalArgumentException{
 		if(name == null || name.isBlank()){
 			throw new IllegalArgumentException("Gymnasium name is empty");
 		}
@@ -88,7 +89,7 @@ public class Gymnasium implements Comparable<Gymnasium>{
 	 *
 	 * @return The color of the gymnasium.
 	 */
-	public String getColor(){
+	public GymnasiumColor getColor(){
 		return this.color;
 	}
 	
