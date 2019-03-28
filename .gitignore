@@ -16,3 +16,5 @@ Rapport/.texpadtmp
 *.gz
 
 Rapport/build/
+
+*.log
