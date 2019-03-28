@@ -1,4 +1,4 @@
-image: maven:3.6.0-jdk-11-slim
+image: maven:3.6-jdk-12-alpine
 
 variables:
   MAVEN_OPTS: "-Dmaven.repo.local=$CI_PROJECT_DIR/.m2/repository"
@@ -9,19 +9,35 @@ cache:
     - .m2/repository
     - Planificateur/target/
 
-build:
+⚙maven-build:
   stage: build
   script:
     - cd Planificateur
     - mvn $MAVEN_CLI_OPTS compile
 
-test:
+🧪junit-test:
   stage: test
   script:
     - cd Planificateur
     - mvn $MAVEN_CLI_OPTS -B test
+    - awk -F"," '{ instructions += $4 + $5; covered += $5 } END { print covered, "/", instructions, "instructions covered"; print 100*covered/instructions, "% covered" }' target/site/jacoco/jacoco.csv
+  coverage: '/\d+.\d+ \% covered/'
+  artifacts:
+    paths:
+      - Planificateur/target/site/jacoco/
+    expire_in: 30 days
 
-deploy:
+📖javadoc:
+  stage: deploy
+  script:
+    - cd Planificateur
+    - mvn $MAVEN_CLI_OPTS -DskipTests=true -B javadoc:javadoc
+  artifacts:
+    paths:
+      - Planificateur/target/site/apidocs
+    expire_in: 30 days
+
+⏯build-jar:
   stage: deploy
   script:
     - cd Planificateur
