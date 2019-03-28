@@ -10,11 +10,11 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <java.version>11</java.version>
+        <java.version>12</java.version>
         <main.class>fr.mrcraftcod.shcheduler.Main</main.class>
-        <log4j.version>2.11.1</log4j.version>
+        <log4j.version>2.11.2</log4j.version>
         <junit.version>5.4.0-M1</junit.version>
-        <javafx.version>11.0.2</javafx.version>
+        <javafx.version>12</javafx.version>
     </properties>
     <packaging>jar</packaging>
 
@@ -40,6 +40,18 @@
                         </goals>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>3.0.1</version>
+                <configuration>
+                    <additionalOptions>-private</additionalOptions>
+                    <sourceFileExcludes>
+                        <exclude>module-info.java</exclude>
+                        <exclude>**/module-info.java</exclude>
+                    </sourceFileExcludes>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

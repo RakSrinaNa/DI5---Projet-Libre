@@ -9,19 +9,29 @@ cache:
     - .m2/repository
     - Planificateur/target/
 
-build:
+⚙maven-build:
   stage: build
   script:
     - cd Planificateur
     - mvn $MAVEN_CLI_OPTS compile
 
-test:
+🧪junit-test:
   stage: test
   script:
     - cd Planificateur
     - mvn $MAVEN_CLI_OPTS -B test
 
-deploy:
+📖javadoc:
+  stage: deploy
+  script:
+    - cd Planificateur
+    - mvn $MAVEN_CLI_OPTS -DskipTests=true -B javadoc:javadoc
+  artifacts:
+    paths:
+      - Simulator/target/site/apidocs
+    expire_in: 30 days
+
+⏯build-jar:
   stage: deploy
   script:
     - cd Planificateur
