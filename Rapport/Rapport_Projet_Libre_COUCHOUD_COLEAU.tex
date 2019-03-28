@@ -44,12 +44,12 @@
 			\paragraph{Gymnases}
 				Trois colonnes doivent être présentes : le nom du gymnase, sa capacité maximale et sa ville.
 				
-				\latexsourcefile[caption="Exemple de fichier CSV pour les gymnases"]{../Planificateur/gyms.csv}
+				\latexsourcefile[caption=Exemple de fichier CSV pour les gymnases]{../Planificateur/gyms.csv}
 
 			\paragraph{Equipes}
 				Quatre colonnes doivent être présentes : le nom de l'équipe, le nom du gymnase dans lequel jour l'équipe, la ville du gymnase et la poule à laquelle appartient l'équipe.
 				
-				\latexsourcefile[caption="Exemple de fichier CSV pour les équipes"]{../Planificateur/teams.csv}
+				\latexsourcefile[caption=Exemple de fichier CSV pour les équipes]{../Planificateur/teams.csv}
 
 				Une importance particulière doit être portée sur les noms de poule puisque c'est à partir des valeurs de cette colonnes que seront définies les poules dans le modèle sous-jacent pour la suite des opération. La moindre erreur dans le nom du poule la différencierait des autres et en créerait donc une nouvelle.
 
@@ -62,7 +62,29 @@
 	\section{Description des interface}
 	
 \chapter{Réalisation du logiciel}
+	Nous allons ici expliquer comment a été réalisé le programme afin de répondre à la problématique exposée précédemment.
+	
+	\section{Modèle}
+		\img{classDiagram.png}{Diagramme de classe du model}{scale=0.5}
+		
+		La première étape a été de créer tout le modèle d'un championnat.
+		Pour cela les classes dans le diagramme précédent ont été créées.
+		
+		Nous retrouvons tout en haut le Championship.
+		Ce dernier représente tout le championnat et est donc composé de GroupStages, ainsi qu'un nombre de semaines sur lesquelles se déroule la compétition.
+		
+		Les GroupStage représentent les poules et ont chacune un nom ainsi qu'un liste de Match qui devront être joués.
+		
+		Les Match sont quand a eux composés de deux équipes (l'équipe qui va recevoir, et la deuxième) et d'une date.
+		Si la date du match est encore inconnue la valeur << null >> lui serra assigné.
+		
+		Les équipes sont représentées par Team et comporte un nom ainsi que leur gymnase affecté.
+
+		Enfin un Gymnase à une capacité, un nom, une liste de dates où le gymnase est indisponible et une couleur qui lui sera affecté dans l'interface.
+
 	\section{Parser}
+		
+	
 	\section{Interface}
 		%TODO Thomas
 	\section{Exportation}
@@ -93,11 +115,37 @@
 		Un autre aspect qui a été utilisé tout au long du projet et le versionning de code.
 		Ce système nous permet de gérer des "versions" de code de manière efficace en ayant un historique de tout le code ainsi que des outils pour fusionner plusieurs versions, effectuer des retours en arrière, etc.
 		
-		
-		%TODO Thomas
-		
 	\section{Intégration continue} 
-		%TODO Thomas
+		Afin d'améliorer le développement, un système d'intégration continue a été mis en place.
+	Cela permet d'effectuer certaines actions lorsqu'une modification sur le code est envoyé sur le serveur Git.
+	Nous pouvons entre autres faire de la vérification de code grâce à une compilation et des tests.
+	
+	Voici les différentes étapes qui sont réalisées dans ce projet sont les suivantes:
+	\img{ci-stages.png}{Etapes du CI}{}
+	
+	Afin de passer à une étape suivante, toutes les tâches de l'étape doivent être validées.
+		
+	\begin{easylist}[itemize]
+		@ Etape build:
+		@@ Effectue la compilation du projet
+		@ Etape test:
+		@@ Effectue les tests unitaires du projet
+		@ Etape deploy:
+		@@ build-jar: Construit un jar exécutable du projet
+		@@ javadoc: Génère la Javadoc du projet
+	\end{easylist}
+	
+	Si nous prenons l'exemple de la Javadoc, après la fin du job concerné, il est possible de télécharger cette dernière pour le code à cet instant t:
+	\img{ci-artifacts.png}{Téléchargements des fichiers du job}{scale=1}
+	
+	De plus les tests unitaires produisent un résultat de test de couverture permettant ainsi de se rendre compte de l'efficacité de ces derniers. 
+	\img{ci-coverage.png}{Pourcentage de couverture}{}
+	
+	Ces résultats sont aussi disponibles sur la page principale du projet sous forme de badges.
+	\img{ci-badges.png}{Page principale du projet}{}
+	
+	La phase de déploiement permet de mettre en ligne la Javadoc ainsi qu'une version plus poussée su rapport de couverture des tests.
+	\img{jacoco.png}{Rapport JaCoCo}{}
 
 \chapter{Améliorations à prévoir}
 
