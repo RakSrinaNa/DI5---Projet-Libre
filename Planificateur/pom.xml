@@ -74,6 +74,8 @@
                 </executions>
                 <configuration>
                     <excludes>
+                        <exclude>fr/mrcraftcod/scheduler/jfx/*</exclude>
+                        <exclude>fr/mrcraftcod/scheduler/jfx/**/*</exclude>
                     </excludes>
                 </configuration>
             </plugin>
