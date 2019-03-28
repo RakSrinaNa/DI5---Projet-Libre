@@ -11,7 +11,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>12</java.version>
-        <main.class>fr.mrcraftcod.shcheduler.Main</main.class>
+        <main.class>fr.mrcraftcod.scheduler.Main</main.class>
         <log4j.version>2.11.2</log4j.version>
         <junit.version>5.4.0-M1</junit.version>
         <javafx.version>12</javafx.version>
