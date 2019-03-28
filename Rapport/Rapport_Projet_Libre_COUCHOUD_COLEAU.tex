@@ -24,23 +24,25 @@
 
 \begin{document}
 \chapter{Introduction}
-
 	\section{Contexte}
-		Dans le cadre de championnats sportifs, les organisateurs sont souvent amenés à planifier les rencontres entre équipes. Ce travail peut être plus ou moins complexe en fonction du nombre d'équipes à gérer, du nombre de poules dans le championnat, des contraintes de lieux (chaque équipe ayant un gymnase à domicile), de dates (une équipe ne doit pas jouer tous ses matchs d'affilée), d'alternance (une équipe ne doit pas jouer tous ses matchs en extérieur d'affilée), etc. \\
-		De plus, ces rencontres sont souvent sous forme de match aller-retour. La période aller devant précéder celle de retour. \\
+		Dans le cadre de championnats sportifs, les organisateurs sont souvent amenés à planifier les rencontres entre équipes. Ce travail peut être plus ou moins complexe en fonction du nombre d'équipes à gérer, du nombre de poules dans le championnat, des contraintes de lieux (chaque équipe ayant un gymnase à domicile), de dates (une équipe ne doit pas jouer tous ses matchs d'affilée), d'alternance (une équipe ne doit pas jouer tous ses matchs en extérieur d'affilée), etc.
+		
+		De plus, ces rencontres sont souvent sous forme de match aller-retour. La période aller devant précéder celle de retour.
+		
 		Tout cela créé un environnement complexe à appréhender, où l'ensemble des contraintes devient vite bloquant.
 
 	\section{Objectifs}
-		L'objectif de ce projet libre est donc de proposer un logiciel graphique facilitant la planification après import des données au sein du système. \\
+		L'objectif de ce projet libre est donc de proposer un logiciel graphique facilitant la planification après import des données au sein du système.
+		
 		Celui-ci aura deux buts principaux : 
-		\begin{easylist}
+		\begin{easylist}[itemize]
 			@ La partie graphique servira à représenter de manière simple un calendrier de matchs afin qu'un utilisateur humain puisse, d'un simple coup d'oeil, voir et comprendre l'état actuel de la planification.
 			@ Le logiciel devra intégrer un certain nombre de contraintes prédéfinies, plus ou moins bloquantes, telles que le fait qu'un équipe ne peut pas jouer deux fois la même semaine. Cela a aussi pour but d'aider l'utilisateur dans la prise en compte des contraintes.
 		\end{easylist}
 
 	\section{Hypothèses}
 		Pour la réalisation de ce calendrier interactif, plusieurs hypothèses relatives au monde sportif ont été posées :
-		\begin{easylist}
+		\begin{easylist}[itemize]
 			@ Un championnat se compose de plusieurs poules regroupant les équipes. Ces poules ne sont pas strictement indépendantes puisse que certaines contraintes peuvent être communes.
 			@ Au sein d'un poule, toutes les équipes doivent rencontrer toutes les autres deux fois. Le premier match devra se dérouler dans le gymnase de la première équipe, et le second dans le gymnase de la deuxième équipe.
 			@ Chaque équipe est associé à un gymnase de référence. Ce gymnase est celui dans lequel l'équipe joue son match à domicile. Un gymnase possède une capacité maximale de matchs en simultané. Plusieurs équipes peuvent être associées au même gymnase. Dans le cas où les équipes seraient dans des poules différentes, il faudra donc faire attention à ne pas dépasser la capacité du gymnase.
@@ -48,17 +50,22 @@
 
 \chapter{Description générale}	
 	\section{Environnement du projet}
-		Lors de la réalisation de notre projet, aucun existant n’est déjà présent. Nous voulons mettre à disposition de l’utilisateur une application simple, intuitive et facile d'utilisation. \\
+		Lors de la réalisation de notre projet, aucun existant n’est déjà présent. Nous voulons mettre à disposition de l’utilisateur une application simple, intuitive et facile d'utilisation.
+		
 		Nous avons donc choisi de mettre en place l’environnement suivant :
 		\img{InteractionSchema.png}{Architecture générale du projet}{}
 
-		Comme on peut le voir sur la figure précédente, l'application comportera est partie interface graphique avec laquelle l'utilisateur interagira et une partie algorithmique, regissant les contraintes pré-établies. \\
-		De plus, le programme prendra en entrée des fichiers au format CSV contenant les informations nécessaires et permettra d'exporter le résultat de la planification dans un fichier CSV. \\
+		Comme on peut le voir sur la figure précédente, l'application comportera est partie interface graphique avec laquelle l'utilisateur interagira et une partie algorithmique, régissant les contraintes pré-établies.
+		
+		De plus, le programme prendra en entrée des fichiers au format CSV contenant les informations nécessaires et permettra d'exporter le résultat de la planification dans un fichier CSV.
 
-		Le dévelopement de l'application se fait en Java. De ce fait, nous utilisons la librairie JavaFX pour l'affichage graphique. \\
-		Afin de pouvoir utiliser l'application il est donc nécessaire d'avoir Java 12 ou supérieur d'installé sur l'ordinateur. \\
-		Ce dernier peut être téléchargée ici: \href{https://jdk.java.net/}{OpenJDK downloads} (ou ici pour la version Oracle: \href{https://www.oracle.com/technetwork/java/javase/downloads/index.html}{Oracle downloads})(\href{https://adoptopenjdk.net/}{une version d'OpenJDK est distribuée par AdoptOpenJDK} et propose un installateur afin de faciliter l'intallation de Java). \\
-	            Il suffit de prendre la version adaptée à l'architecture cible et suivre les étapes d'installation (peut différer selon vos besoins, néanmoins une possibilité est expliquée \href{https://stackoverflow.com/a/52531093/3281185}{ici}).
+		Le développement de l'application se fait en Java. De ce fait, nous utilisons la librairie JavaFX pour l'affichage graphique.
+		
+		Afin de pouvoir utiliser l'application il est donc nécessaire d'avoir Java 12 ou supérieur d'installé sur l'ordinateur.
+		
+		Ce dernier peut être téléchargée ici: \href{https://jdk.java.net/}{OpenJDK downloads} (ou ici pour la version Oracle: \href{https://www.oracle.com/technetwork/java/javase/downloads/index.html}{Oracle downloads})(\href{https://adoptopenjdk.net/}{une version d'OpenJDK est distribuée par AdoptOpenJDK} et propose un installateur afin de faciliter l'installation de Java).
+		
+	    Il suffit de prendre la version adaptée à l'architecture cible et suivre les étapes d'installation (peut différer selon vos besoins, néanmoins une possibilité est expliquée \href{https://stackoverflow.com/a/52531093/3281185}{ici}).
 
 	\section{Caractéristiques des utilisateurs}
 		Les utilisateurs finaux du programme sont des gens n'ayant aucun lien avec l'informatique. De ce fait, le programme doit être utilisable de la manière la plus simple et intuitive possible. Pour cela il faut que l'utilisateur est le moins de paramètres à définir en amont à l'exception des fichiers d'entrée à fournir. De plus, il est nécessaire que l'interface graphique soit claire, propre et intuitive ainsi que simple de prise en main et d'utilisation.
@@ -74,12 +81,12 @@
 			\paragraph{Gymnases}
 				Trois colonnes doivent être présentes : le nom du gymnase, sa capacité maximale et sa ville.
 				
-				\latexsourcefile[caption=Exemple de fichier CSV pour les gymnases]{../Planificateur/gyms.csv}
+				\latexsourcefile[label=code:gyms,caption=Exemple de fichier CSV pour les gymnases]{../Planificateur/gyms.csv}
 
 			\paragraph{Equipes}
 				Quatre colonnes doivent être présentes : le nom de l'équipe, le nom du gymnase dans lequel jour l'équipe, la ville du gymnase et la poule à laquelle appartient l'équipe.
 				
-				\latexsourcefile[caption=Exemple de fichier CSV pour les équipes]{../Planificateur/teams.csv}
+				\latexsourcefile[label=code:teams,caption=Exemple de fichier CSV pour les équipes]{../Planificateur/teams.csv}
 
 				Une importance particulière doit être portée sur les noms de poule puisque c'est à partir des valeurs de cette colonnes que seront définies les poules dans le modèle sous-jacent pour la suite des opération. La moindre erreur dans le nom du poule la différencierait des autres et en créerait donc une nouvelle.
 
@@ -113,7 +120,16 @@
 		Enfin un Gymnase à une capacité, un nom, une liste de dates où le gymnase est indisponible et une couleur qui lui sera affecté dans l'interface.
 
 	\section{Parser}
+		Etant donné que les données du championnat se trouve à l'origine dans des fichiers Excel, il est nécessaire de réaliser un parseur qui va traduire les différentes données dans le modèle de notre programme.
+		Excel étant propriétaire, nous avons préféré nous focaliser sur un format plus large, le CSV (excel est capable d'exporter un document dans ce format).
 		
+		Des exemples de fichiers ont été donnés en \autoref{code:teams} et \autoref{code:gyms}.
+		A partir de là, chaque ligne représente un gymnase ou bien une équipe.
+		Il suffit donc de simplement récupérer chaque information et créer les instances du modèle associé.
+		
+		Ce qui manque est la liste des différents matchs qui devront être joués.
+		Pour cela nous créons un match entre toutes les paires d'équipes possible.
+		Nous considérons que l'<< équipe 1 >> de la paire représente l'équipe accueillante.
 	
 	\section{Interface}
 		%TODO Thomas
