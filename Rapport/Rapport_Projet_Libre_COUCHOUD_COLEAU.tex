@@ -14,11 +14,11 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %TODO
-\resume{}
-\motcle{}
+\resume{Ce projet libre vise à réalise un outil permétant la planification de matchs lors d'un championnat sportif. Il s'appuit sur des travaux précédement réalisés par deux étudiants l'année précédente. Ces derniers avaient proposés un modèle mathématique pour résoudre le problème. De notre côte, nous nous sommes orienté vers une interface graphique facilitant la planification par un utilisateur humain.}
+\motcle{Planning, Sport, Championnat, Java, JavaFX}
 
-\abstract{}
-\keyword{}
+\abstract{This projet aims to build a tool to schedule matches for a championship. It's based on a previous work by two other students from the previous year. Those students proposed a mathematical model to solve the problem. On our side, we focused on a graphical interface to ease the work of the user.}
+\keyword{Schedule, Sport, Championship, Java, JavaFX}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -81,24 +81,52 @@
 			\paragraph{Gymnases}
 				Trois colonnes doivent être présentes : le nom du gymnase, sa capacité maximale et sa ville.
 				
-				\latexsourcefile[label=code:gyms,caption=Exemple de fichier CSV pour les gymnases]{../Planificateur/gyms.csv}
+				\csvsourcefile[label=code:gyms,caption=Exemple de fichier CSV pour les gymnases]{../Planificateur/gyms.csv}
 
 			\paragraph{Equipes}
 				Quatre colonnes doivent être présentes : le nom de l'équipe, le nom du gymnase dans lequel jour l'équipe, la ville du gymnase et la poule à laquelle appartient l'équipe.
 				
-				\latexsourcefile[label=code:teams,caption=Exemple de fichier CSV pour les équipes]{../Planificateur/teams.csv}
+				\csvsourcefile[label=code:teams,caption=Exemple de fichier CSV pour les équipes]{../Planificateur/teams.csv}
 
 				Une importance particulière doit être portée sur les noms de poule puisque c'est à partir des valeurs de cette colonnes que seront définies les poules dans le modèle sous-jacent pour la suite des opération. La moindre erreur dans le nom du poule la différencierait des autres et en créerait donc une nouvelle.
 
 		\subsection{Afficher le planning}
-			La seconde chose que le programme doit faire est l'affichage de la planification.
+			La seconde chose que le programme doit faire est l'affichage de la planification. \\
+			Puisqu'il s'agit d'afficher un ensemble de matchs en fonction d'un lieu (le gymnase de la rencontre) et d'une date, nous avons choisi de représenter le planning sous la forme d'un tableau à double entrée. Les lignes seront les gymnases alors que les colonnes seront les dates de rencontres. \\
+			Les matchs quand à eux viendront se placer dans les cases ainsi créées. \\
+			De cette façon, un utilisateur humain peut facilement comprendre l'état actuelle de la planification, ce qu'il reste à faire et les possibles contraintes pouvant déjà être présentes.
 
 		\subsection{Planification des matches}
+			Par la suite, l'utilisateur doit pouvoir ajoouter des matchs dans chacune des cases de planification disponibles. Cependant, certaines contraintes doivent être respectées :
+			\begin{easylist}[itemize]
+				@ Une même équipe ne peut pas jouer deux matchs en même temps.
+				@ Pour une même date, un gymnase ne peut pas accueillir plus de matchs que sa capacité maximale. Cette contrainte doit être commune à toutes les poules.
+				@ Un match doit de préférance se dérouler dans le gymnase de l'équipe acueillante.
+			\end{easylist}
+			Ces trois premières contraintes sont les plus importantes. Par la suite, plusieurs autres contraintes pourront être ajoutées, telles que :
+			\begin{easylist}[itemize]
+				@ Un match retour ne doit pas avoir lieu tant que tous les matchs aller ne sont pas joués.
+				@ Les matchs retour devraient de préférance se dérouler dans le même ordre que les matchs aller.
+				@ Une même équipe ne devrait de préférence pas jouer deux semaines d'affilée.
+			\end{easylist}
 
 		\subsection{Exporter les résultats}
+			Enfin, afin de sauvegarder les résultats de la planification, le logiciel devra intégrer un module d'exportation devant produire un fichier de sortie interprétable par un autre logiciel ou directemet par un humain.
 
 	\section{Description des interface}
 		\label{sec:ui-design}
+		\img{maquette.png}{Maquette du logiciel}{}
+
+		Comme nous pouvons le voir sur la maquette ci-dessus, la représentation sous forme de tableau à double entrée est respectée. \\
+		En ligne nous avons la liste des gymanes dans lesquels les matchs peuvent se dérouler. Chaque gymnase est associé à une couleur par soucis de clarté. \\
+		Plusieurs types de cases sont visibles dans le tableau :
+		\begin{easylist}[itemize]
+			@ Une case gris clair avec un symbole +1 ou +2 (toute valeur d'entier est en réalité possible). Cela signifit que le gymnase peut encore accueillir un nombre de matchs égal au chiffre affiché.
+			@ Une case grise pleine. Cela signifit qu'un place de ce gymnase est occupée par un match d'une autre poule. Cependant, si une case avec chiffre est aussi présente, cela signifit qu'il reste tout de même des places dans ce gymnase pour cette date.
+			@ Une case barrée rouge. Le gymnase est totalement indisponible pour cette date.
+			@ Une case bicolore. Il s'agit d'un match. Les nom de équipe sont écrit dessus et les couleurs sont celles des gymnases associés aux équipes. \\
+		\end{easylist}
+		Sur le droite de la maquette, nous voyons l'ensemble des matchs qui ne sont pas encore assignés.
 	
 \chapter{Réalisation du logiciel}
 	Nous allons ici expliquer comment a été réalisé le programme afin de répondre à la problématique exposée précédemment.
@@ -215,7 +243,7 @@
 		
 	\section{Exportation}
 		L'utilisation de la vue est un élément majeur de notre projet.
-		Cependant il est intéressant de pouvoir sauvegarder le travail qui a été réaliser.
+		Cependant il est intéressant de pouvoir sauvegarder le travail qui a été réalisé.
 		C'est pour cela qu'une fonction d'export a été mise en place.
 		Cette dernière est très basique mais permet tout de même de ne pas perdre son travail.
 		
@@ -301,12 +329,15 @@
 		En effet il est fort probable que l'on veuille éditer le planning en plusieurs étapes et ne pas tout refaire à chaque fois rend le programme beaucoup plus utilisable dans un environnement réel.
 		@ Proposer deux plannings liés pour les matchs aller et les matchs retour.
 		De cette manière la distinction entre les deux est encore plus forte.
-		@@ De plus cela peut être une passerelle pour un mécanisme pourrai être mis en place pour synchroniser les deux: dès qu'un match allé est ajouté, on ajoute le match retour à la même date avec un offset.
+		@@ De plus cela peut être une passerelle pour un mécanisme qui pourrait être mis en place pour synchroniser les deux: dès qu'un match aller est ajouté, on ajoute le match retour à la même date avec un offset.
 		Cela peut permettre de réaliser le planning plus rapidement car il y a de fortes chances que les deux plannings se ressemblent (sauf cas d'impossibilités d'équipe ou de gymnase mais le cas peut être géré à la main).
 		@ Ajouter un algorithme de recherche opérationnelle permettant d'établir un planning pilote automatiquement qui sera par la suite seulement édité pour effectuer des ajustements.
 		De manière parallèle une manière temporaire d'effectuer ce couplage serai d'implémenter le premier point et avoir sa sortie compatible avec les entrées du programme.
 	\end{easylist}
 
 \chapter{Conclusion}
+	En conclusion, bien que le problème eut pu paraitre trivial au premier abord, celui-ci cachait plusieurs subtilités interressantes et importantes à prendre en compte. Certaines des contraintes à implémenter furent plus difficiles que d'autres à concevoir. \\
+	La partie interface graphique posa quelques soucis mais une bonne conception en amont, aidée par une maquette de grande qualité, permit d'éviter de prendre trop de retard. \\
+	Au final, ce projet nous a permit de mettre un peu plus en application nos connaissances en conception et en programmation acquises en cours. Nous espérons que ce projet sera par la suite reprit et paufiné par une autre équipe afin de le finaliser.
 
 \end{document}
