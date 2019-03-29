@@ -101,8 +101,7 @@
 
 		%TODO Thomas
 	\section{Description des interface}
-		
-		%TODO Thomas
+		\label{sec:ui-design}
 	
 \chapter{Réalisation du logiciel}
 	Nous allons ici expliquer comment a été réalisé le programme afin de répondre à la problématique exposée précédemment.
@@ -138,9 +137,104 @@
 		Nous considérons que l'<< équipe 1 >> de la paire représente l'équipe accueillante.
 	
 	\section{Interface}
-		%TODO Thomas
+		Maintenant que nous avons un modèle chargé, il faut les présenter à l'utilisateur.
+		De plus il faut que cette présentation soit accessible pour tous tout en intégrant les fonctionnalités désirées.
+		Pour cela le modèle pensé en \autoref{sec:ui-design} sera implémenté mais avec quelques dérives par manque de temps.
+		
+		\img{ui-main.png}{Fenêtre principale}{}
+		
+		L'image ci-dessus montre l'état actuel de la réalisation.
+		On peut y observer 3 parties majeures:
+		\begin{easylist}[itemize]
+			@ Une barre de menu en haut.
+			Cette dernière permet des interactions avec différents menus tels qu'éditer les propriétés des gymnases ou exporter la planification.
+			@ Différents onglets représentant la planification des poules.
+			@ Une barre inférieure indiquant le nombre de matchs restant à placer.
+		\end{easylist}
+	
+		Nous allons ici détailler plus en détail la partie centrale.
+		Etant donné que nous utilisons la librairie JavaFX, beaucoup d'éléments visuels sont rafraichis automatiquement et ne nécessitent pas vraiment de controleur.
+		Cela passe par des éléments << Properties >> qui cachent un pattern Observer.
+		De cette manière une variable modifiée dans la vue impacte directement le modèle et inversement.
+		Prenons par exemple la liste des matchs à jouer, chaque poule dispose de sa propre liste qui est ensuite distribuée à chaque cellule.
+		Lorsque l'on veut éditer la cellule, cette liste est filtrée et affichée.
+		Si pour une raison quelconque nous souhaitons supprimer un match, il suffit de le supprimer de la liste et ce dernier ne sera plus disponible dans l'interface.
+		
+		Un autre exemple concerne l'affichage des places restantes dans le gymnase.
+		Ce cas est un peu plus complexe et passe quand même par un contrôleur mais des << Properties >> sont aussi impliquées.
+		Ce qu'il se passe est que le contrôleur conserve une liste de propriétés pour chaque gymnase à chaque date.
+		Dès qu'un match est retiré ou ajouté ou que la capacité du gymnase est modifiée, la ou les propriété(s) concernées sont adaptées.
+		La vue est cependant mise à jour de manière automatique pour le texte, et dans le cas ou des matches doivent être supprimés, nous avons notre propre listener pour effectuer le travail.
+		Le code de ce cas est donné ci-dessous.
+		
+		\javasourcefile[caption=Suppression de matchs assignés si la capacité du gymnase ne l'autorise plus]{Code/jfx-property-listener.java}
+		
+		Un point important de la partie centrale est donc l'assignement des matchs.
+		Lors d'un double clic sur une cellule, cette dernière va proposer une liste de matchs qui pourront être sélectionnés.
+		
+		\img{ui-assign.png}{Liste de matchs à choisir}{scale=1}
+		
+		Comme dit précédemment la cellule dispose de la même liste de matchs que toutes les autres cellules.
+		Il est donc nécessaire de filtrer cette dernière pour ne garder que les éléments qui ont un lien avec la cellule.
+		En premier nous ne gardons que les matchs où l'équipe du gymnase concerné joue.
+		Ensuite vient ce que nous appelons les contraintes fortes.
+		Une fois ces dernières appliquées à la liste, les matchs qui ne respectent pas les critères seront désactivés et non clicables.
+		Ces contraintes sont:
+		\begin{easylist}[itemize]
+			@ Le match n'est pas déjà assigné
+			@ Le gymnase est libre à cette date
+			@ Les deux équipes du match ne jouent pas déjà un match le même jour
+		\end{easylist}
+	
+		Encore une fois les différents filtrer sont des prédicats et s'appliquent sur une propriété.
+		Par conséquent dès qu'une case sera cochée toutes les autres seront réactualisées en passant par ces filtres.
+		
+		Vient ensuite des contraintes faibles.
+		Cette fois-ci les cases ne seront pas désactivées mais simplement affichées en jaune.
+		Cela permet d'indiquer que le match peut effectivement être placer ici, mais il faut de préférence l'éviter car cela brise un souhait venant d'une équipe.
+		Pour le moment une seule contrainte est présente et vérifie que le match se déroule dans le gymnase de l'équipe qui accueil.
+		
+		\subsection{Edition d'un gymnase}
+			La barre de menu supérieure ou le double clic sur un gymnase nous permet d'éditer l'un d'entre eux.
+			Pour le moment seul la capacité et les jours interdits peuvent être modifiés.
+			
+			\img{ui-edit-gym.png}{Fenêtre d'édition d'un gymnase}{scale=1}
+			
+			Encore une fois le système de propriétés est utilisé.
+			Lors de la modification de la capacité d'un gymnase, la valeur est directement enregistré et toute la vue s'adapte directement au changement.
+			
+			\img{ui-edit-gym-dates.png}{Fenêtre d'édition des dates interdites d'un gymnase}{scale=1}
+			
+			Encore une fois cette vue ne fais que modifier une propriété (liste de dates) et tout le reste s'adapte.
+			
+		\subsubsection{Conclusion JavaFX}
+			L'utilisation de JavaFX peut beaucoup changer par rapport aux autres librairies dont nous avons l'habitude.
+			Cependant ce nouveau mode de gestion des vues peut avoir son avantage.
+			En effet au lieu de beaucoup se focaliser sur l'interaction que doit avoir le contrôleur sur la vue, nous pouvons juste utiliser des propriétés et passer plus de temps sur l'agencement des différents éléments graphique.
+			
+			De plus cette approche permet de mettre en place des éléments de code un peu plus avancé tel que les expressions lambda ou des références de méthodes.
+			
+			Il est toutefois nécessaire de savoir ce qu'il se cache derrière ces outils magique afin d'en connaitre ses limites.
+		
 	\section{Exportation}
-		%TODO Thomas
+		L'utilisation de la vue est un élément majeur de notre projet.
+		Cependant il est intéressant de pouvoir sauvegarder le travail qui a été réaliser.
+		C'est pour cela qu'une fonction d'export a été mise en place.
+		Cette dernière est très basique mais permet tout de même de ne pas perdre son travail.
+		
+		\csvsourcefile[caption=Exemple d'exportation de planning]{Code/export.csv}
+		
+		le format du fichier exporté est encore une fois un CSV, ce qui permet une ouverture facile dans un tableau.
+		Ce dernier contient 4 colonnes:
+		\begin{easylist}[itemize]
+			@ Le nom de la première équipe
+			@ Le nom de la deuxième équipe
+			@ Le gymnase dans lequel le match a lieu
+			@ Le numéro de la semaine où aura lieu le match
+		\end{easylist}
+	
+		Il est toutefois impossible de réimporter ce fichier dans le programme pour continuer le planning.
+		Cette fonctionnalité pourrait être une forte valeur ajoutée.
 
 \chapter{Gestion de projet}
 	Afin de pouvoir travailler de manière efficace sur le peu de temps qui nous est alloué pour ce projet, nous avons mis quelques éléments de gestion de projet en place.
@@ -200,6 +294,21 @@
 	\img{jacoco.png}{Rapport JaCoCo}{}
 
 \chapter{Améliorations à prévoir}
+	Le projet est encore a un stade peu avancé et difficilement utilisable par un utilisateur.
+	Cependant il propose une base permettant de progresser vers quelque chose de plus fiable.
+	
+	Nous avons en tête les améliorations suivantes:
+	\begin{easylist}[itemize]
+		@ Avoir la possibilité de charger un fichier de planification afin de reprendre un travail précédemment entamé.
+		Ce point la peut être assez facile à mettre en place et aurait une forte valeur ajouté.
+		En effet il est fort probable que l'on veuille éditer le planning en plusieurs étapes et ne pas tout refaire à chaque fois rend le programme beaucoup plus utilisable dans un environnement réel.
+		@ Proposer deux plannings liés pour les matchs aller et les matchs retour.
+		De cette manière la distinction entre les deux est encore plus forte.
+		@@ De plus cela peut être une passerelle pour un mécanisme pourrai être mis en place pour synchroniser les deux: dès qu'un match allé est ajouté, on ajoute le match retour à la même date avec un offset.
+		Cela peut permettre de réaliser le planning plus rapidement car il y a de fortes chances que les deux plannings se ressemblent (sauf cas d'impossibilités d'équipe ou de gymnase mais le cas peut être géré à la main).
+		@ Ajouter un algorithme de recherche opérationnelle permettant d'établir un planning pilote automatiquement qui sera par la suite seulement édité pour effectuer des ajustements.
+		De manière parallèle une manière temporaire d'effectuer ce couplage serai d'implémenter le premier point et avoir sa sortie compatible avec les entrées du programme.
+	\end{easylist}
 
 \chapter{Conclusion}
 
