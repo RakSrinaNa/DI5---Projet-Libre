@@ -14,22 +14,59 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %TODO
-\resume{}
-\motcle{}
+\resume{Ce projet libre vise à réalise un outil permétant la planification de matchs lors d'un championnat sportif. Il s'appuit sur des travaux précédement réalisés par deux étudiants l'année précédente. Ces derniers avaient proposés un modèle mathématique pour résoudre le problème. De notre côte, nous nous sommes orienté vers une interface graphique facilitant la planification par un utilisateur humain.}
+\motcle{Planning, Sport, Championnat, Java, JavaFX}
 
-\abstract{}
-\keyword{}
+\abstract{This projet aims to build a tool to schedule matches for a championship. It's based on a previous work by two other students from the previous year. Those students proposed a mathematical model to solve the problem. On our side, we focused on a graphical interface to ease the work of the user.}
+\keyword{Schedule, Sport, Championship, Java, JavaFX}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \begin{document}
 \chapter{Introduction}
 	\section{Contexte}
+		Dans le cadre de championnats sportifs, les organisateurs sont souvent amenés à planifier les rencontres entre équipes. Ce travail peut être plus ou moins complexe en fonction du nombre d'équipes à gérer, du nombre de poules dans le championnat, des contraintes de lieux (chaque équipe ayant un gymnase à domicile), de dates (une équipe ne doit pas jouer tous ses matchs d'affilée), d'alternance (une équipe ne doit pas jouer tous ses matchs en extérieur d'affilée), etc.
+		
+		De plus, ces rencontres sont souvent sous forme de match aller-retour. La période aller devant précéder celle de retour.
+		
+		Tout cela créé un environnement complexe à appréhender, où l'ensemble des contraintes devient vite bloquant.
+
 	\section{Objectifs}
+		L'objectif de ce projet libre est donc de proposer un logiciel graphique facilitant la planification après import des données au sein du système.
+		
+		Celui-ci aura deux buts principaux : 
+		\begin{easylist}[itemize]
+			@ La partie graphique servira à représenter de manière simple un calendrier de matchs afin qu'un utilisateur humain puisse, d'un simple coup d'oeil, voir et comprendre l'état actuel de la planification.
+			@ Le logiciel devra intégrer un certain nombre de contraintes prédéfinies, plus ou moins bloquantes, telles que le fait qu'un équipe ne peut pas jouer deux fois la même semaine. Cela a aussi pour but d'aider l'utilisateur dans la prise en compte des contraintes.
+		\end{easylist}
+
 	\section{Hypothèses}
+		Pour la réalisation de ce calendrier interactif, plusieurs hypothèses relatives au monde sportif ont été posées :
+		\begin{easylist}[itemize]
+			@ Un championnat se compose de plusieurs poules regroupant les équipes. Ces poules ne sont pas strictement indépendantes puisse que certaines contraintes peuvent être communes.
+			@ Au sein d'un poule, toutes les équipes doivent rencontrer toutes les autres deux fois. Le premier match devra se dérouler dans le gymnase de la première équipe, et le second dans le gymnase de la deuxième équipe.
+			@ Chaque équipe est associé à un gymnase de référence. Ce gymnase est celui dans lequel l'équipe joue son match à domicile. Un gymnase possède une capacité maximale de matchs en simultané. Plusieurs équipes peuvent être associées au même gymnase. Dans le cas où les équipes seraient dans des poules différentes, il faudra donc faire attention à ne pas dépasser la capacité du gymnase.
+		\end{easylist}
 
 \chapter{Description générale}	
 	\section{Environnement du projet}
+		Lors de la réalisation de notre projet, aucun existant n’est déjà présent. Nous voulons mettre à disposition de l’utilisateur une application simple, intuitive et facile d'utilisation.
+		
+		Nous avons donc choisi de mettre en place l’environnement suivant :
+		\img{InteractionSchema.png}{Architecture générale du projet}{}
+
+		Comme on peut le voir sur la figure précédente, l'application comportera est partie interface graphique avec laquelle l'utilisateur interagira et une partie algorithmique, régissant les contraintes pré-établies.
+		
+		De plus, le programme prendra en entrée des fichiers au format CSV contenant les informations nécessaires et permettra d'exporter le résultat de la planification dans un fichier CSV.
+
+		Le développement de l'application se fait en Java. De ce fait, nous utilisons la librairie JavaFX pour l'affichage graphique.
+		
+		Afin de pouvoir utiliser l'application il est donc nécessaire d'avoir Java 12 ou supérieur d'installé sur l'ordinateur.
+		
+		Ce dernier peut être téléchargée ici: \href{https://jdk.java.net/}{OpenJDK downloads} (ou ici pour la version Oracle: \href{https://www.oracle.com/technetwork/java/javase/downloads/index.html}{Oracle downloads})(\href{https://adoptopenjdk.net/}{une version d'OpenJDK est distribuée par AdoptOpenJDK} et propose un installateur afin de faciliter l'installation de Java).
+		
+	    Il suffit de prendre la version adaptée à l'architecture cible et suivre les étapes d'installation (peut différer selon vos besoins, néanmoins une possibilité est expliquée \href{https://stackoverflow.com/a/52531093/3281185}{ici}).
+
 	\section{Caractéristiques des utilisateurs}
 		Les utilisateurs finaux du programme sont des gens n'ayant aucun lien avec l'informatique. De ce fait, le programme doit être utilisable de la manière la plus simple et intuitive possible. Pour cela il faut que l'utilisateur est le moins de paramètres à définir en amont à l'exception des fichiers d'entrée à fournir. De plus, il est nécessaire que l'interface graphique soit claire, propre et intuitive ainsi que simple de prise en main et d'utilisation.
  		
@@ -44,29 +81,185 @@
 			\paragraph{Gymnases}
 				Trois colonnes doivent être présentes : le nom du gymnase, sa capacité maximale et sa ville.
 				
-				\latexsourcefile[caption="Exemple de fichier CSV pour les gymnases"]{../Planificateur/gyms.csv}
+				\csvsourcefile[label=code:gyms,caption=Exemple de fichier CSV pour les gymnases]{../Planificateur/gyms.csv}
 
 			\paragraph{Equipes}
 				Quatre colonnes doivent être présentes : le nom de l'équipe, le nom du gymnase dans lequel jour l'équipe, la ville du gymnase et la poule à laquelle appartient l'équipe.
 				
-				\latexsourcefile[caption="Exemple de fichier CSV pour les équipes"]{../Planificateur/teams.csv}
+				\csvsourcefile[label=code:teams,caption=Exemple de fichier CSV pour les équipes]{../Planificateur/teams.csv}
 
 				Une importance particulière doit être portée sur les noms de poule puisque c'est à partir des valeurs de cette colonnes que seront définies les poules dans le modèle sous-jacent pour la suite des opération. La moindre erreur dans le nom du poule la différencierait des autres et en créerait donc une nouvelle.
 
 		\subsection{Afficher le planning}
+			La seconde chose que le programme doit faire est l'affichage de la planification. \\
+			Puisqu'il s'agit d'afficher un ensemble de matchs en fonction d'un lieu (le gymnase de la rencontre) et d'une date, nous avons choisi de représenter le planning sous la forme d'un tableau à double entrée. Les lignes seront les gymnases alors que les colonnes seront les dates de rencontres. \\
+			Les matchs quand à eux viendront se placer dans les cases ainsi créées. \\
+			De cette façon, un utilisateur humain peut facilement comprendre l'état actuelle de la planification, ce qu'il reste à faire et les possibles contraintes pouvant déjà être présentes.
 
 		\subsection{Planification des matches}
+			Par la suite, l'utilisateur doit pouvoir ajoouter des matchs dans chacune des cases de planification disponibles. Cependant, certaines contraintes doivent être respectées :
+			\begin{easylist}[itemize]
+				@ Une même équipe ne peut pas jouer deux matchs en même temps.
+				@ Pour une même date, un gymnase ne peut pas accueillir plus de matchs que sa capacité maximale. Cette contrainte doit être commune à toutes les poules.
+				@ Un match doit de préférance se dérouler dans le gymnase de l'équipe acueillante.
+			\end{easylist}
+			Ces trois premières contraintes sont les plus importantes. Par la suite, plusieurs autres contraintes pourront être ajoutées, telles que :
+			\begin{easylist}[itemize]
+				@ Un match retour ne doit pas avoir lieu tant que tous les matchs aller ne sont pas joués.
+				@ Les matchs retour devraient de préférance se dérouler dans le même ordre que les matchs aller.
+				@ Une même équipe ne devrait de préférence pas jouer deux semaines d'affilée.
+			\end{easylist}
 
 		\subsection{Exporter les résultats}
+			Enfin, afin de sauvegarder les résultats de la planification, le logiciel devra intégrer un module d'exportation devant produire un fichier de sortie interprétable par un autre logiciel ou directemet par un humain.
 
 	\section{Description des interface}
+		\label{sec:ui-design}
+		\img{maquette.png}{Maquette du logiciel}{}
+
+		Comme nous pouvons le voir sur la maquette ci-dessus, la représentation sous forme de tableau à double entrée est respectée. \\
+		En ligne nous avons la liste des gymanes dans lesquels les matchs peuvent se dérouler. Chaque gymnase est associé à une couleur par soucis de clarté. \\
+		Plusieurs types de cases sont visibles dans le tableau :
+		\begin{easylist}[itemize]
+			@ Une case gris clair avec un symbole +1 ou +2 (toute valeur d'entier est en réalité possible). Cela signifit que le gymnase peut encore accueillir un nombre de matchs égal au chiffre affiché.
+			@ Une case grise pleine. Cela signifit qu'un place de ce gymnase est occupée par un match d'une autre poule. Cependant, si une case avec chiffre est aussi présente, cela signifit qu'il reste tout de même des places dans ce gymnase pour cette date.
+			@ Une case barrée rouge. Le gymnase est totalement indisponible pour cette date.
+			@ Une case bicolore. Il s'agit d'un match. Les nom de équipe sont écrit dessus et les couleurs sont celles des gymnases associés aux équipes. \\
+		\end{easylist}
+		Sur le droite de la maquette, nous voyons l'ensemble des matchs qui ne sont pas encore assignés.
 	
 \chapter{Réalisation du logiciel}
+	Nous allons ici expliquer comment a été réalisé le programme afin de répondre à la problématique exposée précédemment.
+	
+	\section{Modèle}
+		\img{classDiagram.png}{Diagramme de classe du model}{scale=0.5}
+		
+		La première étape a été de créer tout le modèle d'un championnat.
+		Pour cela les classes dans le diagramme précédent ont été créées.
+		
+		Nous retrouvons tout en haut le Championship.
+		Ce dernier représente tout le championnat et est donc composé de GroupStages, ainsi qu'un nombre de semaines sur lesquelles se déroule la compétition.
+		
+		Les GroupStage représentent les poules et ont chacune un nom ainsi qu'un liste de Match qui devront être joués.
+		
+		Les Match sont quand a eux composés de deux équipes (l'équipe qui va recevoir, et la deuxième) et d'une date.
+		Si la date du match est encore inconnue la valeur << null >> lui serra assigné.
+		
+		Les équipes sont représentées par Team et comporte un nom ainsi que leur gymnase affecté.
+
+		Enfin un Gymnase à une capacité, un nom, une liste de dates où le gymnase est indisponible et une couleur qui lui sera affecté dans l'interface.
+
 	\section{Parser}
+		Etant donné que les données du championnat se trouve à l'origine dans des fichiers Excel, il est nécessaire de réaliser un parseur qui va traduire les différentes données dans le modèle de notre programme.
+		Excel étant propriétaire, nous avons préféré nous focaliser sur un format plus large, le CSV (excel est capable d'exporter un document dans ce format).
+		
+		Des exemples de fichiers ont été donnés en \autoref{code:teams} et \autoref{code:gyms}.
+		A partir de là, chaque ligne représente un gymnase ou bien une équipe.
+		Il suffit donc de simplement récupérer chaque information et créer les instances du modèle associé.
+		
+		Ce qui manque est la liste des différents matchs qui devront être joués.
+		Pour cela nous créons un match entre toutes les paires d'équipes possible.
+		Nous considérons que l'<< équipe 1 >> de la paire représente l'équipe accueillante.
+	
 	\section{Interface}
-		%TODO Thomas
+		Maintenant que nous avons un modèle chargé, il faut les présenter à l'utilisateur.
+		De plus il faut que cette présentation soit accessible pour tous tout en intégrant les fonctionnalités désirées.
+		Pour cela le modèle pensé en \autoref{sec:ui-design} sera implémenté mais avec quelques dérives par manque de temps.
+		
+		\img{ui-main.png}{Fenêtre principale}{}
+		
+		L'image ci-dessus montre l'état actuel de la réalisation.
+		On peut y observer 3 parties majeures:
+		\begin{easylist}[itemize]
+			@ Une barre de menu en haut.
+			Cette dernière permet des interactions avec différents menus tels qu'éditer les propriétés des gymnases ou exporter la planification.
+			@ Différents onglets représentant la planification des poules.
+			@ Une barre inférieure indiquant le nombre de matchs restant à placer.
+		\end{easylist}
+	
+		Nous allons ici détailler plus en détail la partie centrale.
+		Etant donné que nous utilisons la librairie JavaFX, beaucoup d'éléments visuels sont rafraichis automatiquement et ne nécessitent pas vraiment de controleur.
+		Cela passe par des éléments << Properties >> qui cachent un pattern Observer.
+		De cette manière une variable modifiée dans la vue impacte directement le modèle et inversement.
+		Prenons par exemple la liste des matchs à jouer, chaque poule dispose de sa propre liste qui est ensuite distribuée à chaque cellule.
+		Lorsque l'on veut éditer la cellule, cette liste est filtrée et affichée.
+		Si pour une raison quelconque nous souhaitons supprimer un match, il suffit de le supprimer de la liste et ce dernier ne sera plus disponible dans l'interface.
+		
+		Un autre exemple concerne l'affichage des places restantes dans le gymnase.
+		Ce cas est un peu plus complexe et passe quand même par un contrôleur mais des << Properties >> sont aussi impliquées.
+		Ce qu'il se passe est que le contrôleur conserve une liste de propriétés pour chaque gymnase à chaque date.
+		Dès qu'un match est retiré ou ajouté ou que la capacité du gymnase est modifiée, la ou les propriété(s) concernées sont adaptées.
+		La vue est cependant mise à jour de manière automatique pour le texte, et dans le cas ou des matches doivent être supprimés, nous avons notre propre listener pour effectuer le travail.
+		Le code de ce cas est donné ci-dessous.
+		
+		\javasourcefile[caption=Suppression de matchs assignés si la capacité du gymnase ne l'autorise plus]{Code/jfx-property-listener.java}
+		
+		Un point important de la partie centrale est donc l'assignement des matchs.
+		Lors d'un double clic sur une cellule, cette dernière va proposer une liste de matchs qui pourront être sélectionnés.
+		
+		\img{ui-assign.png}{Liste de matchs à choisir}{scale=1}
+		
+		Comme dit précédemment la cellule dispose de la même liste de matchs que toutes les autres cellules.
+		Il est donc nécessaire de filtrer cette dernière pour ne garder que les éléments qui ont un lien avec la cellule.
+		En premier nous ne gardons que les matchs où l'équipe du gymnase concerné joue.
+		Ensuite vient ce que nous appelons les contraintes fortes.
+		Une fois ces dernières appliquées à la liste, les matchs qui ne respectent pas les critères seront désactivés et non clicables.
+		Ces contraintes sont:
+		\begin{easylist}[itemize]
+			@ Le match n'est pas déjà assigné
+			@ Le gymnase est libre à cette date
+			@ Les deux équipes du match ne jouent pas déjà un match le même jour
+		\end{easylist}
+	
+		Encore une fois les différents filtrer sont des prédicats et s'appliquent sur une propriété.
+		Par conséquent dès qu'une case sera cochée toutes les autres seront réactualisées en passant par ces filtres.
+		
+		Vient ensuite des contraintes faibles.
+		Cette fois-ci les cases ne seront pas désactivées mais simplement affichées en jaune.
+		Cela permet d'indiquer que le match peut effectivement être placer ici, mais il faut de préférence l'éviter car cela brise un souhait venant d'une équipe.
+		Pour le moment une seule contrainte est présente et vérifie que le match se déroule dans le gymnase de l'équipe qui accueil.
+		
+		\subsection{Edition d'un gymnase}
+			La barre de menu supérieure ou le double clic sur un gymnase nous permet d'éditer l'un d'entre eux.
+			Pour le moment seul la capacité et les jours interdits peuvent être modifiés.
+			
+			\img{ui-edit-gym.png}{Fenêtre d'édition d'un gymnase}{scale=1}
+			
+			Encore une fois le système de propriétés est utilisé.
+			Lors de la modification de la capacité d'un gymnase, la valeur est directement enregistré et toute la vue s'adapte directement au changement.
+			
+			\img{ui-edit-gym-dates.png}{Fenêtre d'édition des dates interdites d'un gymnase}{scale=1}
+			
+			Encore une fois cette vue ne fais que modifier une propriété (liste de dates) et tout le reste s'adapte.
+			
+		\subsubsection{Conclusion JavaFX}
+			L'utilisation de JavaFX peut beaucoup changer par rapport aux autres librairies dont nous avons l'habitude.
+			Cependant ce nouveau mode de gestion des vues peut avoir son avantage.
+			En effet au lieu de beaucoup se focaliser sur l'interaction que doit avoir le contrôleur sur la vue, nous pouvons juste utiliser des propriétés et passer plus de temps sur l'agencement des différents éléments graphique.
+			
+			De plus cette approche permet de mettre en place des éléments de code un peu plus avancé tel que les expressions lambda ou des références de méthodes.
+			
+			Il est toutefois nécessaire de savoir ce qu'il se cache derrière ces outils magique afin d'en connaitre ses limites.
+		
 	\section{Exportation}
-		%TODO Thomas
+		L'utilisation de la vue est un élément majeur de notre projet.
+		Cependant il est intéressant de pouvoir sauvegarder le travail qui a été réalisé.
+		C'est pour cela qu'une fonction d'export a été mise en place.
+		Cette dernière est très basique mais permet tout de même de ne pas perdre son travail.
+		
+		\csvsourcefile[caption=Exemple d'exportation de planning]{Code/export.csv}
+		
+		le format du fichier exporté est encore une fois un CSV, ce qui permet une ouverture facile dans un tableau.
+		Ce dernier contient 4 colonnes:
+		\begin{easylist}[itemize]
+			@ Le nom de la première équipe
+			@ Le nom de la deuxième équipe
+			@ Le gymnase dans lequel le match a lieu
+			@ Le numéro de la semaine où aura lieu le match
+		\end{easylist}
+	
+		Il est toutefois impossible de réimporter ce fichier dans le programme pour continuer le planning.
+		Cette fonctionnalité pourrait être une forte valeur ajoutée.
 
 \chapter{Gestion de projet}
 	Afin de pouvoir travailler de manière efficace sur le peu de temps qui nous est alloué pour ce projet, nous avons mis quelques éléments de gestion de projet en place.
@@ -93,14 +286,58 @@
 		Un autre aspect qui a été utilisé tout au long du projet et le versionning de code.
 		Ce système nous permet de gérer des "versions" de code de manière efficace en ayant un historique de tout le code ainsi que des outils pour fusionner plusieurs versions, effectuer des retours en arrière, etc.
 		
-		
-		%TODO Thomas
-		
 	\section{Intégration continue} 
-		%TODO Thomas
+		Afin d'améliorer le développement, un système d'intégration continue a été mis en place.
+	Cela permet d'effectuer certaines actions lorsqu'une modification sur le code est envoyé sur le serveur Git.
+	Nous pouvons entre autres faire de la vérification de code grâce à une compilation et des tests.
+	
+	Voici les différentes étapes qui sont réalisées dans ce projet sont les suivantes:
+	\img{ci-stages.png}{Etapes du CI}{}
+	
+	Afin de passer à une étape suivante, toutes les tâches de l'étape doivent être validées.
+		
+	\begin{easylist}[itemize]
+		@ Etape build:
+		@@ Effectue la compilation du projet
+		@ Etape test:
+		@@ Effectue les tests unitaires du projet
+		@ Etape deploy:
+		@@ build-jar: Construit un jar exécutable du projet
+		@@ javadoc: Génère la Javadoc du projet
+	\end{easylist}
+	
+	Si nous prenons l'exemple de la Javadoc, après la fin du job concerné, il est possible de télécharger cette dernière pour le code à cet instant t:
+	\img{ci-artifacts.png}{Téléchargements des fichiers du job}{scale=1}
+	
+	De plus les tests unitaires produisent un résultat de test de couverture permettant ainsi de se rendre compte de l'efficacité de ces derniers. 
+	\img{ci-coverage.png}{Pourcentage de couverture}{}
+	
+	Ces résultats sont aussi disponibles sur la page principale du projet sous forme de badges.
+	\img{ci-badges.png}{Page principale du projet}{}
+	
+	La phase de déploiement permet de mettre en ligne la Javadoc ainsi qu'une version plus poussée su rapport de couverture des tests.
+	\img{jacoco.png}{Rapport JaCoCo}{}
 
 \chapter{Améliorations à prévoir}
+	Le projet est encore a un stade peu avancé et difficilement utilisable par un utilisateur.
+	Cependant il propose une base permettant de progresser vers quelque chose de plus fiable.
+	
+	Nous avons en tête les améliorations suivantes:
+	\begin{easylist}[itemize]
+		@ Avoir la possibilité de charger un fichier de planification afin de reprendre un travail précédemment entamé.
+		Ce point la peut être assez facile à mettre en place et aurait une forte valeur ajouté.
+		En effet il est fort probable que l'on veuille éditer le planning en plusieurs étapes et ne pas tout refaire à chaque fois rend le programme beaucoup plus utilisable dans un environnement réel.
+		@ Proposer deux plannings liés pour les matchs aller et les matchs retour.
+		De cette manière la distinction entre les deux est encore plus forte.
+		@@ De plus cela peut être une passerelle pour un mécanisme qui pourrait être mis en place pour synchroniser les deux: dès qu'un match aller est ajouté, on ajoute le match retour à la même date avec un offset.
+		Cela peut permettre de réaliser le planning plus rapidement car il y a de fortes chances que les deux plannings se ressemblent (sauf cas d'impossibilités d'équipe ou de gymnase mais le cas peut être géré à la main).
+		@ Ajouter un algorithme de recherche opérationnelle permettant d'établir un planning pilote automatiquement qui sera par la suite seulement édité pour effectuer des ajustements.
+		De manière parallèle une manière temporaire d'effectuer ce couplage serai d'implémenter le premier point et avoir sa sortie compatible avec les entrées du programme.
+	\end{easylist}
 
 \chapter{Conclusion}
+	En conclusion, bien que le problème ait pu paraitre trivial au premier abord, celui-ci cachait plusieurs subtilités interressantes et importantes à prendre en compte. Certaines des contraintes à implémenter furent plus difficiles que d'autres à concevoir. \\
+	La partie interface graphique posa quelques soucis mais une bonne conception en amont, aidée par une maquette de grande qualité, permit d'éviter de prendre trop de retard. \\
+	Au final, ce projet nous a permit de mettre un peu plus en application nos connaissances en conception et en programmation acquises en cours. Nous espérons que ce projet sera par la suite reprit et paufiné par une autre équipe afin de le finaliser.
 
 \end{document}

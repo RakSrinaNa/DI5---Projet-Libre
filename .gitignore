@@ -12,3 +12,9 @@ Rapport/polytech
 Rapport/.texpadtmp
 
 *.iml
+
+*.gz
+
+Rapport/build/
+
+*.log
